@@ -10,5 +10,6 @@ class GroupTest {
     @Test
     void test1() {
         Group group = new Group(1, "이재훈","051-3233-3333","부산광역시 ");
+        Group group = new Group(1, "이재훈","051-3233-3333","부산광역시");
     }
 }
