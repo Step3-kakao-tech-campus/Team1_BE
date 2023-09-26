@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @RequiredArgsConstructor
 public class Group {
+    private static final int MIN_NAME_LENGHT = 2;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GROUP_ID")
