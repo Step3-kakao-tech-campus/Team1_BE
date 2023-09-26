@@ -82,7 +82,7 @@ class UserRepositoryTest {
     void test5() {
         User user = User.builder()
                 .id(1)
-                .name("이이이이이이이이이이이이이이이이이이이")
+                .name("일이삼사오육칠팔구십일")
                 .phoneNumber("010-5538-6818")
                 .build();
 
