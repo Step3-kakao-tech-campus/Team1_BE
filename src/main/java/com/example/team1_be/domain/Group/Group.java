@@ -27,6 +27,9 @@ public class Group {
 
     @Builder
     public Group(int id, String name, String telNumber, String address) {
+        if (name.length() < MIN_NAME_LENGHT)
+            throw new IllegalArgumentException("이름은 2글자 미만일 수 없습니다.");
+        
         this.id = id;
         this.name = name;
         this.telNumber = telNumber;
