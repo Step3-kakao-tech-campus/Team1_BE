@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolationException;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
@@ -61,3 +63,17 @@ class UserRepositoryTest {
         if (newUser!=null)
             assertThat(newUser.getName()).isEqualTo("이재훈");
     }
+
+    @DisplayName("유저를 이름은 2글자 미만을 저장할 수 있어야 한다.")
+    @Test
+    void test4() {
+        User user = User.builder()
+                .id(1)
+                .name("이")
+                .phoneNumber("010-5538-6818")
+                .build();
+
+        assertThatExceptionOfType(ConstraintViolationException.class)
+                .isThrownBy(() -> userRepository.save(user));
+    }
+}
