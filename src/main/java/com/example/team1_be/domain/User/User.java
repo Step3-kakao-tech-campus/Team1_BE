@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -38,13 +37,5 @@ public class User {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 }
