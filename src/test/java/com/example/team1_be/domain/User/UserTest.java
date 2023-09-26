@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     @DisplayName("유저의 정보(이름, 전화번호)를 조회할 수 있다.")
-    @CsvSource({"이재훈, 010-1234-4466",
-                "안한주, 010-3333-3333"})
+    @CsvSource({"1, 이재훈, 010-1234-4466",
+                "2, 안한주, 010-3333-3333"})
     @ParameterizedTest
-    void test1(String name, String phoneNumber) {
-        User user = new User(name, phoneNumber);
+    void test1(int id, String name, String phoneNumber) {
+        User user = new User(id, name, phoneNumber);
         assertThat(user.getName()).isEqualTo(name);
         assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
     }
@@ -25,6 +25,7 @@ class UserTest {
     @Test
     void test2() {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new User("이", "010-5538-6818"));
+                .isThrownBy(() -> new User(1, "이", "010-5538-6818"));
+    }
     }
 }
