@@ -89,4 +89,17 @@ class UserRepositoryTest {
         assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> userRepository.save(user));
     }
+
+    @DisplayName("유저의 전화번호는 13자리여야 한다.")
+    @Test
+    void test6() {
+        User user = User.builder()
+                .id(1)
+                .name("이재훈")
+                .phoneNumber("010-5538")
+                .build();
+
+        assertThatExceptionOfType(ConstraintViolationException.class)
+                .isThrownBy(() -> userRepository.save(user));
+    }
 }
