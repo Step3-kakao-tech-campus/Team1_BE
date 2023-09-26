@@ -16,16 +16,23 @@ class UserTest {
                 "2, 안한주, 010-3333-3333"})
     @ParameterizedTest
     void test1(int id, String name, String phoneNumber) {
-        User user = new User(id, name, phoneNumber);
+        User user = User.builder()
+                .id(id)
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .build();
         assertThat(user.getName()).isEqualTo(name);
         assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
     }
 
     @DisplayName("유저의 이름길이는 2글자 미만이 될 수 없다.")
     @Test
-    void test2() {
+    void test2(){
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new User(1, "이", "010-5538-6818"));
-    }
+                .isThrownBy(()-> User.builder()
+                        .id(1)
+                        .name("이")
+                        .phoneNumber("010-5538-0389")
+                        .build());
     }
 }
