@@ -1,12 +1,14 @@
 package com.example.team1_be.domain.Group;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
+@Getter
 @RequiredArgsConstructor
 public class Group {
     @Id
