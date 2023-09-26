@@ -76,4 +76,17 @@ class UserRepositoryTest {
         assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> userRepository.save(user));
     }
+
+    @DisplayName("유저를 이름은 10글자를 넘길 수 없다.")
+    @Test
+    void test5() {
+        User user = User.builder()
+                .id(1)
+                .name("이이이이이이이이이이이이이이이이이이이")
+                .phoneNumber("010-5538-6818")
+                .build();
+
+        assertThatExceptionOfType(ConstraintViolationException.class)
+                .isThrownBy(() -> userRepository.save(user));
+    }
 }
