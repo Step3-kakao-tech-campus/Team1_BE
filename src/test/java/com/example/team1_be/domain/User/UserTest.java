@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
@@ -18,5 +19,12 @@ class UserTest {
         User user = new User(name, phoneNumber);
         assertThat(user.getName()).isEqualTo(name);
         assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
+    }
+
+    @DisplayName("유저의 이름길이는 2글자 미만이 될 수 없다.")
+    @Test
+    void test2() {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new User("이", "010-5538-6818"));
     }
 }
