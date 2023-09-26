@@ -1,11 +1,13 @@
 package com.example.team1_be.domain.Group;
 
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
+@RequiredArgsConstructor
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +22,11 @@ public class Group {
     @Column(length = 100)
     private String address;
 
+    @Builder
+    public Group(int id, String name, String telNumber, String address) {
+        this.id = id;
+        this.name = name;
+        this.telNumber = telNumber;
+        this.address = address;
+    }
 }
