@@ -1,16 +1,29 @@
 package com.example.team1_be.domain.Group;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.persistence.EntityManager;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class GroupRepositoryTest {
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private EntityManager em;
+
+    @AfterEach
+    public void resetRepository() {
+        em.clear();
+        groupRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
+                .executeUpdate();
+        em.clear();
+    }
 
     @DisplayName("그룹을 생성할 수 있다.")
     @Test
