@@ -4,11 +4,13 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +23,27 @@ class WeekRepositoryTest {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private WeekRepository weekRepository;
+    @Autowired
+    private EntityManager em;
+
+    @AfterEach
+    public void resetRepository() {
+        em.clear();
+
+        weekRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Week_tb ALTER COLUMN `week_id` RESTART WITH 1")
+                .executeUpdate();
+
+        scheduleRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Schedule_tb ALTER COLUMN `schedule_id` RESTART WITH 1")
+                .executeUpdate();
+
+        groupRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
+                .executeUpdate();
+
+        em.clear();
+    }
 
     @DisplayName("한주의 정보를 생성할 수 있다.")
     @Test
