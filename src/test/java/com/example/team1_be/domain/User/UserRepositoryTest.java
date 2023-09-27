@@ -22,8 +22,8 @@ class UserRepositoryTest {
     public void resetRepository() {
         em.clear();
         userRepository.deleteAll();
-        em.createNativeQuery("TRUNCATE TABLE User_tb RESTART IDENTITY;")
-                        .executeUpdate();
+        em.createNativeQuery("ALTER TABLE User_tb ALTER COLUMN `user_id` RESTART WITH 1")
+                .executeUpdate();
         em.clear();
     }
 
