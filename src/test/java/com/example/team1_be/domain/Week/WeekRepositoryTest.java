@@ -64,7 +64,8 @@ class WeekRepositoryTest {
         Week.builder()
                 .id(1)
                 .schedule(schedule)
-                .startTime(LocalDateTime.now());
+                .startTime(LocalDateTime.now())
+                .build();
     }
 
     @DisplayName("한주의 정보를 저장할 수 있다.")
