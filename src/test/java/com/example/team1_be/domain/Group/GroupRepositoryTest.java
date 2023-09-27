@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -46,5 +47,19 @@ class GroupRepositoryTest {
                 .address("부산광역시")
                 .build();
         groupRepository.save(group);
+    }
+
+    @DisplayName("그룹을 조회할 수 있다.")
+    @Test
+    void test3() {
+        Group group = Group.builder()
+                .id(1)
+                .name("이재훈")
+                .phoneNumber("010-5538-6818")
+                .address("부산광역시")
+                .build();
+        groupRepository.save(group);
+        Group group1 = groupRepository.findById(1).orElse(null);
+        assertThat(group1).isNotEqualTo(null);
     }
 }
