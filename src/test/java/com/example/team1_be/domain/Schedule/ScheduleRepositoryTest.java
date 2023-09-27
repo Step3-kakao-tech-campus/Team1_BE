@@ -26,7 +26,7 @@ class ScheduleRepositoryTest {
         em.clear();
 
         scheduleRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
+        em.createNativeQuery("ALTER TABLE Schedule_tb ALTER COLUMN `schedule_id` RESTART WITH 1")
                 .executeUpdate();
 
         groupRepository.deleteAll();
