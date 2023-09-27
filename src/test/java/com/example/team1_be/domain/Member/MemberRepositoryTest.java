@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -91,5 +92,35 @@ class MemberRepositoryTest {
                 .group(group)
                 .build();
         memberRepository.save(member);
+    }
+
+    @DisplayName("그룹원을 불러올 수 있다.")
+    @Test
+    void test3() {
+        Group group = Group.builder()
+                .id(1)
+                .name("맘스터치")
+                .phoneNumber("011-1111-1111")
+                .address("부산광역시")
+                .build();
+        groupRepository.save(group);
+
+        User user = User.builder()
+                .id(1)
+                .name("이재훈")
+                .phoneNumber("010-2222-2222")
+                .build();
+        userRepository.save(user);
+
+        Member member = Member.builder()
+                .isAdmin(false)
+                .user(user)
+                .group(group)
+                .build();
+        memberRepository.save(member);
+
+        assertThat(memberRepository.findById(1)
+                .orElse(null))
+                .isNotEqualTo(null);
     }
 }
