@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -107,5 +108,40 @@ class WeekdayRepositoryTest {
                 .week(week)
                 .build();
         dayRepository.save(day);
+    }
+
+    @DisplayName("요일 정보를 불러올 수 있다.")
+    @Test
+    void test3() {
+        Group group = Group.builder()
+                .id(1)
+                .name("맘스터치")
+                .phoneNumber("010-1111-1111")
+                .address("부산광역시")
+                .build();
+        groupRepository.save(group);
+
+        Schedule schedule = Schedule.builder()
+                .id(1)
+                .group(group)
+                .build();
+        scheduleRepository.save(schedule);
+
+        Week week = Week.builder()
+                .id(1)
+                .schedule(schedule)
+                .startTime(LocalDateTime.now())
+                .build();
+        weekRepository.save(week);
+
+        Day day = Day.builder()
+                .weekday(Weekday.Monday)
+                .week(week)
+                .build();
+        dayRepository.save(day);
+
+        assertThat(dayRepository.findById(1)
+                .orElse(null))
+                .isNotEqualTo(null);
     }
 }
