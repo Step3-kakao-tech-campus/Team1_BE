@@ -4,10 +4,13 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +22,27 @@ class MemberRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private EntityManager em;
+
+    @AfterEach
+    public void resetRepository() {
+        em.clear();
+
+        memberRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Member_tb ALTER COLUMN `member_id` RESTART WITH 1")
+                .executeUpdate();
+
+        userRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE User_tb ALTER COLUMN `user_id` RESTART WITH 1")
+                .executeUpdate();
+
+        groupRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
+                .executeUpdate();
+
+        em.clear();
+    }
 
     @DisplayName("그룹원을 생성할 수 있다.")
     @Test
