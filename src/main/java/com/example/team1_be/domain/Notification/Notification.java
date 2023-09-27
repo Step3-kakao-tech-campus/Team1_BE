@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "notification_id")
     private int id;
 
     @Column(length = 200, nullable = false)
