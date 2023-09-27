@@ -9,11 +9,13 @@ import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +32,36 @@ class WorktimeRepositoryTest {
     private DayRepository dayRepository;
     @Autowired
     private WorktimeRepository worktimeRepository;
+    @Autowired
+    private EntityManager em;
+
+    @AfterEach
+    public void resetRepository() {
+        em.clear();
+
+        worktimeRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Worktime_tb ALTER COLUMN `worktime_id` RESTART WITH 1")
+                .executeUpdate();
+
+        dayRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Day_tb ALTER COLUMN `day_id` RESTART WITH 1")
+                .executeUpdate();
+
+        weekRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Week_tb ALTER COLUMN `week_id` RESTART WITH 1")
+                .executeUpdate();
+
+        scheduleRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Schedule_tb ALTER COLUMN `schedule_id` RESTART WITH 1")
+                .executeUpdate();
+
+        groupRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
+                .executeUpdate();
+
+        em.clear();
+    }
+
     @DisplayName("근무일자를 생성할 수 있다.")
     @Test
     void test1() {
