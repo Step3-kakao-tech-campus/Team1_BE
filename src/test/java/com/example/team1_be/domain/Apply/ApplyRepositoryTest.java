@@ -24,6 +24,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -186,5 +187,65 @@ class ApplyRepositoryTest {
                 .state(ApplyType.REMAIN)
                 .build();
         applyRepository.save(apply);
+    }
+
+    @DisplayName("신청서를 조회할 수 있다.")
+    @Test
+    void test3() {
+        User user = User.builder()
+                .name("이재훈")
+                .phoneNumber("010-5538-6818")
+                .build();
+        userRepository.save(user);
+
+        Group group = Group.builder()
+                .name("맘스터치")
+                .phoneNumber("010-1111-1111")
+                .address("부산광역시")
+                .build();
+        groupRepository.save(group);
+
+        Member member = Member.builder()
+                .isAdmin(false)
+                .user(user)
+                .group(group)
+                .build();
+        memberRepository.save(member);
+
+        Schedule schedule = Schedule.builder()
+                .group(group)
+                .build();
+        scheduleRepository.save(schedule);
+
+        Week week = Week.builder()
+                .schedule(schedule)
+                .startTime(LocalDateTime.now())
+                .build();
+        weekRepository.save(week);
+
+        Day day = Day.builder()
+                .weekday(Weekday.Monday)
+                .week(week)
+                .build();
+        dayRepository.save(day);
+
+        Worktime worktime = Worktime.builder()
+                .day(day)
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusHours(1))
+                .amount(2)
+                .build();
+        worktimeRepository.save(worktime);
+
+        Apply apply = Apply.builder()
+                .worktime(worktime)
+                .member(member)
+                .state(ApplyType.REMAIN)
+                .build();
+        applyRepository.save(apply);
+
+        assertThat(applyRepository.findById(1)
+                .orElse(null))
+                .isNotEqualTo(null);
     }
 }
