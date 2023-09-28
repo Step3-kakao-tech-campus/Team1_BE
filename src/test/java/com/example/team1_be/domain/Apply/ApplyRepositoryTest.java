@@ -60,6 +60,7 @@ class ApplyRepositoryTest {
         Apply.builder()
                 .worktime(worktime)
                 .member(member)
-                .state(ApplyType.REMAIN);
+                .state(ApplyType.REMAIN)
+                .build();
     }
 }
