@@ -27,7 +27,7 @@ public class Apply {
     @NotNull
     private Worktime worktime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Member member;
 
