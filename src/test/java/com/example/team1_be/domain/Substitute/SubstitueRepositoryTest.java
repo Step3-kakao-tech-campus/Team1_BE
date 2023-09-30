@@ -18,14 +18,14 @@ import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class SubstitueRepositoryTest {
@@ -47,6 +47,51 @@ class SubstitueRepositoryTest {
     private ApplyRepository applyRepository;
     @Autowired
     private SubstituteRepository substituteRepository;
+    @Autowired
+    private EntityManager em;
+
+    @AfterEach
+    public void resetRepository() {
+        em.clear();
+
+        substituteRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Substitute_tb ALTER COLUMN `substitute_id` RESTART WITH 1")
+                .executeUpdate();
+
+        applyRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Apply_tb ALTER COLUMN `apply_id` RESTART WITH 1")
+                .executeUpdate();
+
+        worktimeRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Worktime_tb ALTER COLUMN `worktime_id` RESTART WITH 1")
+                .executeUpdate();
+
+        dayRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Day_tb ALTER COLUMN `day_id` RESTART WITH 1")
+                .executeUpdate();
+
+        weekRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Week_tb ALTER COLUMN `week_id` RESTART WITH 1")
+                .executeUpdate();
+
+        scheduleRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Schedule_tb ALTER COLUMN `schedule_id` RESTART WITH 1")
+                .executeUpdate();
+
+        memberRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Member_tb ALTER COLUMN `member_id` RESTART WITH 1")
+                .executeUpdate();
+
+        groupRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
+                .executeUpdate();
+
+        userRepository.deleteAll();
+        em.createNativeQuery("ALTER TABLE User_tb ALTER COLUMN `user_id` RESTART WITH 1")
+                .executeUpdate();
+
+        em.clear();
+    }
 
     @DisplayName("대타 신청서를 생성할 수 있다.")
     @Test
@@ -116,6 +161,6 @@ class SubstitueRepositoryTest {
                 .adminApprove(false)
                 .applicant(apply)
                 .build();
-        substitueRepository.save(substitute);
+        substituteRepository.save(substitute);
     }
 }
