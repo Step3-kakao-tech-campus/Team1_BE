@@ -69,6 +69,18 @@ public class UserController {
                 String.class // 요청 시 반환되는 데이터 타입
         );
         System.out.println(response2.getBody());
+
+        ObjectMapper om2 = new ObjectMapper();
+        UserKakaoProfile userKakaoProfile = null;
+
+        try{
+            userKakaoProfile = om2.readValue(response2.getBody(),UserKakaoProfile.class);
+        } catch(JsonMappingException e){
+            e.printStackTrace();
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
+        System.out.println();
         return response2.getBody();
     }
 }
