@@ -46,7 +46,7 @@ class SubstitueRepositoryTest {
     @Autowired
     private ApplyRepository applyRepository;
     @Autowired
-    private SubstitueRepository substitueRepository;
+    private SubstituteRepository substitueRepository;
 
     @DisplayName("대타 신청서를 생성할 수 있다.")
     @Test
