@@ -27,6 +27,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 class SubstitueRepositoryTest {
     @Autowired
@@ -162,5 +164,71 @@ class SubstitueRepositoryTest {
                 .applicant(apply)
                 .build();
         substituteRepository.save(substitute);
+    }
+
+    @DisplayName("대타 신청서를 조회할 수 있다.")
+    @Test
+    void test3() {
+        Group group = Group.builder()
+                .address("부산광역시")
+                .name("맘스터치")
+                .phoneNumber("010-2222-2222")
+                .build();
+        groupRepository.save(group);
+
+        Schedule schedule = Schedule.builder()
+                .group(group)
+                .build();
+        scheduleRepository.save(schedule);
+
+        Week week = Week.builder()
+                .schedule(schedule)
+                .startTime(LocalDateTime.now())
+                .build();
+        weekRepository.save(week);
+
+        Day day = Day.builder()
+                .week(week)
+                .weekday(Weekday.Monday)
+                .build();
+        dayRepository.save(day);
+
+        Worktime worktime = Worktime.builder()
+                .day(day)
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now())
+                .build();
+        worktimeRepository.save(worktime);
+
+        User user = User.builder()
+                .name("이재훈")
+                .phoneNumber("010-5538-6818")
+                .build();
+        userRepository.save(user);
+
+        Member member = Member.builder()
+                .user(user)
+                .isAdmin(false)
+                .group(group)
+                .build();
+        memberRepository.save(member);
+
+        Apply apply = Apply.builder()
+                .state(ApplyType.REMAIN)
+                .worktime(worktime)
+                .member(member)
+                .build();
+        applyRepository.save(apply);
+
+        Substitute substitute = Substitute.builder()
+                .content("이런 사유로 대타 신청합니다.")
+                .adminApprove(false)
+                .applicant(apply)
+                .build();
+        substituteRepository.save(substitute);
+
+        assertThat(substituteRepository.findById(1)
+                .orElse(null))
+                .isNotEqualTo(null);
     }
 }
