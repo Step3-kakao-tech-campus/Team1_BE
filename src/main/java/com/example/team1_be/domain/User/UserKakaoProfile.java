@@ -6,6 +6,6 @@ import lombok.Data;
 public class UserKakaoProfile {
 
     public Long id;
-    public String connectedAt;
+    public String connected_at;
 
 }
