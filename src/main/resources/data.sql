@@ -11,8 +11,8 @@ truncate table Week_tb;
 truncate table Worktime_tb;
 SET REFERENTIAL_INTEGRITY TRUE;
 
-insert into User_tb (`user_id`, `name`, `phone_number`) values ('1','이재훈','010-1111-1111');
-insert into User_tb (`user_id`, `name`, `phone_number`) values ('2','안한주','010-2222-2222');
+insert into User_tb (`user_id`,`kakao_id`, `name`, `phone_number`) values ('1','3041041899','이재훈','010-1111-1111');
+insert into User_tb (`user_id`,`kakao_id`, `name`, `phone_number`) values ('2','3041041892','안한주','010-2222-2222');
 
 insert into Group_tb (`group_id`, `name`, `phone_number`, `address`) values ('1','맘스터치','011-1111-1111','부산광역시');
 
