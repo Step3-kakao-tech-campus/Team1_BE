@@ -22,7 +22,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/login/kakao")
-    public @ResponseBody String kakaoCallback(String code){
+    public @ResponseBody ResponseEntity<String> kakaoCallback(String code){
+        // 인가 코드 받아오기
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
@@ -57,6 +58,7 @@ public class UserController {
             e.printStackTrace();
         }
 
+        // access_token 받아오기
         RestTemplate rt2 = new RestTemplate();
         HttpHeaders headers2 = new HttpHeaders();
         headers2.add("Authorization","Bearer "+kakaoOAuthToken.getAccess_token());
@@ -72,7 +74,6 @@ public class UserController {
                 kakaoProfileRequest, // 요청할 때 보낼 데이터
                 String.class // 요청 시 반환되는 데이터 타입
         );
-        System.out.println(response2.getBody());
 
         ObjectMapper om2 = new ObjectMapper();
         UserKakaoProfile userKakaoProfile = null;
@@ -84,21 +85,11 @@ public class UserController {
         }catch (JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println();
-
-        User user = User.builder()
-                .kakaoId(userKakaoProfile.getId())
-                .name("안한주")
-                .phoneNumber("010-8840-3048")
-                .build();
-
-        User originUser = userService.findUser(user.getKakaoId());
-        if(originUser == null){
-            userService.register(user);
-        }
+        User user = new User();
 
 
-
-        return response2.getBody();
+        return ResponseEntity.ok().body(userService.login(userKakaoProfile, user));
     }
+
+
 }
