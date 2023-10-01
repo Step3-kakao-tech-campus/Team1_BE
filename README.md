@@ -2,6 +2,25 @@
 1조
 ## 카카오 테크 캠퍼스 3단계 진행 보드
 
+## 커밋 단위 및 양식
+
+### 커밋 단위
+- 최소 단위는 하나의 메서드나 객체가 다른 곳에 활용되면 커밋할 것
+- 첫 객체 생성을 예로 들면 User 클래스의 생성시 독립적으로 존재할 이유가 없다.
+- 그러므로 User 클래스에서 리포지토리와 테스트가 추가되어 의미가 있게되면 각 단계를 커밋한다.
+- 변경사항이나 오류에 대해서는 즉각적으로 커밋할 것
+
+### 커밋 양식
+- feat : **새로운** 기능에 대한 커밋
+- fix : **버그** 수정에 대한 커밋
+- refactor : 코드 **리펙토링**에 대한 커밋
+- docs : **문서** 수정에 대한 커밋
+- test : **테스트 코드** 수정에 대한 커밋
+- chore : **자잘한 수정**에 대한 커밋(오타)
+- build : **빌드** 관련 파일에 대한 커밋
+- move : **파일 이동**에 관한 커밋
+- rename : **파일이름** 변경에 관한 커밋
+
 </br>
 
 ## 배포와 관련하여
@@ -32,6 +51,8 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 ![image](https://github.com/Step3-kakao-tech-campus/practice/assets/138656575/b42cbc06-c5e7-4806-8477-63dfa8e807a0)
 
 [git flowchart_FE.pdf](https://github.com/Step3-kakao-tech-campus/practice/files/12521045/git.flowchart_FE.pdf)
+
+
 
 
 </br>
