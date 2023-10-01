@@ -3,6 +3,7 @@ package com.example.team1_be.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ import org.springframework.http.HttpEntity;
 
 @Controller
 public class UserController {
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/login/kakao")
     public @ResponseBody String kakaoCallback(String code){
         RestTemplate rt = new RestTemplate();
@@ -81,6 +85,20 @@ public class UserController {
             e.printStackTrace();
         }
         System.out.println();
+
+        User user = User.builder()
+                .kakaoId(userKakaoProfile.getId())
+                .name("안한주")
+                .phoneNumber("010-8840-3048")
+                .build();
+
+        User originUser = userService.findUser(user.getKakaoId());
+        if(originUser == null){
+            userService.register(user);
+        }
+
+
+
         return response2.getBody();
     }
 }
