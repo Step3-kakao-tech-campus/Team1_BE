@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -17,7 +18,7 @@ public class User {
     @Column(name = "user_id")
     private int id;
 
-    @Column()
+    @NotNull
     private Long kakaoId;
 
     @Column(length = 10, nullable = false)
