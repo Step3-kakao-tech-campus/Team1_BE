@@ -1,9 +1,10 @@
-package com.example.team1_be.utils;
+package com.example.team1_be.utils.security;
 
 
-import com.example.team1_be.domain.User.UserService;
+import com.example.team1_be.utils.security.auth.jwt.JwtAuthenticationFilter;
+import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,15 +12,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.crypto.SecretKey;
-
-@Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AuthenticationConfig {
+    private final JwtProvider jwtProvider;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        return httpSecurity
-                .httpBasic().disable()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        return http.httpBasic().disable()
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
@@ -32,5 +32,4 @@ public class AuthenticationConfig {
 //                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
 }
