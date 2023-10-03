@@ -1,13 +1,15 @@
 package com.example.team1_be.domain.Schedule;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 일간 근무 명단 조회 Request DTO
  */
-@Data
+@Getter
+@NoArgsConstructor
 public class DailyWorkerListRequest {
-    Integer date;
-    Integer month;
-    Integer year;
+    private Integer date;
+    private Integer month;
+    private Integer year;
 }

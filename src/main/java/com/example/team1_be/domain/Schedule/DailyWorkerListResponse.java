@@ -1,31 +1,35 @@
 package com.example.team1_be.domain.Schedule;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
  * 일간 근무 명단 조회 Response DTO
  */
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DailyWorkerListResponse {
     @Getter
-    @Setter
-    private class DailySchedule {
-        String title;                   // 시간대명
-        List<WorkerList> workerList;    // 일간 근무자 명단
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DailySchedule {
+        private String title;                   // 시간대명
+        private List<WorkerList> workerList;    // 일간 근무자 명단
     }
 
     @Getter
-    @Setter
-    private class WorkerList {
-        Integer memberId;               // 근무자 id
-        String name;                    // 근무자 이름
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class WorkerList {
+        private Integer memberId;               // 근무자 id
+        private String name;                    // 근무자 이름
     }
 
     @JsonProperty("schedule")
-    List<DailySchedule> dailySchedules;
+    private List<DailySchedule> dailySchedules;
 }

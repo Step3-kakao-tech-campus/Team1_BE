@@ -1,13 +1,15 @@
 package com.example.team1_be.domain.Member;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 회원가입 Request DTO
  */
-@Data
+@Getter
+@NoArgsConstructor
 public class MemberCreateRequest {
-    String userName;      // 유저 이름
-    String isAdmin;       // 관리자 여부
+    private String userName;      // 유저 이름
+    private String isAdmin;       // 관리자 여부
 }
 

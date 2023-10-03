@@ -1,25 +1,28 @@
 package com.example.team1_be.domain.Notification;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * 알림 조회 Request DTO
  */
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationResponse {
 
-    @Getter @Setter
-    private class Notice {
-    LocalDateTime date;             // 알림 보낸 시각
-        String content;             // 알림 내용
-        String notificationType;    // 알림 타입
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Notice {
+        private String date;                // 알림 보낸 시각
+        private String content;             // 알림 내용
+        private String notificationType;    // 알림 타입
     }
 
-    List<Notice> notifications;     // 알림 목록
+    private List<Notice> notifications;     // 알림 목록
 }
 

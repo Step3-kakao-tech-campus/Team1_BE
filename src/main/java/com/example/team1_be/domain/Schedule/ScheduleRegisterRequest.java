@@ -1,32 +1,30 @@
 package com.example.team1_be.domain.Schedule;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.time.LocalTime;
+import lombok.NoArgsConstructor;
 
 /**
  * 스케줄 등록 Request DTO
  */
-@Data
+@Getter
+@NoArgsConstructor
 public class ScheduleRegisterRequest {
 
     @Getter
-    @Setter
-    private class Schedule {
-        String title;               // 시간대명
-        LocalTime startTime;        // 시작 시간
-        LocalTime endTime;          // 종료 시간
-        Integer amount;             // 인원수
+    @NoArgsConstructor
+    public static class Schedule {
+        private String title;               // 시간대명
+        private String startTime;           // 시작 시간
+        private String endTime;             // 종료 시간
+        private Integer amount;             // 인원수
     }
 
     //요일별 스케줄 등록
-    Schedule monday;
-    Schedule tuesday;
-    Schedule wednesday;
-    Schedule thursday;
-    Schedule friday;
-    Schedule saturday;
-    Schedule sunday;
+    private Schedule monday;
+    private Schedule tuesday;
+    private Schedule wednesday;
+    private Schedule thursday;
+    private Schedule friday;
+    private Schedule saturday;
+    private Schedule sunday;
 }

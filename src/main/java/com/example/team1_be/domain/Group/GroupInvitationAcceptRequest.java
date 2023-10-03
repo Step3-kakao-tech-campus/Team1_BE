@@ -1,11 +1,13 @@
 package com.example.team1_be.domain.Group;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 그룹 초대장 접속 및 수락 Request DTO
  */
-@Data
+@Getter
+@NoArgsConstructor
 public class GroupInvitationAcceptRequest {
-    String invitationKey;      // 초대 key
+    private String invitationKey;      // 초대 key
 }
