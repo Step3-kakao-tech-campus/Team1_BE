@@ -29,6 +29,8 @@ public class AuthenticationConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+                        UsernamePasswordAuthenticationFilter.class)
 //                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
