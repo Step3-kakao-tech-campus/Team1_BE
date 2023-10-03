@@ -19,7 +19,7 @@ public class JwtProvider {
     private String secretKey;
 
     private final CustomUserDetailsService customUserDetailsService;
-    
+
     private Long expiredMs = 1000 * 60 * 60l * 24;
 
     public String createJwt(int id) {
