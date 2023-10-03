@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.User;
+package com.example.team1_be.utils.security.auth.kakao;
 
 import lombok.Data;
 
