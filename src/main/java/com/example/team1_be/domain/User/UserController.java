@@ -1,95 +1,37 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
+import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
+import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpEntity;
 
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final KakaoOAuth kakaoOAuth;
 
     @GetMapping("/login/kakao")
-    public @ResponseBody ResponseEntity<String> kakaoCallback(String code){
-        // 인가 코드 받아오기
-        RestTemplate rt = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+    public @ResponseBody ResponseEntity<String> kakaoCallback(String code) throws JsonProcessingException {
+        System.out.println("로그인 처리중");
+        System.out.println("code : "+code);
+        KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(code);
+        System.out.println("code : "+kakaoOAuthToken);
+        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", "ba5bf7b3c440fb54f054ac5c3bfff761");
-        params.add("redirect_uri", "http://localhost:8080/login/kakao");
-        params.add("code", code);
-
-        // 요청하기 위해 헤더(Header)와 데이터(Body)를 합친다.
-        // kakaoTokenRequest는 데이터(Body)와 헤더(Header)를 Entity가 된다.
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
-
-        // POST 방식으로 Http 요청한다. 그리고 response 변수의 응답 받는다.
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token", // https://{요청할 서버 주소}
-                HttpMethod.POST, // 요청할 방식
-                kakaoTokenRequest, // 요청할 때 보낼 데이터
-                String.class // 요청 시 반환되는 데이터 타입
-        );
-
-        ObjectMapper om = new ObjectMapper();
-        KakaoOAuthToken kakaoOAuthToken = null;
-
-        try{
-            kakaoOAuthToken = om.readValue(response.getBody(),KakaoOAuthToken.class);
-        } catch(JsonMappingException e){
-            e.printStackTrace();
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
-        }
-
-        // access_token 받아오기
-        RestTemplate rt2 = new RestTemplate();
-        HttpHeaders headers2 = new HttpHeaders();
-        headers2.add("Authorization","Bearer "+kakaoOAuthToken.getAccess_token());
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
-
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers2);
-
-
-        // POST 방식으로 Http 요청한다. 그리고 response 변수의 응답 받는다.
-        ResponseEntity<String> response2 = rt2.exchange(
-                "https://kapi.kakao.com/v2/user/me", // https://{요청할 서버 주소}
-                HttpMethod.POST, // 요청할 방식
-                kakaoProfileRequest, // 요청할 때 보낼 데이터
-                String.class // 요청 시 반환되는 데이터 타입
-        );
-
-        ObjectMapper om2 = new ObjectMapper();
-        UserKakaoProfile userKakaoProfile = null;
-
-        try{
-            userKakaoProfile = om2.readValue(response2.getBody(),UserKakaoProfile.class);
-        } catch(JsonMappingException e){
-            e.printStackTrace();
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
-        }
-        User user = new User();
-
-
-        return ResponseEntity.ok().body(userService.login(userKakaoProfile, user));
+        String login = userService.login(kakaoOAuthProfile);
+        System.out.println("login : "+login);
+        System.out.println("Bearer "+login);
+        return ResponseEntity.ok().header("Authorization", login).body(login);
     }
 
 
