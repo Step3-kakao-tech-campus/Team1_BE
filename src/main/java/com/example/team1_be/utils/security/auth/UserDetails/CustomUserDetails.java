@@ -1,21 +1,25 @@
 package com.example.team1_be.utils.security.auth.UserDetails;
 
 import com.example.team1_be.domain.User.User;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+@RequiredArgsConstructor
+@Getter
 public class CustomUserDetails implements UserDetails {
-    private User user;
-
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
+    private final User user;
+    private final Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority[]{new SimpleGrantedAuthority("ROLE_USER")});
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
