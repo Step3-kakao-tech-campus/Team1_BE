@@ -1,5 +1,6 @@
 package com.example.team1_be.utils.security.auth.jwt;
 
+import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetailsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -19,7 +21,7 @@ public class JwtProvider {
     private String secretKey;
 
     private final CustomUserDetailsService customUserDetailsService;
-    
+
     private Long expiredMs = 1000 * 60 * 60l * 24;
 
     public String createJwt(int id) {
@@ -53,8 +55,7 @@ public class JwtProvider {
         if (claimsId == null) {
             throw new RuntimeException("권한 정보 없음");
         }
-        CustomUserDetails principal = (CustomUserDetails) customUserDetailsService.loadUserByUsername(claimsId.toString());
-
+        UserDetails principal = customUserDetailsService.loadUserByUsername(claimsId.toString());
         return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
     }
 
