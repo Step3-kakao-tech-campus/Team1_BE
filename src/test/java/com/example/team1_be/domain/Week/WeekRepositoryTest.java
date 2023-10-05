@@ -50,19 +50,19 @@ class WeekRepositoryTest {
     @Test
     void test1() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("010-1111-1111")
                 .address("부산광역시")
                 .build();
 
         Schedule schedule = Schedule.builder()
-                .id(1)
+                .id(1L)
                 .group(group)
                 .build();
 
         Week.builder()
-                .id(1)
+                .id(1L)
                 .schedule(schedule)
                 .startTime(LocalDateTime.now())
                 .build();
@@ -72,7 +72,7 @@ class WeekRepositoryTest {
     @Test
     void test2() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("010-1111-1111")
                 .address("부산광역시")
@@ -80,13 +80,13 @@ class WeekRepositoryTest {
         groupRepository.save(group);
 
         Schedule schedule = Schedule.builder()
-                .id(1)
+                .id(1L)
                 .group(group)
                 .build();
         scheduleRepository.save(schedule);
 
         Week week = Week.builder()
-                .id(1)
+                .id(1L)
                 .schedule(schedule)
                 .startTime(LocalDateTime.now())
                 .build();
@@ -97,7 +97,7 @@ class WeekRepositoryTest {
     @Test
     void test3() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("010-1111-1111")
                 .address("부산광역시")
@@ -105,13 +105,13 @@ class WeekRepositoryTest {
         groupRepository.save(group);
 
         Schedule schedule = Schedule.builder()
-                .id(1)
+                .id(1L)
                 .group(group)
                 .build();
         scheduleRepository.save(schedule);
 
         Week week = Week.builder()
-                .id(1)
+                .id(1L)
                 .schedule(schedule)
                 .startTime(LocalDateTime.now())
                 .build();

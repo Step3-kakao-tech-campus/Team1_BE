@@ -43,14 +43,14 @@ class ScheduleRepositoryTest {
     @Test
     void test1() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("011-1111-1111")
                 .address("부산광역시")
                 .build();
 
         Schedule.builder()
-                .id(1)
+                .id(1L)
                 .group(group)
                 .build();
     }
@@ -59,7 +59,7 @@ class ScheduleRepositoryTest {
     @Test
     void test2() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("011-1111-1111")
                 .address("부산광역시")
@@ -67,7 +67,7 @@ class ScheduleRepositoryTest {
         groupRepository.save(group);
 
         Schedule schedule = Schedule.builder()
-                .id(1)
+                .id(1L)
                 .group(group)
                 .build();
         scheduleRepository.save(schedule);
@@ -77,7 +77,7 @@ class ScheduleRepositoryTest {
     @Test
     void test3() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("011-1111-1111")
                 .address("부산광역시")
@@ -85,7 +85,7 @@ class ScheduleRepositoryTest {
         groupRepository.save(group);
 
         Schedule schedule = Schedule.builder()
-                .id(1)
+                .id(1L)
                 .group(group)
                 .build();
         scheduleRepository.save(schedule);

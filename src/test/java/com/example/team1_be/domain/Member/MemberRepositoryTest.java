@@ -49,14 +49,14 @@ class MemberRepositoryTest {
     @Test
     void test1() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("011-1111-1111")
                 .address("부산광역시")
                 .build();
 
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-2222-2222")
                 .build();
@@ -72,7 +72,7 @@ class MemberRepositoryTest {
     @Test
     void test2() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("011-1111-1111")
                 .address("부산광역시")
@@ -80,7 +80,7 @@ class MemberRepositoryTest {
         groupRepository.save(group);
 
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-2222-2222")
                 .build();
@@ -98,7 +98,7 @@ class MemberRepositoryTest {
     @Test
     void test3() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("맘스터치")
                 .phoneNumber("011-1111-1111")
                 .address("부산광역시")
@@ -106,7 +106,7 @@ class MemberRepositoryTest {
         groupRepository.save(group);
 
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-2222-2222")
                 .build();
