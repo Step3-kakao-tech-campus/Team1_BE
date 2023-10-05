@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class Apply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "apply_id")
     private int id;
 
     @Enumerated(EnumType.STRING)
