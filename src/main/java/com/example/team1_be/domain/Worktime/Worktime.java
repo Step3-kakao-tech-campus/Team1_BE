@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class Worktime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "worktime_id")
     private int id;
 
     @Column(nullable = false)
