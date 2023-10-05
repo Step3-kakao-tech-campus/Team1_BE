@@ -2,6 +2,7 @@ package com.example.team1_be;
 
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
@@ -100,6 +101,15 @@ public class BaseTest {
     @BeforeEach
     public void initializeRepository() {
         createUser();
+        createGroup();
+    }
+
+    private void createGroup() {
+        groupRepository.save(Group.builder()
+                .address("부산광역시")
+                .name("맘스터치")
+                .phoneNumber("010-8888-8888")
+                .build());
     }
 
     private void createUser() {
