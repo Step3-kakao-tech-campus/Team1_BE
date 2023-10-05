@@ -8,7 +8,7 @@ truncate table schedule;
 truncate table substitute;
 truncate table users;
 truncate table week;
-truncate table Worktime_tb;
+truncate table worktime;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- insert into users (`user_id`,`kakao_id`,`name`,`phone_number`) values ('1','1','이재훈','010-1111-1111');
@@ -27,7 +27,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into days (`day_id`,`weekday`,`week_week_id`) values ('1','MONDAY','1');
 --
--- insert into Worktime_tb (`worktime_id`,`start_time`,`end_time`,`amount`,`day_day_id`) values ('1',current_time, current_time,'1','1');
+-- insert into worktime (`worktime_id`,`start_time`,`end_time`,`amount`,`day_day_id`) values ('1',current_time, current_time,'1','1');
 --
 -- insert into Apply_tb (`apply_id`,`state`,`worktime_worktime_id`,`member_member_id`) values ('1','FIX','1','2');
 --
