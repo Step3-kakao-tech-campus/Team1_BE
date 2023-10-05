@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Week_tb")
+@Table
 public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

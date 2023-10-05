@@ -7,7 +7,7 @@ truncate table notification;
 truncate table schedule;
 truncate table substitute;
 truncate table users;
-truncate table Week_tb;
+truncate table week;
 truncate table Worktime_tb;
 SET REFERENTIAL_INTEGRITY TRUE;
 
@@ -23,7 +23,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into schedule (`schedule_id`, `group_group_id`) values ('1','1');
 --
--- insert into Week_tb (`week_id`,`start_time`,`schedule_schedule_id`) values ('1',current_time,'1');
+-- insert into week (`week_id`,`start_time`,`schedule_schedule_id`) values ('1',current_time,'1');
 --
 -- insert into days (`day_id`,`weekday`,`week_week_id`) values ('1','MONDAY','1');
 --
