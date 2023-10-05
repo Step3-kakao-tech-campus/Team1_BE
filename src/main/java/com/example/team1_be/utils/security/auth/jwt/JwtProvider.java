@@ -24,7 +24,7 @@ public class JwtProvider {
 
     private Long expiredMs = 1000 * 60 * 60l * 24;
 
-    public String createJwt(int id) {
+    public String createJwt(Long id) {
         Claims claims = Jwts.claims();
         claims.put("id",id);
 
