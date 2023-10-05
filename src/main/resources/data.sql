@@ -1,6 +1,6 @@
 SET REFERENTIAL_INTEGRITY FALSE;
 truncate table Apply_tb;
-truncate table Day_tb;
+truncate table days;
 truncate table groups;
 truncate table member;
 truncate table notification;
@@ -25,7 +25,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into Week_tb (`week_id`,`start_time`,`schedule_schedule_id`) values ('1',current_time,'1');
 --
--- insert into Day_tb (`day_id`,`weekday`,`week_week_id`) values ('1','MONDAY','1');
+-- insert into days (`day_id`,`weekday`,`week_week_id`) values ('1','MONDAY','1');
 --
 -- insert into Worktime_tb (`worktime_id`,`start_time`,`end_time`,`amount`,`day_day_id`) values ('1',current_time, current_time,'1','1');
 --

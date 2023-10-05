@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Day_tb")
+@Table(name = "days")
 public class Day {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
