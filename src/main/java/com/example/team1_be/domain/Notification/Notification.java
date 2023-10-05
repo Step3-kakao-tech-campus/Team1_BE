@@ -18,8 +18,8 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200, nullable = false)
     @Size(max = 200)
+    @NotNull
     private String content;
 
     @Enumerated(EnumType.STRING)

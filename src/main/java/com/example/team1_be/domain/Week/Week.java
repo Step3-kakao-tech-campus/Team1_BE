@@ -18,7 +18,6 @@ public class Week {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     @NotNull
     private LocalDateTime startTime;
 

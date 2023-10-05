@@ -20,12 +20,12 @@ public class User {
     @NotNull
     private Long kakaoId;
 
-    @Column(length = 10, nullable = false)
     @Size(min = 2, max = 10)
+    @NotNull
     private String name;
 
-    @Column(length = 13, nullable = false)
     @Size(min = 13, max = 13)
+    @NotNull
     private String phoneNumber;
 
     @Builder
