@@ -16,7 +16,6 @@ import javax.validation.constraints.Size;
 public class Day {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "day_id")
     private int id;
 
     @Enumerated(EnumType.STRING)

@@ -25,7 +25,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into week (`id`,`start_time`,`schedule_id`) values ('1',current_time,'1');
 --
--- insert into days (`day_id`,`weekday`,`week_week_id`) values ('1','MONDAY','1');
+-- insert into days (`id`,`weekday`,`week_id`) values ('1','MONDAY','1');
 --
 -- insert into worktime (`worktime_id`,`start_time`,`end_time`,`amount`,`day_day_id`) values ('1',current_time, current_time,'1','1');
 --
