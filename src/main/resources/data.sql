@@ -6,20 +6,20 @@ truncate table Member_tb;
 truncate table Notification_tb;
 truncate table Schedule_tb;
 truncate table Substitute_tb;
-truncate table User_tb;
+truncate table users;
 truncate table Week_tb;
 truncate table Worktime_tb;
 SET REFERENTIAL_INTEGRITY TRUE;
 
--- insert into User_tb (`user_id`, `name`, `phone_number`) values ('1','이재훈','010-1111-1111');
--- insert into User_tb (`user_id`, `name`, `phone_number`) values ('2','안한주','010-2222-2222');
+-- insert into users (`user_id`,`kakao_id`,`name`,`phone_number`) values ('1','1','이재훈','010-1111-1111');
+-- insert into Users (`user_id`,`kakao_id`,`name`,`phone_number`) values ('2','2','안한주','010-2222-2222');
 --
 -- insert into Group_tb (`group_id`, `name`, `phone_number`, `address`) values ('1','맘스터치','011-1111-1111','부산광역시');
 --
--- insert into Member_tb (`member_id`,`is_admin`,`group_group_id`,`user_user_id`) values ('1','true','1','1');
--- insert into Member_tb (`member_id`,`is_admin`,`group_group_id`,`user_user_id`) values ('2','false','1','2');
+-- insert into Member_tb (`member_id`,`is_admin`,`group_group_id`,`user_id`) values ('1','true','1','1');
+-- insert into Member_tb (`member_id`,`is_admin`,`group_group_id`,`user_id`) values ('2','false','1','2');
 --
--- insert into Notification_tb (`notification_id`,`content`,`type`,`is_read`,`user_user_id`) values ('1','환영합니다.','ETC','false','1');
+-- insert into Notification_tb (`notification_id`,`content`,`type`,`is_read`,`user_id`) values ('1','환영합니다.','ETC','false','1');
 --
 -- insert into Schedule_tb (`schedule_id`, `group_group_id`) values ('1','1');
 --
