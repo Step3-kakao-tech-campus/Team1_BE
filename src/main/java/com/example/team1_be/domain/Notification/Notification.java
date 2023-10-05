@@ -17,7 +17,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//
+
     @Column(length = 200, nullable = false)
     @Size(max = 200)
     private String content;
@@ -31,7 +31,6 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-//    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
