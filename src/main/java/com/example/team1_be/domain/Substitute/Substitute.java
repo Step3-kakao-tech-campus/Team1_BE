@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class Substitute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Size(max = 255)
     @NotNull
@@ -33,7 +33,7 @@ public class Substitute {
     private Apply receptionist;
 
     @Builder
-    public Substitute(int id, String content, Boolean adminApprove, Apply applicant, Apply receptionist) {
+    public Substitute(Long id, String content, Boolean adminApprove, Apply applicant, Apply receptionist) {
         this.id = id;
         this.content = content;
         this.adminApprove = adminApprove;

@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotNull
     private Long kakaoId;
@@ -29,7 +29,7 @@ public class User {
     private String phoneNumber;
 
     @Builder
-    public User(int id, Long kakaoId, String name, String phoneNumber) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;

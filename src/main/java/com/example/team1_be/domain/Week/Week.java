@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -27,7 +27,7 @@ public class Week {
     private Schedule schedule;
 
     @Builder
-    public Week(int id, LocalDateTime startTime, Schedule schedule) {
+    public Week(Long id, LocalDateTime startTime, Schedule schedule) {
         this.id = id;
         this.startTime = startTime;
         this.schedule = schedule;

@@ -15,14 +15,14 @@ import javax.validation.constraints.NotNull;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull
     private Group group;
 
     @Builder
-    public Schedule(int id, Group group) {
+    public Schedule(Long id, Group group) {
         this.id = id;
         this.group = group;
     }
