@@ -12,12 +12,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Member_tb")
+@Table
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -32,7 +31,7 @@ public class Member {
     private User user;
 
     @Builder
-    public Member(int id, Boolean isAdmin, Group group, User user) {
+    public Member(Long id, Boolean isAdmin, Group group, User user) {
         this.id = id;
         this.isAdmin = isAdmin;
         this.group = group;

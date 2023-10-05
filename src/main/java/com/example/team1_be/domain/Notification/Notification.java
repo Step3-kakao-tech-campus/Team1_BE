@@ -12,12 +12,11 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Notification_tb")
+@Table
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notification_id")
-    private int id;
+    private Long id;
 
     @Column(length = 200, nullable = false)
     @Size(max = 200)
@@ -32,11 +31,10 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-//    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Notification(int id, String content, NotificationType type, Boolean isRead, User user) {
+    public Notification(Long id, String content, NotificationType type, Boolean isRead, User user) {
         this.id = id;
         this.content = content;
         this.type = type;
