@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Notification_tb")
+@Table
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
