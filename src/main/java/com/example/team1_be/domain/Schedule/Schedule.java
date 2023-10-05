@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "schedule_id")
     private int id;
 
     @OneToOne(fetch = FetchType.LAZY)

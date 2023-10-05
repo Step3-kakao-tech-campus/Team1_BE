@@ -21,7 +21,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into notification (`id`,`content`,`type`,`is_read`,`user_id`) values ('1','환영합니다.','ETC','false','1');
 --
--- insert into schedule (`schedule_id`, `group_group_id`) values ('1','1');
+-- insert into schedule (`id`, `group_id`) values ('1','1');
 --
 -- insert into week (`week_id`,`start_time`,`schedule_schedule_id`) values ('1',current_time,'1');
 --
