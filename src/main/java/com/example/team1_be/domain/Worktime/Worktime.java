@@ -18,15 +18,12 @@ public class Worktime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     @NotNull
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
     @NotNull
     private LocalDateTime endTime;
 
-    @Column(nullable = false)
     @NotNull
     private int amount;
 
