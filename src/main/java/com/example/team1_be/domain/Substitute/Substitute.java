@@ -16,7 +16,6 @@ import javax.validation.constraints.Size;
 public class Substitute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "substitute_id")
     private int id;
 
     @Size(max = 255)
