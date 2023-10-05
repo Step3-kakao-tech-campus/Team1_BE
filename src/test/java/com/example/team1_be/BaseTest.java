@@ -7,9 +7,12 @@ import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
+import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
@@ -44,6 +47,7 @@ public class BaseTest {
         this.em = em;
     }
 
+    @AfterEach
     public void resetRepository() {
         em.clear();
 
@@ -91,5 +95,43 @@ public class BaseTest {
                 .executeUpdate();
 
         em.clear();
+    }
+
+    @BeforeEach
+    public void initializeRepository() {
+        createUser();
+    }
+
+    private void createUser() {
+        userRepository.save(User.builder()
+                .kakaoId(1L)
+                .name("dlwogns")
+                .phoneNumber("010-1111-1111")
+                .build());
+        userRepository.save(User.builder()
+                .kakaoId(2L)
+                .name("dksgkswn")
+                .phoneNumber("010-2222-2222")
+                .build());
+        userRepository.save(User.builder()
+                .kakaoId(3L)
+                .name("chldmswls")
+                .phoneNumber("010-3333-3333")
+                .build());
+        userRepository.save(User.builder()
+                .kakaoId(4L)
+                .name("dlguswl")
+                .phoneNumber("010-4444-4444")
+                .build());
+        userRepository.save(User.builder()
+                .kakaoId(5L)
+                .name("ckwldnjs")
+                .phoneNumber("010-5555-5555")
+                .build());
+        userRepository.save(User.builder()
+                .kakaoId(6L)
+                .name("alsgkfls")
+                .phoneNumber("010-6666-6666")
+                .build());
     }
 }
