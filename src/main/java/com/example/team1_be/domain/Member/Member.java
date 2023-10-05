@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private int id;
 
     @Column(nullable = false)
