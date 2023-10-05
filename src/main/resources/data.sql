@@ -5,7 +5,7 @@ truncate table Group_tb;
 truncate table Member_tb;
 truncate table Notification_tb;
 truncate table Schedule_tb;
-truncate table Substitute_tb;
+truncate table substitute;
 truncate table users;
 truncate table Week_tb;
 truncate table Worktime_tb;
@@ -31,4 +31,4 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into Apply_tb (`apply_id`,`state`,`worktime_worktime_id`,`member_member_id`) values ('1','FIX','1','2');
 --
--- insert into Substitute_tb (`substitute_id`,`content`,`admin_approve`,`applicant_apply_id`,`receptionist_apply_id`) values ('1','사유서','false','1','1');
+-- insert into substitute (`substitute_id`,`content`,`admin_approve`,`applicant_apply_id`,`receptionist_apply_id`) values ('1','사유서','false','1','1');

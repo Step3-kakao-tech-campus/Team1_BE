@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Substitute_tb")
+@Table
 public class Substitute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
