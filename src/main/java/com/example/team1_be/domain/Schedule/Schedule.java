@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Schedule_tb")
+@Table
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

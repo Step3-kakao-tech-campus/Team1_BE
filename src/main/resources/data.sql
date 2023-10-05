@@ -4,7 +4,7 @@ truncate table Day_tb;
 truncate table Group_tb;
 truncate table Member_tb;
 truncate table Notification_tb;
-truncate table Schedule_tb;
+truncate table schedule;
 truncate table substitute;
 truncate table users;
 truncate table Week_tb;
@@ -21,7 +21,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into Notification_tb (`notification_id`,`content`,`type`,`is_read`,`user_id`) values ('1','환영합니다.','ETC','false','1');
 --
--- insert into Schedule_tb (`schedule_id`, `group_group_id`) values ('1','1');
+-- insert into schedule (`schedule_id`, `group_group_id`) values ('1','1');
 --
 -- insert into Week_tb (`week_id`,`start_time`,`schedule_schedule_id`) values ('1',current_time,'1');
 --
