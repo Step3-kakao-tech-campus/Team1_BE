@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "week_id")
     private int id;
 
     @Column(nullable = false)

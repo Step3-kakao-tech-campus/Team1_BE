@@ -23,7 +23,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into schedule (`id`, `group_id`) values ('1','1');
 --
--- insert into week (`week_id`,`start_time`,`schedule_schedule_id`) values ('1',current_time,'1');
+-- insert into week (`id`,`start_time`,`schedule_id`) values ('1',current_time,'1');
 --
 -- insert into days (`day_id`,`weekday`,`week_week_id`) values ('1','MONDAY','1');
 --
