@@ -2,7 +2,7 @@ SET REFERENTIAL_INTEGRITY FALSE;
 truncate table Apply_tb;
 truncate table Day_tb;
 truncate table Group_tb;
-truncate table Member_tb;
+truncate table member;
 truncate table notification;
 truncate table schedule;
 truncate table substitute;
@@ -16,8 +16,8 @@ SET REFERENTIAL_INTEGRITY TRUE;
 --
 -- insert into Group_tb (`group_id`, `name`, `phone_number`, `address`) values ('1','맘스터치','011-1111-1111','부산광역시');
 --
--- insert into Member_tb (`member_id`,`is_admin`,`group_group_id`,`user_id`) values ('1','true','1','1');
--- insert into Member_tb (`member_id`,`is_admin`,`group_group_id`,`user_id`) values ('2','false','1','2');
+-- insert into member (`member_id`,`is_admin`,`group_group_id`,`user_user_id`) values ('1','true','1','1');
+-- insert into member (`member_id`,`is_admin`,`group_group_id`,`user_user_id`) values ('2','false','1','2');
 --
 -- insert into notification (`notification_id`,`content`,`type`,`is_read`,`user_user_id`) values ('1','환영합니다.','ETC','false','1');
 --
