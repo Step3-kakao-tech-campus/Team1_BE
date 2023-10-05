@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Group_tb")
+@Table(name="groups")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
