@@ -14,7 +14,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 -- insert into users (`id`,`kakao_id`,`name`,`phone_number`) values ('1','1','이재훈','010-1111-1111');
 -- insert into Users (`id`,`kakao_id`,`name`,`phone_number`) values ('2','2','안한주','010-2222-2222');
 --
--- insert into groups (`group_id`, `name`, `phone_number`, `address`) values ('1','맘스터치','011-1111-1111','부산광역시');
+-- insert into groups (`id`, `name`, `phone_number`, `address`) values ('1','맘스터치','011-1111-1111','부산광역시');
 --
 -- insert into member (`member_id`,`is_admin`,`group_group_id`,`user_user_id`) values ('1','true','1','1');
 -- insert into member (`member_id`,`is_admin`,`group_group_id`,`user_user_id`) values ('2','false','1','2');

@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
     private int id;
 
     @Column(length = 50, nullable = false)
