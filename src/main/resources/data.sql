@@ -19,7 +19,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 -- insert into member (`id`,`is_admin`,`group_id`,`user_id`) values ('1','true','1','1');
 -- insert into member (`id`,`is_admin`,`group_id`,`user_id`) values ('2','false','1','2');
 --
--- insert into notification (`notification_id`,`content`,`type`,`is_read`,`user_user_id`) values ('1','환영합니다.','ETC','false','1');
+-- insert into notification (`id`,`content`,`type`,`is_read`,`user_id`) values ('1','환영합니다.','ETC','false','1');
 --
 -- insert into schedule (`schedule_id`, `group_group_id`) values ('1','1');
 --
