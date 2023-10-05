@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Apply_tb")
+@Table
 public class Apply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
