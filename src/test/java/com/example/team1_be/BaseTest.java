@@ -4,6 +4,7 @@ import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
+import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
@@ -12,12 +13,15 @@ import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 @DataJpaTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -33,8 +37,9 @@ public class BaseTest {
     protected final ScheduleRepository scheduleRepository;
     protected final SubstituteRepository substituteRepository;
     protected final EntityManager em;
+    protected final ObjectMapper om;
 
-    public BaseTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
+    public BaseTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em, ObjectMapper om) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.memberRepository = memberRepository;
@@ -46,6 +51,7 @@ public class BaseTest {
         this.scheduleRepository = scheduleRepository;
         this.substituteRepository = substituteRepository;
         this.em = em;
+        this.om = om;
     }
 
     @AfterEach
@@ -100,48 +106,91 @@ public class BaseTest {
 
     @BeforeEach
     public void initializeRepository() {
-        createUser();
-        createGroup();
-    }
-
-    private void createGroup() {
-        groupRepository.save(Group.builder()
-                .address("부산광역시")
-                .name("맘스터치")
-                .phoneNumber("010-8888-8888")
-                .build());
-    }
-
-    private void createUser() {
-        userRepository.save(User.builder()
+        List<User> users = new ArrayList<>();
+        User admin = User.builder()
                 .kakaoId(1L)
                 .name("dlwogns")
                 .phoneNumber("010-1111-1111")
-                .build());
-        userRepository.save(User.builder()
+                .build();
+        users.add(admin);
+        User user1 = User.builder()
                 .kakaoId(2L)
                 .name("dksgkswn")
                 .phoneNumber("010-2222-2222")
-                .build());
-        userRepository.save(User.builder()
+                .build();
+        users.add(user1);
+        User user2 = User.builder()
                 .kakaoId(3L)
                 .name("chldmswls")
                 .phoneNumber("010-3333-3333")
-                .build());
-        userRepository.save(User.builder()
+                .build();
+        users.add(user2);
+        User user3 = User.builder()
                 .kakaoId(4L)
                 .name("dlguswl")
                 .phoneNumber("010-4444-4444")
-                .build());
-        userRepository.save(User.builder()
+                .build();
+        users.add(user3);
+        User user4 = User.builder()
                 .kakaoId(5L)
                 .name("ckwldnjs")
                 .phoneNumber("010-5555-5555")
-                .build());
-        userRepository.save(User.builder()
+                .build();
+        users.add(user4);
+        User user5 = User.builder()
                 .kakaoId(6L)
                 .name("alsgkfls")
                 .phoneNumber("010-6666-6666")
-                .build());
+                .build();
+        users.add(user5);
+        userRepository.saveAll(users);
+
+        Group group = Group.builder()
+                .address("부산광역시")
+                .name("맘스터치")
+                .phoneNumber("010-8888-8888")
+                .build();
+
+        groupRepository.save(group);
+
+        List<Member> members = new ArrayList<>();
+        Member member = Member.builder()
+                .user(admin)
+                .group(group)
+                .isAdmin(true)
+                .build();
+        members.add(member);
+        Member member1 = Member.builder()
+                .user(user1)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member1);
+        Member member2 = Member.builder()
+                .user(user2)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member2);
+        Member member3 = Member.builder()
+                .user(user3)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member3);
+        Member member4 = Member.builder()
+                .user(user4)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member4);
+        Member member5 = Member.builder()
+                .user(user5)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member5);
+        memberRepository.saveAll(members);
+
     }
 }
