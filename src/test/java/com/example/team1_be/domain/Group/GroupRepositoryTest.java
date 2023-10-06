@@ -15,8 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
-
-import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +29,10 @@ class GroupRepositoryTest extends BaseTest {
     @DisplayName("그룹 조회")
     @Test
     void test1() {
-        Group group = Group.builder()
+        Group.builder()
+                .id(1L)
+                .name("이재훈")
+                .phoneNumber("010-5538-6818")
                 .address("부산광역시")
                 .name("맘스터치")
                 .phoneNumber("010-7777-7777")
@@ -44,8 +46,43 @@ class GroupRepositoryTest extends BaseTest {
     @DisplayName("그룹 전체 조회")
     @Test
     void test2() {
-        List<Group> groups = groupRepository.findAll();
-
-        groups.stream().forEach(group -> System.out.println(group.getId()));
+        Group group = Group.builder()
+                .id(1L)
+                .name("이재훈")
+                .phoneNumber("010-5538-6818")
+                .address("부산광역시")
+                .build();
+        groupRepository.save(group);
     }
+
+    @DisplayName("그룹을 조회할 수 있다.")
+    @Test
+    void test3() {
+        Group group = Group.builder()
+                .id(1L)
+                .name("이재훈")
+                .phoneNumber("010-5538-6818")
+                .address("부산광역시")
+                .build();
+        groupRepository.save(group);
+        Group group1 = groupRepository.findById(1).orElse(null);
+        assertThat(group1).isNotEqualTo(null);
+    }
+
+//    @DisplayName("초대 링크 보내기")
+//    @Test
+//    String test4(){
+//        Group group = Group.builder()
+//                .id(1L)
+//                .name("이재훈")
+//                .phoneNumber("010-5538-6818")
+//                .address("부산광역시")
+//                .build();
+//        groupRepository.save(group);
+//
+//        String inviteCode = "1234";
+//
+//
+//
+//    }
 }
