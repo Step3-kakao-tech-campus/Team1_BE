@@ -1,7 +1,9 @@
 package com.example.team1_be;
 
 import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.Day.Weekday;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
@@ -14,6 +16,7 @@ import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +25,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +226,13 @@ public class BaseTest {
                 .build();
         notifications.add(etcNoti);
         notificationRepository.saveAll(notifications);
+        
+        Week week = Week.builder()
+                .schedule(schedule)
+                .startTime(LocalDateTime.now())
+                .build();
+        weekRepository.save(week);
+
         em.clear();
     }
 }
