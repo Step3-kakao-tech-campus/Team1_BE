@@ -2,6 +2,7 @@ package com.example.team1_be.domain.Group.Service;
 
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupCreateRequest;
+import com.example.team1_be.domain.Group.GroupCreateResponse;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Group.Invite.InviteRepository;
 import com.example.team1_be.domain.Member.Member;
@@ -27,7 +28,7 @@ public class GroupService {
 
     }
 
-    public void create(User user, GroupCreateRequest groupCreateRequest) {
+    public GroupCreateResponse create(User user, GroupCreateRequest groupCreateRequest) {
         // 멤버 조회
         Optional<Member> optionalMember = memberRepository.findByUser(user);
 
@@ -51,7 +52,14 @@ public class GroupService {
                 .user(user)
                 .build();
 
-        groupRepository.save(group);
+        Group group1 = groupRepository.save(group);
         memberRepository.save(member);
+
+        GroupCreateResponse groupCreateResponse = GroupCreateResponse.builder()
+                .groupId(group1.getId())
+                .groupName(group1.getName())
+                .build();
+
+        return groupCreateResponse;
     }
 }
