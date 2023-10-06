@@ -6,7 +6,9 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Notification.Notification;
 import com.example.team1_be.domain.Notification.NotificationRepository;
+import com.example.team1_be.domain.Notification.NotificationType;
 import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
@@ -195,6 +197,31 @@ public class BaseTest {
                 .build();
         scheduleRepository.save(schedule);
 
+        List<Notification> notifications = new ArrayList<>();
+        Notification startNoti = Notification.builder()
+                .user(user2)
+                .type(NotificationType.START)
+                .content("시작 알림")
+                .isRead(false)
+                .build();
+        notifications.add(startNoti);
+
+        Notification endNoti = Notification.builder()
+                .user(user2)
+                .type(NotificationType.END)
+                .content("종료 알림")
+                .isRead(false)
+                .build();
+        notifications.add(endNoti);
+
+        Notification etcNoti = Notification.builder()
+                .user(user2)
+                .type(NotificationType.ETC)
+                .content("기타 알림")
+                .isRead(false)
+                .build();
+        notifications.add(etcNoti);
+        notificationRepository.saveAll(notifications);
         em.clear();
     }
 }
