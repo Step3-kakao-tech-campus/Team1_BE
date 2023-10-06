@@ -58,24 +58,24 @@ insert into users (`id`,`kakao_id`,`name`,`phone_number`) values ('35','35','이
 /**
     groups dummy data
  */
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('1','백소정 부산대점','011-0000-0001','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('2','족발삶는마을 본점','011-0000-0002','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('3','천리쿵푸 마라탕&마라샹궈 부산대점','011-0000-0003','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('4','크로플덕 오리아가씨 장전점','011-0000-0004','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('5','하삼동커피 동래래미안점','011-0000-0005','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('6','하이오커피 장전역점','011-0000-0006','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('7','청솔로9 부산대점','011-0000-0007','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('8','요거프레소 장전역점','011-0000-0008','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('9','메가커피 장전역점','011-0000-0009','부산광역시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('10','뚜레쥬르 공덕역점','011-0000-0010','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('11','투썸플레이스 마포대로점','011-0000-0011','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('12','파리바게뜨 공덕역사점','011-0000-0012','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('13','후라이드 참잘하는집 삼전점','011-0000-0013','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('14','동네파스타 송파본점','011-0000-0014','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('15','귀한족발 잠실점','011-0000-0015','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('16','롯데리아 송파점','011-0000-0016','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('17','맥도날드 송파잠실DT점','011-0000-0017','서울특별시');
-insert into groups (`id`, `name`, `phone_number`, `address`) values ('18','이나타코야끼 잠실점','011-0000-0018','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('1','백소정 부산대점','011-0000-0001','1','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('2','족발삶는마을 본점','011-0000-0002','2','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('3','천리쿵푸 마라탕&마라샹궈 부산대점','011-0000-0003','3','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('4','크로플덕 오리아가씨 장전점','011-0000-0004','4','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('5','하삼동커피 동래래미안점','011-0000-0005','5','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('6','하이오커피 장전역점','011-0000-0006','6','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('7','청솔로9 부산대점','011-0000-0007','7','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('8','요거프레소 장전역점','011-0000-0008','8','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('9','메가커피 장전역점','011-0000-0009','9','부산광역시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('10','뚜레쥬르 공덕역점','011-0000-0010','10','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('11','투썸플레이스 마포대로점','011-0000-0011','11','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('12','파리바게뜨 공덕역사점','011-0000-0012','12','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('13','후라이드 참잘하는집 삼전점','011-0000-0013','13','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('14','동네파스타 송파본점','011-0000-0014','14','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('15','귀한족발 잠실점','011-0000-0015','15','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('16','롯데리아 송파점','011-0000-0016','16','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('17','맥도날드 송파잠실DT점','011-0000-0017','17','서울특별시');
+insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`) values ('18','이나타코야끼 잠실점','011-0000-0018','18','서울특별시');
 
 
 /**
