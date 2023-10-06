@@ -13,7 +13,6 @@ import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -37,9 +36,8 @@ public class BaseTest {
     protected final ScheduleRepository scheduleRepository;
     protected final SubstituteRepository substituteRepository;
     protected final EntityManager em;
-    protected final ObjectMapper om;
 
-    public BaseTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em, ObjectMapper om) {
+    public BaseTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.memberRepository = memberRepository;
@@ -51,8 +49,8 @@ public class BaseTest {
         this.scheduleRepository = scheduleRepository;
         this.substituteRepository = substituteRepository;
         this.em = em;
-        this.om = om;
     }
+
 
     @AfterEach
     public void resetRepository() {
