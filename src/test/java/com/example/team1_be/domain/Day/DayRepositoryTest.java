@@ -36,4 +36,10 @@ class DayRepositoryTest extends BaseTest {
                 .orElse(null)).isNotEqualTo(null);
     }
 
+    @DisplayName("주간 ID로 days 조회")
+    @Test
+    void test2() {
+        List<Day> days = dayRepository.findByWeekId(1L);
+        assertThat(days.size()).isEqualTo(7);
+    }
 }
