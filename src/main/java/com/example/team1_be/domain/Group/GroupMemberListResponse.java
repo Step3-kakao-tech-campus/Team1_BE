@@ -18,7 +18,7 @@ public class GroupMemberListResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Member {
-        private Integer memberId;
+        private Long memberId;
         private String name;
     }
 
