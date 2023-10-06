@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Group.controller;
 
 import com.example.team1_be.domain.Group.GroupCreateRequest;
+import com.example.team1_be.domain.Group.GroupCreateResponse;
 import com.example.team1_be.domain.Group.Service.GroupService;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,8 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping
-    public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid GroupCreateRequest groupCreateRequest) {
-        groupService.create(userDetails.getUser(), groupCreateRequest);
-
-        return ResponseEntity.ok(null);
+    public ResponseEntity<GroupCreateResponse> create(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid GroupCreateRequest groupCreateRequest) {
+        GroupCreateResponse groupCreateResponse = groupService.create(userDetails.getUser(), groupCreateRequest);
+        return ResponseEntity.ok(groupCreateResponse);
     }
 }
