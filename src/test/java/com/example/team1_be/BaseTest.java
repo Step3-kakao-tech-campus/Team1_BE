@@ -7,6 +7,7 @@ import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
+import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.User;
@@ -56,17 +57,6 @@ public class BaseTest {
     public void resetRepository() {
         em.clear();
 
-        substituteRepository.deleteAll();
-        applyRepository.deleteAll();
-        worktimeRepository.deleteAll();
-        dayRepository.deleteAll();
-        weekRepository.deleteAll();
-        scheduleRepository.deleteAll();
-        groupRepository.deleteAll();
-        memberRepository.deleteAll();
-        notificationRepository.deleteAll();
-        userRepository.deleteAll();
-
         em.createNativeQuery(
                         "ALTER TABLE substitute ALTER COLUMN `id` RESTART WITH 1")
                 .executeUpdate();
@@ -98,6 +88,16 @@ public class BaseTest {
                 "ALTER TABLE users ALTER COLUMN `id` RESTART WITH 1")
                 .executeUpdate();
 
+        substituteRepository.deleteAll();
+        applyRepository.deleteAll();
+        worktimeRepository.deleteAll();
+        dayRepository.deleteAll();
+        weekRepository.deleteAll();
+        scheduleRepository.deleteAll();
+        groupRepository.deleteAll();
+        memberRepository.deleteAll();
+        notificationRepository.deleteAll();
+        userRepository.deleteAll();
 
         em.clear();
     }
@@ -149,46 +149,52 @@ public class BaseTest {
                 .phoneNumber("010-8888-8888")
                 .build();
 
-        groupRepository.save(group);
+        group = groupRepository.save(group);
 
-//        List<Member> members = new ArrayList<>();
-//        Member member = Member.builder()
-//                .user(admin)
-//                .group(group)
-//                .isAdmin(true)
-//                .build();
-//        members.add(member);
-//        Member member1 = Member.builder()
-//                .user(user1)
-//                .group(group)
-//                .isAdmin(false)
-//                .build();
-//        members.add(member1);
-//        Member member2 = Member.builder()
-//                .user(user2)
-//                .group(group)
-//                .isAdmin(false)
-//                .build();
-//        members.add(member2);
-//        Member member3 = Member.builder()
-//                .user(user3)
-//                .group(group)
-//                .isAdmin(false)
-//                .build();
-//        members.add(member3);
-//        Member member4 = Member.builder()
-//                .user(user4)
-//                .group(group)
-//                .isAdmin(false)
-//                .build();
-//        members.add(member4);
-//        Member member5 = Member.builder()
-//                .user(user5)
-//                .group(group)
-//                .isAdmin(false)
-//                .build();
-//        members.add(member5);
-//        memberRepository.saveAll(members);
+        List<Member> members = new ArrayList<>();
+        Member member = Member.builder()
+                .user(admin)
+                .group(group)
+                .isAdmin(true)
+                .build();
+        members.add(member);
+        Member member1 = Member.builder()
+                .user(user1)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member1);
+        Member member2 = Member.builder()
+                .user(user2)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member2);
+        Member member3 = Member.builder()
+                .user(user3)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member3);
+        Member member4 = Member.builder()
+                .user(user4)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member4);
+        Member member5 = Member.builder()
+                .user(user5)
+                .group(group)
+                .isAdmin(false)
+                .build();
+        members.add(member5);
+        memberRepository.saveAll(members);
 
+        Schedule schedule = Schedule.builder()
+                .group(group)
+                .build();
+        scheduleRepository.save(schedule);
+
+        em.clear();
     }
 }
