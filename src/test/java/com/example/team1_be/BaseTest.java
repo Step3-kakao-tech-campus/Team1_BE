@@ -233,6 +233,44 @@ public class BaseTest {
                 .build();
         weekRepository.save(week);
 
+        List<Day> days = new ArrayList<>();
+        Day monday = Day.builder()
+                .weekday(Weekday.Monday)
+                .week(week)
+                .build();
+        days.add(monday);
+        Day tuesday = Day.builder()
+                .weekday(Weekday.Tuesday)
+                .week(week)
+                .build();
+        days.add(tuesday);
+        Day wednesday = Day.builder()
+                .weekday(Weekday.Wednesday)
+                .week(week)
+                .build();
+        days.add(wednesday);
+        Day thursday = Day.builder()
+                .weekday(Weekday.Thursday)
+                .week(week)
+                .build();
+        days.add(thursday);
+        Day friday = Day.builder()
+                .weekday(Weekday.Friday)
+                .week(week)
+                .build();
+        days.add(friday);
+        Day saturday = Day.builder()
+                .weekday(Weekday.Saturday)
+                .week(week)
+                .build();
+        days.add(saturday);
+        Day sunday = Day.builder()
+                .weekday(Weekday.Sunday)
+                .week(week)
+                .build();
+        days.add(sunday);
+        dayRepository.saveAll(days);
+
         em.clear();
     }
 }
