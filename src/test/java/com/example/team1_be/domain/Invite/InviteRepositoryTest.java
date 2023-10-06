@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 import java.util.UUID;
 import static org.assertj.core.api.Assertions.*;
 
@@ -89,16 +90,15 @@ class InviteRepositoryTest {
                 .build();
         inviteRepository.save(invite);
 
-        String url = prefix+code;
         //then
-        System.out.println(url);
+        String url = prefix+code;
+        assertThat("/group/invitaion/"+invite.getCode()).isEqualTo(url);
     }
     @DisplayName("링크 접속 시 해당 그룹 멤버로 등록하는 테스트")
     @Test
     void test3(){
         //given
         String code = UUID.randomUUID().toString();
-        //when
         Group group = Group.builder()
                 .id(1L)
                 .name("맘스터치")
@@ -122,19 +122,16 @@ class InviteRepositoryTest {
                 .build();
         userRepository.save(user);
 
-        //then
-        if(code.equals(invite.getCode())){
-            Member member = Member.builder()
-                    .id(1L)
-                    .isAdmin(false)
-                    .group(group)
-                    .user(user)
-                    .build();
-            memberRepository.save(member);
-            assertThat(member.getId()).isEqualTo(1L);
-        }else{
-            System.out.println("틀린 url");
-        }
-    }
+        //when
+        Optional<Group> findgroup = inviteRepository.findGroupByCode(code);
+        assertThat(findgroup).isNotEqualTo(null);
 
+        Member member = Member.builder()
+                .id(1L)
+                .isAdmin(false)
+                .group(group)
+                .user(user)
+                .build();
+        memberRepository.save(member);
+    }
 }
