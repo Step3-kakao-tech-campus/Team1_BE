@@ -37,7 +37,7 @@ class NotificationRepositoryTest {
     @Test
     void test1() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -45,7 +45,7 @@ class NotificationRepositoryTest {
                 .content("hello")
                 .isRead(false)
                 .type(NotificationType.INVITE)
-                .id(1)
+                .id(1L)
                 .user(user)
                 .build();
     }
@@ -54,7 +54,7 @@ class NotificationRepositoryTest {
     @Test
     void test2() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -63,7 +63,7 @@ class NotificationRepositoryTest {
                 .content("hello")
                 .isRead(false)
                 .type(NotificationType.INVITE)
-                .id(1)
+                .id(1L)
                 .user(user)
                 .build();
         notificationRepository.save(notification);
@@ -73,7 +73,7 @@ class NotificationRepositoryTest {
     @Test
     void test3() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -82,7 +82,7 @@ class NotificationRepositoryTest {
                 .content("hello")
                 .isRead(false)
                 .type(NotificationType.INVITE)
-                .id(1)
+                .id(1L)
                 .user(user)
                 .build();
         notificationRepository.save(notification);

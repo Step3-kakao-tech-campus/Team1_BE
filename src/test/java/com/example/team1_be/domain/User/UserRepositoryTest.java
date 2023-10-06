@@ -31,7 +31,7 @@ class UserRepositoryTest {
     @Test
     void test1() {
         User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -41,7 +41,7 @@ class UserRepositoryTest {
     @Test
     void test2() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -53,13 +53,13 @@ class UserRepositoryTest {
     @Test
     void test3() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .build();
 
         userRepository.save(user);
-        User newUser = userRepository.findById(1).orElse(null);
+        User newUser = userRepository.findById(1L).orElse(null);
         if (newUser!=null)
             assertThat(newUser.getName()).isEqualTo("이재훈");
     }
@@ -68,7 +68,7 @@ class UserRepositoryTest {
     @Test
     void test4() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -81,7 +81,7 @@ class UserRepositoryTest {
     @Test
     void test5() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("일이삼사오육칠팔구십일")
                 .phoneNumber("010-5538-6818")
                 .build();
@@ -94,7 +94,7 @@ class UserRepositoryTest {
     @Test
     void test6() {
         User user = User.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538")
                 .build();
