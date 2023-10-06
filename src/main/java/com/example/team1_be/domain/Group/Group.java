@@ -23,6 +23,7 @@ public class Group {
     @Size(min = 13, max = 13)
     private String phoneNumber;
 
+    @Column(nullable = false, unique = true)
     private String businessNumber;
 
     @Size(max = 100)
