@@ -18,6 +18,7 @@ import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
+import com.example.team1_be.domain.Week.WeekType;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -230,6 +231,7 @@ public class BaseTest {
         
         Week week = Week.builder()
                 .schedule(schedule)
+                .status(WeekType.STARTED)
                 .startTime(LocalDateTime.now())
                 .build();
         weekRepository.save(week);

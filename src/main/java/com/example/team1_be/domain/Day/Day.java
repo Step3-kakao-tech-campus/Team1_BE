@@ -18,18 +18,17 @@ public class Day {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
-    private Weekday weekday;
+    private int dayOfWeek;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Week week;
 
     @Builder
-    public Day(Long id, Weekday weekday, Week week) {
+    public Day(Long id, int dayOfWeek, Week week) {
         this.id = id;
-        this.weekday = weekday;
+        this.dayOfWeek = dayOfWeek
         this.week = week;
     }
 }
