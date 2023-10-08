@@ -12,12 +12,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Apply_tb")
+@Table
 public class Apply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "apply_id")
-    private int id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -32,7 +31,7 @@ public class Apply {
     private Member member;
 
     @Builder
-    public Apply(int id, ApplyType state, Worktime worktime, Member member) {
+    public Apply(Long id, ApplyType state, Worktime worktime, Member member) {
         this.id = id;
         this.state = state;
         this.worktime = worktime;

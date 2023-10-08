@@ -10,27 +10,23 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Group_tb")
+@Table(name="groups")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
-    private int id;
+    private Long id;
 
-    @Column(length = 50, nullable = false)
     @Size(min = 2, max = 50)
     private String name;
 
-    @Column(length = 13, nullable = false)
     @Size(min = 13, max = 13)
     private String phoneNumber;
 
-    @Column(length = 100, nullable = false)
     @Size(max = 100)
     private String address;
 
     @Builder
-    public Group(int id, String name, String phoneNumber, String address) {
+    public Group(Long id, String name, String phoneNumber, String address) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;

@@ -1,47 +1,53 @@
 package com.example.team1_be.domain.Group;
 
-import org.junit.jupiter.api.AfterEach;
+import com.example.team1_be.BaseTest;
+import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Notification.NotificationRepository;
+import com.example.team1_be.domain.Schedule.ScheduleRepository;
+import com.example.team1_be.domain.Substitute.SubstituteRepository;
+import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.User.UserRepository;
+import com.example.team1_be.domain.Week.WeekRepository;
+import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-class GroupRepositoryTest {
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private EntityManager em;
+class GroupRepositoryTest extends BaseTest {
 
-    @AfterEach
-    public void resetRepository() {
-        em.clear();
-        groupRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
-                .executeUpdate();
-        em.clear();
+    public GroupRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
+        super(userRepository, groupRepository, memberRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
     }
 
-    @DisplayName("그룹을 생성할 수 있다.")
+    @DisplayName("그룹 조회")
     @Test
     void test1() {
-        Group.builder()
-                .id(1)
+        Group group = Group.builder()
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .address("부산광역시")
+                .name("맘스터치")
+                .phoneNumber("010-7777-7777")
                 .build();
+        groupRepository.save(group);
+
+        assertThat(groupRepository.findById(1L).orElse(null))
+                .isNotEqualTo(null);
     }
 
-    @DisplayName("그룹을 저장할 수 있다.")
+    @DisplayName("그룹 전체 조회")
     @Test
     void test2() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .address("부산광역시")
@@ -53,13 +59,30 @@ class GroupRepositoryTest {
     @Test
     void test3() {
         Group group = Group.builder()
-                .id(1)
+                .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
                 .address("부산광역시")
                 .build();
         groupRepository.save(group);
-        Group group1 = groupRepository.findById(1).orElse(null);
+        Group group1 = groupRepository.findById(1L).orElse(null);
         assertThat(group1).isNotEqualTo(null);
     }
+
+//    @DisplayName("초대 링크 보내기")
+//    @Test
+//    String test4(){
+//        Group group = Group.builder()
+//                .id(1L)
+//                .name("이재훈")
+//                .phoneNumber("010-5538-6818")
+//                .address("부산광역시")
+//                .build();
+//        groupRepository.save(group);
+//
+//        String inviteCode = "1234";
+//
+//
+//
+//    }
 }
