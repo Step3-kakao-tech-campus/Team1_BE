@@ -32,9 +32,9 @@ public class KakaoOAuth {
         );
     }
 
-    public KakaoUserProfile getProfile(KakaoOAuthToken token) throws JsonProcessingException {
+    public KakaoUserProfile getProfile(String accessToken) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization","Bearer "+token.getAccess_token());
+        headers.add("Authorization","Bearer " + accessToken);
 
         return executeRequest(
                 "https://kapi.kakao.com/v2/user/me",

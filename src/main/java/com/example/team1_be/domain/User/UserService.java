@@ -1,7 +1,10 @@
 package com.example.team1_be.domain.User;
 
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
+import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
+import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,23 +15,48 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final KakaoOAuth kakaoOAuth;
 
-    public void register(User user){
-        userRepository.save(user);
+    @Transactional
+    public UserResponse.KakaoLoginDTO kakaoLogin(String code) throws JsonProcessingException {
+        KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(code);
+        String accessToken = kakaoOAuthToken.getAccess_token();
+        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
+
+        Boolean alreadyJoin = false;
+        User user = userRepository.findByKakaoId(kakaoId);
+        if (user != null) {
+            alreadyJoin = true;
+        }
+
+        return new UserResponse.KakaoLoginDTO(accessToken, alreadyJoin);
     }
 
     @Transactional
-    public String login(KakaoUserProfile kakaoUserProfile){
-        User user = userRepository.findByKakaoId(kakaoUserProfile.getId())
-                .orElse(null);
-        if (user == null) {
-            user = User.builder()
-                    .kakaoId(kakaoUserProfile.getId())
-                    .name("안한주")
-                    .phoneNumber("010-8840-3048")
-                    .build();
-            register(user);
-        }
+    public String join(UserRequest.JoinDTO joinDTO) throws JsonProcessingException {
+        String accessToken = joinDTO.getAccessToken();
+        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
+
+        User user = User.builder()
+                .kakaoId(kakaoId)
+                .name(joinDTO.getName())
+                .phoneNumber(null)
+                .build();
+        userRepository.save(user);
+
+        return jwtProvider.createJwt(user.getId());
+    }
+
+    @Transactional
+    public String login(UserRequest.LoginDTO loginDTO) throws JsonProcessingException {
+        String accessToken = loginDTO.getAccessToken();
+        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
+
+        User user = userRepository.findByKakaoId(kakaoId);
+
         return jwtProvider.createJwt(user.getId());
     }
 }
