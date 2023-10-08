@@ -236,37 +236,37 @@ public class BaseTest {
 
         List<Day> days = new ArrayList<>();
         Day monday = Day.builder()
-                .weekday(Weekday.Monday)
+                .dayOfWeek(7)
                 .week(week)
                 .build();
         days.add(monday);
         Day tuesday = Day.builder()
-                .weekday(Weekday.Tuesday)
+                .dayOfWeek(1)
                 .week(week)
                 .build();
         days.add(tuesday);
         Day wednesday = Day.builder()
-                .weekday(Weekday.Wednesday)
+                .dayOfWeek(2)
                 .week(week)
                 .build();
         days.add(wednesday);
         Day thursday = Day.builder()
-                .weekday(Weekday.Thursday)
+                .dayOfWeek(3)
                 .week(week)
                 .build();
         days.add(thursday);
         Day friday = Day.builder()
-                .weekday(Weekday.Friday)
+                .dayOfWeek(4)
                 .week(week)
                 .build();
         days.add(friday);
         Day saturday = Day.builder()
-                .weekday(Weekday.Saturday)
+                .dayOfWeek(5)
                 .week(week)
                 .build();
         days.add(saturday);
         Day sunday = Day.builder()
-                .weekday(Weekday.Sunday)
+                .dayOfWeek(6)
                 .week(week)
                 .build();
         days.add(sunday);
