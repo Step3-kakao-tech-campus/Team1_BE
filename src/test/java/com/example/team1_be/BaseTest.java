@@ -3,7 +3,6 @@ package com.example.team1_be;
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Day.Weekday;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
