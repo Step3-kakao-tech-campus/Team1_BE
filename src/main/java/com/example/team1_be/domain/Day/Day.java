@@ -28,7 +28,7 @@ public class Day {
     @Builder
     public Day(Long id, int dayOfWeek, Week week) {
         this.id = id;
-        this.dayOfWeek = dayOfWeek
+        this.dayOfWeek = dayOfWeek;
         this.week = week;
     }
 }
