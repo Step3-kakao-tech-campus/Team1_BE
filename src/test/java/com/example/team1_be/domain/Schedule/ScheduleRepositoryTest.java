@@ -1,97 +1,34 @@
 package com.example.team1_be.domain.Schedule;
 
+import com.example.team1_be.BaseTest;
+import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
-import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.domain.User.User;
-import org.junit.jupiter.api.AfterEach;
+import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Notification.NotificationRepository;
+import com.example.team1_be.domain.Substitute.SubstituteRepository;
+import com.example.team1_be.domain.User.UserRepository;
+import com.example.team1_be.domain.Week.WeekRepository;
+import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-class ScheduleRepositoryTest {
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-    @Autowired
-    private EntityManager em;
+class ScheduleRepositoryTest extends BaseTest {
 
-    @AfterEach
-    public void resetRepository() {
-        em.clear();
-
-        scheduleRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Schedule_tb ALTER COLUMN `schedule_id` RESTART WITH 1")
-                .executeUpdate();
-
-        groupRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
-                .executeUpdate();
-
-        em.clear();
+    public ScheduleRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
+        super(userRepository, groupRepository, memberRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
     }
 
-    @DisplayName("스케줄을 생성할 수 있다.")
+    @DisplayName("스케줄 조회")
     @Test
     void test1() {
-        Group group = Group.builder()
-                .id(1)
-                .name("맘스터치")
-                .phoneNumber("011-1111-1111")
-                .address("부산광역시")
-                .build();
-
-        Schedule.builder()
-                .id(1)
-                .group(group)
-                .build();
-    }
-
-    @DisplayName("스케줄을 저장할 수 있다.")
-    @Test
-    void test2() {
-        Group group = Group.builder()
-                .id(1)
-                .name("맘스터치")
-                .phoneNumber("011-1111-1111")
-                .address("부산광역시")
-                .build();
-        groupRepository.save(group);
-
-        Schedule schedule = Schedule.builder()
-                .id(1)
-                .group(group)
-                .build();
-        scheduleRepository.save(schedule);
-    }
-
-    @DisplayName("스케줄을 불러올 수 있다.")
-    @Test
-    void test3() {
-        Group group = Group.builder()
-                .id(1)
-                .name("맘스터치")
-                .phoneNumber("011-1111-1111")
-                .address("부산광역시")
-                .build();
-        groupRepository.save(group);
-
-        Schedule schedule = Schedule.builder()
-                .id(1)
-                .group(group)
-                .build();
-        scheduleRepository.save(schedule);
-
-        assertThat(scheduleRepository.findById(1)
-                .orElse(null))
+        assertThat(scheduleRepository.findById(1L).orElse(null))
                 .isNotEqualTo(null);
     }
 }

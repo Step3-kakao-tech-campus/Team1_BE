@@ -1,251 +1,131 @@
 package com.example.team1_be.domain.Apply;
 
-import com.example.team1_be.domain.Day.Day;
+import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Day.Weekday;
-import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
-import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
-import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.UserRepository;
-import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-class ApplyRepositoryTest {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-    @Autowired
-    private WeekRepository weekRepository;
-    @Autowired
-    private DayRepository dayRepository;
-    @Autowired
-    private WorktimeRepository worktimeRepository;
-    @Autowired
-    private ApplyRepository applyRepository;
-    @Autowired
-    private EntityManager em;
+class ApplyRepositoryTest extends BaseTest {
 
-    @AfterEach
-    public void resetRepository() {
-        em.clear();
-
-        applyRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Apply_tb ALTER COLUMN `apply_id` RESTART WITH 1")
-                .executeUpdate();
-
-        worktimeRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Worktime_tb ALTER COLUMN `worktime_id` RESTART WITH 1")
-                .executeUpdate();
-
-        dayRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Day_tb ALTER COLUMN `day_id` RESTART WITH 1")
-                .executeUpdate();
-
-        weekRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Week_tb ALTER COLUMN `week_id` RESTART WITH 1")
-                .executeUpdate();
-
-        scheduleRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Schedule_tb ALTER COLUMN `schedule_id` RESTART WITH 1")
-                .executeUpdate();
-
-        memberRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Member_tb ALTER COLUMN `member_id` RESTART WITH 1")
-                .executeUpdate();
-
-        userRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE User_tb ALTER COLUMN `user_id` RESTART WITH 1")
-                .executeUpdate();
-
-        groupRepository.deleteAll();
-        em.createNativeQuery("ALTER TABLE Group_tb ALTER COLUMN `group_id` RESTART WITH 1")
-                .executeUpdate();
-
-        em.clear();
+    public ApplyRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
+        super(userRepository, groupRepository, memberRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
     }
 
-    @DisplayName("신청서를 생성할 수 있다.")
+    @DisplayName("근무 시간별 신청인원 부족한 사람 조회")
     @Test
     void test1() {
-        User user = User.builder()
-                .name("이재훈")
-                .phoneNumber("010-5538-6818")
-                .build();
+        List<Worktime> worktimes = worktimeRepository.findAll();
+        List<Apply> applyList = applyRepository.findAll();
 
-        Group group = Group.builder()
-                .name("맘스터치")
-                .phoneNumber("010-1111-1111")
-                .address("부산광역시")
-                .build();
-
-        Member member = Member.builder()
-                .isAdmin(false)
-                .build();
-
-        Schedule schedule = Schedule.builder()
-                .group(group)
-                .build();
-
-        Week week = Week.builder()
-                .schedule(schedule)
-                .startTime(LocalDateTime.now())
-                .build();
-
-        Day day = Day.builder()
-                .weekday(Weekday.Monday)
-                .week(week)
-                .build();
-
-        Worktime worktime = Worktime.builder()
-                .day(day)
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .amount(2)
-                .build();
-
-        Apply.builder()
-                .worktime(worktime)
-                .member(member)
-                .state(ApplyType.REMAIN)
-                .build();
+        List<Integer> collect = worktimes.stream().map(
+                        x -> x.getAmount() - applyRepository.findappliesByWorktimeId(x.getId()).size())
+                .collect(Collectors.toList());
+        collect.forEach(System.out::println);
     }
-
-    @DisplayName("신청서를 저장할 수 있다.")
+    @DisplayName("근무 시간 할당 최적화")
     @Test
     void test2() {
-        User user = User.builder()
-                .name("이재훈")
-                .phoneNumber("010-5538-6818")
-                .build();
-        userRepository.save(user);
+        /**
+         * 신청의 우선순위를 결정
+         * 지원한 시간대의 필요 인원 (요구량-지원자 수)이 클수록 높음
+         * 할당을 통해서 변화되는 점
+         * 필요 상태
+         * 요구 인원수 테이블 <근무 일정 : 요구 인원수>
+         * 지원 현황 및 우선순위 <근무 일정 : 지원자 수 : 우선 순위(요구량-지원자 수)>
+         * 신청 현황 <신청 ID : 신청 상태>
+         * 알고리즘
+         * 1. 신청 우선순위 pop
+         * 2. 요구 인원수 테이블에서 해당 근무 일정 요구 인원수 -1
+         * 3. 신청 상태 변경 FIX -> REMAIN
+         */
+        List<Worktime> worktimes = worktimeRepository.findAll();
+        List<Apply> applyList = applyRepository.findAll();
+        int worktimeSize = worktimes.size();
+        int applySize = applyList.size();
+        int i;
 
-        Group group = Group.builder()
-                .name("맘스터치")
-                .phoneNumber("010-1111-1111")
-                .address("부산광역시")
-                .build();
-        groupRepository.save(group);
+        Map<Long,Integer> requestMap = new HashMap<>();
+        for(i=0; i< worktimeSize; i++) {
+            Worktime worktime = worktimes.get(i);
+            requestMap.put(worktime.getId(),worktime.getAmount());
+        }
 
-        Member member = Member.builder()
-                .isAdmin(false)
-                .user(user)
-                .group(group)
-                .build();
-        memberRepository.save(member);
+        Long [][] priorityTable = new Long[worktimeSize][2];
+        for(i = 0; i< worktimeSize; i++) {
+            Worktime worktime = worktimes.get(i);
+            priorityTable[i][0] = worktime.getId();
+            priorityTable[i][1] = (long) (worktime.getAmount() - applyRepository.findappliesByWorktimeId(worktime.getId()).size());
+        }
+        Arrays.sort(priorityTable, (a,b)->Long.compare(b[1],a[1])); // 여유 인원이 적은 곳 부터 할당하기 위해서 정렬
 
-        Schedule schedule = Schedule.builder()
-                .group(group)
-                .build();
-        scheduleRepository.save(schedule);
+        Long [][] applyTable = new Long[applySize][3];
+        for(i=0;i<applySize;i++) {
+            Apply apply = applyList.get(i);
+            applyTable[i][0] = apply.getId();
+            applyTable[i][1] = apply.getWorktime().getId();
+            applyTable[i][2] = Arrays.stream(priorityTable)
+                    .filter(x->x[0]==apply.getWorktime().getId())
+                    .findFirst().get()[1];
+        }
+        Arrays.sort(applyTable, (a,b)->Long.compare(b[2],a[2]));
 
-        Week week = Week.builder()
-                .schedule(schedule)
-                .startTime(LocalDateTime.now())
-                .build();
-        weekRepository.save(week);
+        /**
+         * applyTable에서 하나씩 추출해서 할당
+         * 할당할때 이미 완료된 업무의 경우 패스
+         */
+        for(i=0;i<applySize;i++){
+            Long worktimeId = applyTable[i][1];
+            Integer remain = requestMap.get(worktimeId);
+            if (remain > 0) {
+                requestMap.put(worktimeId, remain -1);
+                Apply apply =  applyRepository.findById(applyTable[i][0]).orElse(null);
+                Apply updateApply = Apply.builder()
+                        .id(apply.getId())
+                        .member(apply.getMember())
+                        .worktime(apply.getWorktime())
+                        .state(ApplyType.FIX)
+                        .build();
+                applyRepository.save(updateApply);
+            }
+        }
 
-        Day day = Day.builder()
-                .weekday(Weekday.Monday)
-                .week(week)
-                .build();
-        dayRepository.save(day);
-
-        Worktime worktime = Worktime.builder()
-                .day(day)
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .amount(2)
-                .build();
-        worktimeRepository.save(worktime);
-
-        Apply apply = Apply.builder()
-                .worktime(worktime)
-                .member(member)
-                .state(ApplyType.REMAIN)
-                .build();
-        applyRepository.save(apply);
-    }
-
-    @DisplayName("신청서를 조회할 수 있다.")
-    @Test
-    void test3() {
-        User user = User.builder()
-                .name("이재훈")
-                .phoneNumber("010-5538-6818")
-                .build();
-        userRepository.save(user);
-
-        Group group = Group.builder()
-                .name("맘스터치")
-                .phoneNumber("010-1111-1111")
-                .address("부산광역시")
-                .build();
-        groupRepository.save(group);
-
-        Member member = Member.builder()
-                .isAdmin(false)
-                .user(user)
-                .group(group)
-                .build();
-        memberRepository.save(member);
-
-        Schedule schedule = Schedule.builder()
-                .group(group)
-                .build();
-        scheduleRepository.save(schedule);
-
-        Week week = Week.builder()
-                .schedule(schedule)
-                .startTime(LocalDateTime.now())
-                .build();
-        weekRepository.save(week);
-
-        Day day = Day.builder()
-                .weekday(Weekday.Monday)
-                .week(week)
-                .build();
-        dayRepository.save(day);
-
-        Worktime worktime = Worktime.builder()
-                .day(day)
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .amount(2)
-                .build();
-        worktimeRepository.save(worktime);
-
-        Apply apply = Apply.builder()
-                .worktime(worktime)
-                .member(member)
-                .state(ApplyType.REMAIN)
-                .build();
-        applyRepository.save(apply);
-
-        assertThat(applyRepository.findById(1)
-                .orElse(null))
-                .isNotEqualTo(null);
+        System.out.println("테스트");
+        for(int j=0;j<priorityTable.length;j++) {
+            for(int k=0;k<priorityTable[j].length;k++){
+                System.out.print(priorityTable[j][k] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("신청 현황");
+        for(int j=0;j<applyTable.length;j++) {
+            for(int k=0;k<applyTable[j].length;k++){
+                System.out.print(applyTable[j][k] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("신청 결과");
+        System.out.println(requestMap);
+        System.out.println("전체 신청 현황");
+        List<Apply> fixedApplies = applyRepository.findAppliesByStatus(ApplyType.FIX);
+        System.out.println("전체 요구 근무 슬롯 수 : " + worktimeRepository.findCountByWeekId(1L));
+        System.out.println("완료된 신청 수 : " + fixedApplies.size());
     }
 }
