@@ -5,7 +5,6 @@ import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Apply.ApplyType;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Day.Weekday;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
@@ -20,6 +19,7 @@ import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
+import com.example.team1_be.domain.Week.WeekType;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -28,8 +28,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @DataJpaTest
@@ -160,24 +162,24 @@ public class BaseTest {
         Notification etcNoti = Notification.builder().user(user2).type(NotificationType.ETC).content("기타 알림").isRead(false).build();
         notifications.add(etcNoti);
         notificationRepository.saveAll(notifications);
-
-        Week week = Week.builder().schedule(schedule).startTime(LocalDateTime.now()).build();
+        
+        Week week = Week.builder().schedule(schedule).status(WeekType.STARTED).startTime(LocalDateTime.now()).build();
         weekRepository.save(week);
 
         List<Day> days = new ArrayList<>();
-        Day monday = Day.builder().weekday(Weekday.Monday).week(week).build();
+        Day monday = Day.builder().dayOfWeek(7).week(week).build();
         days.add(monday);
-        Day tuesday = Day.builder().weekday(Weekday.Tuesday).week(week).build();
+        Day tuesday = Day.builder().dayOfWeek(1).week(week).build();
         days.add(tuesday);
-        Day wednesday = Day.builder().weekday(Weekday.Wednesday).week(week).build();
+        Day wednesday = Day.builder().dayOfWeek(2).week(week).build();
         days.add(wednesday);
-        Day thursday = Day.builder().weekday(Weekday.Thursday).week(week).build();
+        Day thursday = Day.builder().dayOfWeek(3).week(week).build();
         days.add(thursday);
-        Day friday = Day.builder().weekday(Weekday.Friday).week(week).build();
+        Day friday = Day.builder().dayOfWeek(4).week(week).build();
         days.add(friday);
-        Day saturday = Day.builder().weekday(Weekday.Saturday).week(week).build();
+        Day saturday = Day.builder().dayOfWeek(5).week(week).build();
         days.add(saturday);
-        Day sunday = Day.builder().weekday(Weekday.Sunday).week(week).build();
+        Day sunday = Day.builder().dayOfWeek(6).week(week).build();
         days.add(sunday);
         dayRepository.saveAll(days);
 

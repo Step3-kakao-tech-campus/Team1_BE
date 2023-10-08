@@ -4,7 +4,6 @@ import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Day.Weekday;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
@@ -18,12 +17,9 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class WorktimeRepositoryTest extends BaseTest {
 

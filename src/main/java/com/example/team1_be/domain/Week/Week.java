@@ -18,6 +18,10 @@ public class Week {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private WeekType status;
+
     @NotNull
     private LocalDateTime startTime;
 
@@ -26,8 +30,9 @@ public class Week {
     private Schedule schedule;
 
     @Builder
-    public Week(Long id, LocalDateTime startTime, Schedule schedule) {
+    public Week(Long id, WeekType status, LocalDateTime startTime, Schedule schedule) {
         this.id = id;
+        this.status = status;
         this.startTime = startTime;
         this.schedule = schedule;
     }
