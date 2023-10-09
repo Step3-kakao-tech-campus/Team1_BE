@@ -25,7 +25,6 @@ public class User {
     private String name;
 
     @Size(min = 13, max = 13)
-    @NotNull
     private String phoneNumber;
 
     @Builder

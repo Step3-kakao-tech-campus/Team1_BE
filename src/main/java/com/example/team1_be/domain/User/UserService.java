@@ -42,7 +42,6 @@ public class UserService {
         User user = User.builder()
                 .kakaoId(kakaoId)
                 .name(joinDTO.getName())
-                .phoneNumber(null)
                 .build();
         userRepository.save(user);
 
