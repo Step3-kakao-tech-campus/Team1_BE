@@ -21,11 +21,11 @@ public class User {
     private Long kakaoId;
 
     @Size(min = 2, max = 10)
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
     @Size(min = 13, max = 13)
-    @NotNull
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Builder

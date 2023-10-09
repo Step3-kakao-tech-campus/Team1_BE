@@ -17,19 +17,25 @@ public class Group {
     private Long id;
 
     @Size(min = 2, max = 50)
+    @Column(nullable = false)
     private String name;
 
     @Size(min = 13, max = 13)
     private String phoneNumber;
 
+    @Column(nullable = false, unique = true)
+    private String businessNumber;
+
     @Size(max = 100)
+    @Column(nullable = false)
     private String address;
 
     @Builder
-    public Group(Long id, String name, String phoneNumber, String address) {
+    public Group(Long id, String name, String phoneNumber, String businessNumber, String address) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.businessNumber = businessNumber;
         this.address = address;
     }
 }
