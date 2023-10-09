@@ -22,13 +22,9 @@ public class UserService {
         KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(code);
         String accessToken = kakaoOAuthToken.getAccess_token();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
-        Long kakaoId = kakaoOAuthProfile.getId();
 
-        Boolean alreadyJoin = false;
-        User user = userRepository.findByKakaoId(kakaoId);
-        if (user != null) {
-            alreadyJoin = true;
-        }
+        User user = userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElse(null);
+        Boolean alreadyJoin = user==null;
 
         return new UserResponse.KakaoLoginDTO(accessToken, alreadyJoin);
     }
@@ -37,10 +33,9 @@ public class UserService {
     public String join(UserRequest.JoinDTO joinDTO) throws JsonProcessingException {
         String accessToken = joinDTO.getAccessToken();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
-        Long kakaoId = kakaoOAuthProfile.getId();
 
         User user = User.builder()
-                .kakaoId(kakaoId)
+                .kakaoId(kakaoOAuthProfile.getId())
                 .name(joinDTO.getName())
                 .build();
         userRepository.save(user);
@@ -52,10 +47,9 @@ public class UserService {
     public String login(UserRequest.LoginDTO loginDTO) throws JsonProcessingException {
         String accessToken = loginDTO.getAccessToken();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
-        Long kakaoId = kakaoOAuthProfile.getId();
 
-        User user = userRepository.findByKakaoId(kakaoId);
-
-        return jwtProvider.createJwt(user.getId());
+        User user = userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElse(null);
+        Long result = (user!=null)?user.getId():null;
+        return jwtProvider.createJwt(result);
     }
 }
