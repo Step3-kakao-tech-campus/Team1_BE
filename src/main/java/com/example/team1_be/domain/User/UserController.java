@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.utils.ApiUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ public class UserController {
     @GetMapping("/login/kakao")
     public ResponseEntity<?> kakaoCallback(String code) throws JsonProcessingException {
         UserResponse.KakaoLoginDTO kakaoLoginDTO = userService.kakaoLogin(code);
-        return ResponseEntity.ok(kakaoLoginDTO);
+        ApiUtils.ApiResult<UserResponse.KakaoLoginDTO> result = ApiUtils.success(kakaoLoginDTO);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/auth/join")

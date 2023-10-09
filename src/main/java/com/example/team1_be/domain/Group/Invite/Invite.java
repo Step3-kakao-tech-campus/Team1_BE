@@ -1,7 +1,6 @@
-package com.example.team1_be.domain.Member;
+package com.example.team1_be.domain.Group.Invite;
 
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,27 +12,23 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 @Getter
 @Table
-public class Member {
+public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private Boolean isAdmin;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull
-    private Group group;
+    private String code;
 
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull
-    private User user;
+    private Group group;
 
     @Builder
-    public Member(Long id, Boolean isAdmin, Group group, User user) {
+    public Invite(Long id, String code, Group group){
         this.id = id;
-        this.isAdmin = isAdmin;
+        this.code = code;
         this.group = group;
-        this.user = user;
     }
+
 }

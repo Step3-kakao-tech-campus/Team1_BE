@@ -12,25 +12,23 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Day_tb")
+@Table(name = "days")
 public class Day {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "day_id")
-    private int id;
+    private Long id;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
-    private Weekday weekday;
+    private int dayOfWeek;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Week week;
 
     @Builder
-    public Day(int id, Weekday weekday, Week week) {
+    public Day(Long id, int dayOfWeek, Week week) {
         this.id = id;
-        this.weekday = weekday;
+        this.dayOfWeek = dayOfWeek;
         this.week = week;
     }
 }
