@@ -6,6 +6,8 @@ import javax.validation.constraints.NotEmpty;
 
 public class UserRequest {
     @Getter
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class JoinDTO {
 
@@ -17,6 +19,8 @@ public class UserRequest {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class LoginDTO {
 
