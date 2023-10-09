@@ -29,7 +29,7 @@ class GroupRepositoryTest extends BaseTest {
     @DisplayName("그룹 조회")
     @Test
     void test1() {
-        Group.builder()
+        Group group = Group.builder()
                 .id(1L)
                 .name("이재훈")
                 .phoneNumber("010-5538-6818")
@@ -65,7 +65,7 @@ class GroupRepositoryTest extends BaseTest {
                 .address("부산광역시")
                 .build();
         groupRepository.save(group);
-        Group group1 = groupRepository.findById(1).orElse(null);
+        Group group1 = groupRepository.findById(1L).orElse(null);
         assertThat(group1).isNotEqualTo(null);
     }
 

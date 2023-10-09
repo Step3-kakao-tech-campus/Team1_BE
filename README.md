@@ -20,6 +20,7 @@
 - build : **빌드** 관련 파일에 대한 커밋
 - move : **파일 이동**에 관한 커밋
 - rename : **파일이름** 변경에 관한 커밋
+- delete : **파일삭제** 에 관한 커밋
 - config : application.yml 파일에 대한 수정
 
 </br>
