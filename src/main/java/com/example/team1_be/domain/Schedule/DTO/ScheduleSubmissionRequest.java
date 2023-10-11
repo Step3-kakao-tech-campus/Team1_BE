@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Schedule;
+package com.example.team1_be.domain.Schedule.DTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
