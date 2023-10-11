@@ -38,14 +38,4 @@ class BaseEntityTest extends BaseTest {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         System.out.println(om.writeValueAsString(userRepository.findAll()));
     }
-
-    @WithMockCustomUser
-    @DisplayName("인증 상태로 repository 조회시 BaseEntity 정보를 확인할 수 있다.")
-    @Test
-    void test2() throws JsonProcessingException {
-        ObjectMapper om = new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        System.out.println(om.writeValueAsString(userRepository.findAll()));
-    }
 }
