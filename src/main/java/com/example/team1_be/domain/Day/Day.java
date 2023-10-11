@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Day;
 
 import com.example.team1_be.domain.Week.Week;
+import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @Getter
 @Table(name = "days")
-public class Day {
+public class Day extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
