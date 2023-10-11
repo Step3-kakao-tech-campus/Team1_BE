@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Substitute;
 
 import com.example.team1_be.domain.Apply.Apply;
+import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @Getter
 @Table
-public class Substitute {
+public class Substitute extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

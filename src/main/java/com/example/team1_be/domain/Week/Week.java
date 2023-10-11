@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Week;
 
 import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Getter
 @Table
-public class Week {
+public class Week extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

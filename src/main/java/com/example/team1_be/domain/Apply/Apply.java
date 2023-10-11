@@ -2,6 +2,7 @@ package com.example.team1_be.domain.Apply;
 
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Worktime.Worktime;
+import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 @Getter
 @Table
-public class Apply {
+public class Apply extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
