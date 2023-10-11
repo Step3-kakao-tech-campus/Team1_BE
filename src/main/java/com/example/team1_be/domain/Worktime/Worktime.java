@@ -12,22 +12,18 @@ import java.time.LocalDateTime;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Worktime_tb")
+@Table
 public class Worktime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "worktime_id")
-    private int id;
+    private Long id;
 
-    @Column(nullable = false)
     @NotNull
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
     @NotNull
     private LocalDateTime endTime;
 
-    @Column(nullable = false)
     @NotNull
     private int amount;
 
@@ -36,7 +32,7 @@ public class Worktime {
     private Day day;
 
     @Builder
-    public Worktime(int id, LocalDateTime startTime, LocalDateTime endTime, int amount, Day day) {
+    public Worktime(Long id, LocalDateTime startTime, LocalDateTime endTime, int amount, Day day) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;

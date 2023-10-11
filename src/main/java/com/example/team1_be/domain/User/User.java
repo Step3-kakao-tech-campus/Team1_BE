@@ -11,26 +11,25 @@ import javax.validation.constraints.Size;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "User_tb")
+@Table(name="users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private int id;
+    private Long id;
 
     @NotNull
     private Long kakaoId;
 
-    @Column(length = 10, nullable = false)
     @Size(min = 2, max = 10)
+    @NotNull
     private String name;
 
-    @Column(length = 13, nullable = false)
     @Size(min = 13, max = 13)
+    @NotNull
     private String phoneNumber;
 
     @Builder
-    public User(int id, Long kakaoId, String name, String phoneNumber) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;

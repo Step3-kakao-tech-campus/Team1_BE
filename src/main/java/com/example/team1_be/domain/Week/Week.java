@@ -12,14 +12,16 @@ import java.time.LocalDateTime;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "Week_tb")
+@Table
 public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "week_id")
-    private int id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private WeekType status;
+
     @NotNull
     private LocalDateTime startTime;
 
@@ -28,8 +30,9 @@ public class Week {
     private Schedule schedule;
 
     @Builder
-    public Week(int id, LocalDateTime startTime, Schedule schedule) {
+    public Week(Long id, WeekType status, LocalDateTime startTime, Schedule schedule) {
         this.id = id;
+        this.status = status;
         this.startTime = startTime;
         this.schedule = schedule;
     }
