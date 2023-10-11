@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -17,17 +18,17 @@ public class Group {
     private Long id;
 
     @Size(min = 2, max = 50)
-    @Column(nullable = false)
+    @NotNull
     private String name;
 
     @Size(min = 13, max = 13)
     private String phoneNumber;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String businessNumber;
 
     @Size(max = 100)
-    @Column(nullable = false)
+    @NotNull
     private String address;
 
     @Builder
