@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 /**
  * 스케줄 확정 Request DTO
  */
-public class ScheduleApproveRequest {
+public class ScheduleApprove {
     @Getter
     @NoArgsConstructor
     private static class Request {
