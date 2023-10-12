@@ -92,4 +92,28 @@ public class GroupControllerTest {
 
         assertThat(groupRepository.findAll().size()).isEqualTo(groups.size());
     }
+
+
+    @Test
+    @DisplayName("그룹원 조회 테스트")
+    @WithUserDetails(value = "3", userDetailsServiceBeanName = "customUserDetailsService")
+    public void find_all_group_member_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/group")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        resultActions.andExpect(jsonPath("$.response.groupName").value("백소정 부산대점"))
+                .andExpect(jsonPath("$.response.members[0].memberId").value(1))
+                .andExpect(jsonPath("$.response.members[0].name").value("이재훈"))
+                .andExpect(jsonPath("$.response.members[0].isAdmin").value(true))
+                .andExpect(jsonPath("$.response.members[2].memberId").value(3))
+                .andExpect(jsonPath("$.response.members[2].name").value("차지원"))
+                .andExpect(jsonPath("$.response.members[2].isAdmin").value(false));
+
+    }
 }
