@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,17 +25,17 @@ public class Week extends BaseEntity {
     private WeekType status;
 
     @NotNull
-    private LocalDateTime startTime;
+    private LocalDate startDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Schedule schedule;
 
     @Builder
-    public Week(Long id, WeekType status, LocalDateTime startTime, Schedule schedule) {
+    public Week(Long id, WeekType status, LocalDate startDate, Schedule schedule) {
         this.id = id;
         this.status = status;
-        this.startTime = startTime;
+        this.startDate = startDate;
         this.schedule = schedule;
     }
 }
