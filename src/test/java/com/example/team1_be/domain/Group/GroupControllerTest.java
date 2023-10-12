@@ -1,8 +1,12 @@
-package com.example.team1_be.domain.Group.controller;
+package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupCreateRequest;
+import com.example.team1_be.domain.Group.GroupMemberListResponse;
 import com.example.team1_be.domain.Group.GroupRepository;
+import com.example.team1_be.domain.Group.Service.GroupService;
+import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.User.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,11 +25,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
 @ActiveProfiles("test")
-@Sql(value = "data.sql")
+@Sql(value = "/data.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class GroupControllerTest {
@@ -35,11 +41,16 @@ public class GroupControllerTest {
     private ObjectMapper om;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private GroupService groupService;
+
 
 
     @Test
     @DisplayName("그룹 생성 테스트")
-    @WithUserDetails(value = "31", userDetailsServiceBeanName = "customUserDetailsService")
+    @WithUserDetails(value = "7", userDetailsServiceBeanName = "customUserDetailsService")
     public void group_create_test() throws Exception {
         // given
         GroupCreateRequest groupCreateRequest = new GroupCreateRequest("컴포즈커피 모덕점", "19", "011-0000-0019", "부산광역시", "모덕");
