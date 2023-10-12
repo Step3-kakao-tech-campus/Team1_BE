@@ -19,12 +19,11 @@ public class DailyScheduleCandidate {
     private static class Response {
         private String title;
         private List<Applicant> applicants;
-
         private Integer amount;
+
         private class Applicant {
             private Integer memberId;
             private String name;
         }
-
     }
 }
