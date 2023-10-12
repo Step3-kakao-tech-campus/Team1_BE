@@ -29,7 +29,9 @@ import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -163,68 +165,68 @@ public class BaseTest {
         notifications.add(etcNoti);
         notificationRepository.saveAll(notifications);
         
-        Week week = Week.builder().schedule(schedule).status(WeekType.STARTED).startTime(LocalDateTime.now()).build();
+        Week week = Week.builder().schedule(schedule).status(WeekType.STARTED).startDate(LocalDate.now()).build();
         weekRepository.save(week);
 
         List<Day> days = new ArrayList<>();
-        Day monday = Day.builder().dayOfWeek(7).week(week).build();
+        Day monday = Day.builder().dayOfWeek(1).week(week).build();
         days.add(monday);
-        Day tuesday = Day.builder().dayOfWeek(1).week(week).build();
+        Day tuesday = Day.builder().dayOfWeek(2).week(week).build();
         days.add(tuesday);
-        Day wednesday = Day.builder().dayOfWeek(2).week(week).build();
+        Day wednesday = Day.builder().dayOfWeek(3).week(week).build();
         days.add(wednesday);
-        Day thursday = Day.builder().dayOfWeek(3).week(week).build();
+        Day thursday = Day.builder().dayOfWeek(4).week(week).build();
         days.add(thursday);
-        Day friday = Day.builder().dayOfWeek(4).week(week).build();
+        Day friday = Day.builder().dayOfWeek(5).week(week).build();
         days.add(friday);
-        Day saturday = Day.builder().dayOfWeek(5).week(week).build();
+        Day saturday = Day.builder().dayOfWeek(6).week(week).build();
         days.add(saturday);
-        Day sunday = Day.builder().dayOfWeek(6).week(week).build();
+        Day sunday = Day.builder().dayOfWeek(7).week(week).build();
         days.add(sunday);
         dayRepository.saveAll(days);
 
         List<Worktime> worktimes = new ArrayList<>();
-        Worktime worktime1 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-09T00:00:00")).endTime(LocalDateTime.parse("2023-10-09T06:00:00")).day(monday).amount(3).build();
+        Worktime worktime1 = Worktime.builder().startTime(LocalTime.parse("2023-10-09T00:00:00")).endTime(LocalTime.parse("2023-10-09T06:00:00")).day(monday).amount(3).build();
         worktimes.add(worktime1);
-        Worktime worktime2 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-09T06:00:00")).endTime(LocalDateTime.parse("2023-10-09T09:00:00")).day(monday).amount(2).build();
+        Worktime worktime2 = Worktime.builder().startTime(LocalTime.parse("2023-10-09T06:00:00")).endTime(LocalTime.parse("2023-10-09T09:00:00")).day(monday).amount(2).build();
         worktimes.add(worktime2);
-        Worktime worktime3 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-09T09:00:00")).endTime(LocalDateTime.parse("2023-10-09T15:00:00")).day(monday).amount(1).build();
+        Worktime worktime3 = Worktime.builder().startTime(LocalTime.parse("2023-10-09T09:00:00")).endTime(LocalTime.parse("2023-10-09T15:00:00")).day(monday).amount(1).build();
         worktimes.add(worktime3);
 
-        Worktime worktime4 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-10T00:00:00")).endTime(LocalDateTime.parse("2023-10-10T06:00:00")).day(tuesday).amount(2).build();
+        Worktime worktime4 = Worktime.builder().startTime(LocalTime.parse("2023-10-10T00:00:00")).endTime(LocalTime.parse("2023-10-10T06:00:00")).day(tuesday).amount(2).build();
         worktimes.add(worktime4);
-        Worktime worktime5 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-10T06:00:00")).endTime(LocalDateTime.parse("2023-10-10T09:00:00")).day(tuesday).amount(2).build();
+        Worktime worktime5 = Worktime.builder().startTime(LocalTime.parse("2023-10-10T06:00:00")).endTime(LocalTime.parse("2023-10-10T09:00:00")).day(tuesday).amount(2).build();
         worktimes.add(worktime5);
-        Worktime worktime6 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-10T09:00:00")).endTime(LocalDateTime.parse("2023-10-10T15:00:00")).day(tuesday).amount(2).build();
+        Worktime worktime6 = Worktime.builder().startTime(LocalTime.parse("2023-10-10T09:00:00")).endTime(LocalTime.parse("2023-10-10T15:00:00")).day(tuesday).amount(2).build();
         worktimes.add(worktime6);
 
-        Worktime worktime7 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-11T00:00:00")).endTime(LocalDateTime.parse("2023-10-11T06:00:00")).day(wednesday).amount(3).build();
+        Worktime worktime7 = Worktime.builder().startTime(LocalTime.parse("2023-10-11T00:00:00")).endTime(LocalTime.parse("2023-10-11T06:00:00")).day(wednesday).amount(3).build();
         worktimes.add(worktime7);
-        Worktime worktime8 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-11T06:00:00")).endTime(LocalDateTime.parse("2023-10-11T09:00:00")).day(wednesday).amount(3).build();
+        Worktime worktime8 = Worktime.builder().startTime(LocalTime.parse("2023-10-11T06:00:00")).endTime(LocalTime.parse("2023-10-11T09:00:00")).day(wednesday).amount(3).build();
         worktimes.add(worktime8);
 
-        Worktime worktime9 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-12T00:00:00")).endTime(LocalDateTime.parse("2023-10-12T06:00:00")).day(thursday).amount(1).build();
+        Worktime worktime9 = Worktime.builder().startTime(LocalTime.parse("2023-10-12T00:00:00")).endTime(LocalTime.parse("2023-10-12T06:00:00")).day(thursday).amount(1).build();
         worktimes.add(worktime9);
-        Worktime worktime10 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-12T06:00:00")).endTime(LocalDateTime.parse("2023-10-12T09:00:00")).day(thursday).amount(1).build();
+        Worktime worktime10 = Worktime.builder().startTime(LocalTime.parse("2023-10-12T06:00:00")).endTime(LocalTime.parse("2023-10-12T09:00:00")).day(thursday).amount(1).build();
         worktimes.add(worktime10);
-        Worktime worktime11 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-12T09:00:00")).endTime(LocalDateTime.parse("2023-10-12T15:00:00")).day(thursday).amount(1).build();
+        Worktime worktime11 = Worktime.builder().startTime(LocalTime.parse("2023-10-12T09:00:00")).endTime(LocalTime.parse("2023-10-12T15:00:00")).day(thursday).amount(1).build();
         worktimes.add(worktime11);
 
-        Worktime worktime12 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-13T00:00:00")).endTime(LocalDateTime.parse("2023-10-13T06:00:00")).day(friday).amount(1).build();
+        Worktime worktime12 = Worktime.builder().startTime(LocalTime.parse("2023-10-13T00:00:00")).endTime(LocalTime.parse("2023-10-13T06:00:00")).day(friday).amount(1).build();
         worktimes.add(worktime12);
-        Worktime worktime13 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-13T06:00:00")).endTime(LocalDateTime.parse("2023-10-13T09:00:00")).day(friday).amount(2).build();
+        Worktime worktime13 = Worktime.builder().startTime(LocalTime.parse("2023-10-13T06:00:00")).endTime(LocalTime.parse("2023-10-13T09:00:00")).day(friday).amount(2).build();
         worktimes.add(worktime13);
-        Worktime worktime14 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-13T09:00:00")).endTime(LocalDateTime.parse("2023-10-13T15:00:00")).day(friday).amount(1).build();
+        Worktime worktime14 = Worktime.builder().startTime(LocalTime.parse("2023-10-13T09:00:00")).endTime(LocalTime.parse("2023-10-13T15:00:00")).day(friday).amount(1).build();
         worktimes.add(worktime14);
 
-        Worktime worktime15 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-14T00:00:00")).endTime(LocalDateTime.parse("2023-10-14T06:00:00")).day(saturday).amount(1).build();
+        Worktime worktime15 = Worktime.builder().startTime(LocalTime.parse("2023-10-14T00:00:00")).endTime(LocalTime.parse("2023-10-14T06:00:00")).day(saturday).amount(1).build();
         worktimes.add(worktime15);
-        Worktime worktime16 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-14T06:00:00")).endTime(LocalDateTime.parse("2023-10-14T09:00:00")).day(saturday).amount(1).build();
+        Worktime worktime16 = Worktime.builder().startTime(LocalTime.parse("2023-10-14T06:00:00")).endTime(LocalTime.parse("2023-10-14T09:00:00")).day(saturday).amount(1).build();
         worktimes.add(worktime16);
 
-        Worktime worktime17 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-15T00:00:00")).endTime(LocalDateTime.parse("2023-10-15T06:00:00")).day(sunday).amount(2).build();
+        Worktime worktime17 = Worktime.builder().startTime(LocalTime.parse("2023-10-15T00:00:00")).endTime(LocalTime.parse("2023-10-15T06:00:00")).day(sunday).amount(2).build();
         worktimes.add(worktime17);
-        Worktime worktime18 = Worktime.builder().startTime(LocalDateTime.parse("2023-10-15T06:00:00")).endTime(LocalDateTime.parse("2023-10-15T09:00:00")).day(sunday).amount(2).build();
+        Worktime worktime18 = Worktime.builder().startTime(LocalTime.parse("2023-10-15T06:00:00")).endTime(LocalTime.parse("2023-10-15T09:00:00")).day(sunday).amount(2).build();
         worktimes.add(worktime18);
         worktimeRepository.saveAll(worktimes);
 
