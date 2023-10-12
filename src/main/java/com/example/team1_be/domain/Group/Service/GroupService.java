@@ -1,17 +1,18 @@
 package com.example.team1_be.domain.Group.Service;
 
-import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Group.GroupCreateRequest;
-import com.example.team1_be.domain.Group.GroupCreateResponse;
-import com.example.team1_be.domain.Group.GroupRepository;
+import com.example.team1_be.domain.Group.*;
 import com.example.team1_be.domain.Group.Invite.InviteRepository;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Member.exception.AuthorityException;
 import com.example.team1_be.domain.Member.exception.MemberExistsException;
+import com.example.team1_be.domain.Member.exception.MemberNotFoundException;
 import com.example.team1_be.domain.User.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,4 +63,34 @@ public class GroupService {
 
         return groupCreateResponse;
     }
+
+
+    public GroupMemberListResponse findAll(User user) {
+
+        // 멤버 조회
+        Member requesterMember = memberRepository.findByUser(user).orElseThrow(MemberNotFoundException::new);
+
+        // 그룹 조회
+        Group group = requesterMember.getGroup();
+
+        // 그룹원 조회
+        List<Member> members = memberRepository.findAllByGroup(group);
+
+        // response DTO 생성
+        List<GroupMemberListResponse.Member> memberList = new ArrayList<>();
+        for (Member member : members) {
+            GroupMemberListResponse.Member memberDto = GroupMemberListResponse.Member.builder()
+                    .memberId(member.getId())
+                    .name(member.getUser().getName())
+                    .isAdmin(member.getIsAdmin())
+                    .build();
+            memberList.add(memberDto);
+        }
+
+        GroupMemberListResponse groupMemberListResponse = new GroupMemberListResponse(group.getName(), memberList);
+
+        return groupMemberListResponse;
+    }
+
+
 }
