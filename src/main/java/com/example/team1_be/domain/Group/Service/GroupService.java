@@ -92,5 +92,24 @@ public class GroupService {
         return groupMemberListResponse;
     }
 
+    public void deleteMember(User user, Long memberId) {
+        // 멤버 조회
+        Member requester = memberRepository.findByUser(user).orElseThrow(() -> new MemberNotFoundException("멤버로 등록되지 않은 유저입니다."));
 
+        // 권한 확인
+        if (requester.getIsAdmin()) {
+            throw new AuthorityException();
+        }
+
+        // 멤버 id로 퇴사자 멤버 객체 찾기
+        Member quitter = memberRepository.findByUser(user).orElseThrow(() -> new MemberNotFoundException("해당 id로 멤버를 찾을 수 없습니다."));
+
+        // 그룹이 다르다면 권한없음 예외
+        if (!requester.getGroup().equals(quitter.getGroup())) {
+            throw new AuthorityException();
+        }
+
+        // 해당 멤버 삭제
+        memberRepository.delete(quitter);
+    }
 }
