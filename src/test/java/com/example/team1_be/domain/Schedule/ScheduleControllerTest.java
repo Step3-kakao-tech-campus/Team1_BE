@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@Sql("/data.sql")
 class ScheduleControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -61,7 +62,7 @@ class ScheduleControllerTest {
         RecruitSchedule.Request.DailySchedule sunday = RecruitSchedule.Request.DailySchedule.builder().dailySchedules(new ArrayList<>()).build();
 
         RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-                .weekStartDate(LocalDate.parse("2022-10-06"))
+                .weekStartDate(LocalDate.parse("2022-10-16"))
                 .weeklyAmount(List.of(new RecruitSchedule.Request.DailySchedule[]{monday, tuesday, wednesday, thursday, friday, saturday, sunday}))
                 .build();
         String request = om.writeValueAsString(requestDTO);
