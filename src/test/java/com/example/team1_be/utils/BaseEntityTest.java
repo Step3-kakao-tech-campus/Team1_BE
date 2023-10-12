@@ -11,18 +11,14 @@ import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
-import com.example.team1_be.util.WithMockCustomUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class BaseEntityTest extends BaseTest {
 
