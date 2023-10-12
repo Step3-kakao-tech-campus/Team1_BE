@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @RequiredArgsConstructor
@@ -20,10 +21,10 @@ public class Worktime extends BaseEntity {
     private Long id;
 
     @NotNull
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @NotNull
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @NotNull
     private int amount;
@@ -33,7 +34,7 @@ public class Worktime extends BaseEntity {
     private Day day;
 
     @Builder
-    public Worktime(Long id, LocalDateTime startTime, LocalDateTime endTime, int amount, Day day) {
+    public Worktime(Long id, LocalTime startTime, LocalTime endTime, int amount, Day day) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
