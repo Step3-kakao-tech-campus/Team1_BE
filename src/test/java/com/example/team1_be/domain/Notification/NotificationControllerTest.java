@@ -54,10 +54,10 @@ public class NotificationControllerTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("$.response.notifications[0].date").value("2222-11-22T12:34:56"))
+        resultActions.andExpect(jsonPath("$.response.notifications[0].date").value("2022-11-22T12:34:56"))
                 .andExpect(jsonPath("$.response.notifications[0].content").value("ㅁㅁㅁ 님! 새로운 모임을 만들어보세요~"))
                 .andExpect(jsonPath("$.response.notifications[0].notificationType").value("START"))
-                .andExpect(jsonPath("$.response.notifications[1].date").value("2222-11-25T12:34:56"))
+                .andExpect(jsonPath("$.response.notifications[1].date").value("2023-10-13T10:00"))
                 .andExpect(jsonPath("$.response.notifications[1].content").value("ㅇㅇㅇ 님! 새로운 알림입니다."))
                 .andExpect(jsonPath("$.response.notifications[1].notificationType").value("START"))
 
