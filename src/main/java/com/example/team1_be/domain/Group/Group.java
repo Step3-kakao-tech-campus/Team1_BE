@@ -1,5 +1,7 @@
 package com.example.team1_be.domain.Group;
 
+import com.example.team1_be.domain.Group.Invite.Invite;
+import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -32,12 +35,16 @@ public class Group extends BaseEntity {
     @NotNull
     private String address;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    private List<Member> members;
+
     @Builder
-    public Group(Long id, String name, String phoneNumber, String businessNumber, String address) {
+    public Group(Long id, String name, String phoneNumber, String businessNumber, String address, List<Member> members) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
         this.address = address;
+        this.members = members;
     }
 }

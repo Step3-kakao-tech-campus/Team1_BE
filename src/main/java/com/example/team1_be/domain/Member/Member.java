@@ -23,10 +23,12 @@ public class Member extends BaseEntity {
     private Boolean isAdmin;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     @NotNull
     private Group group;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @NotNull
     private User user;
 
