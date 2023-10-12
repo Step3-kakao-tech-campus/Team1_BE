@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
