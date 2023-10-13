@@ -12,10 +12,10 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
     public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
         final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         final CustomUserDetails customUserDetails = new CustomUserDetails(User.builder()
-                .id(1L)
+                .id(Long.valueOf(annotation.userId()))
                 .name(annotation.username())
-                .kakaoId(1L)
-                .phoneNumber("010-1111-1111")
+                .kakaoId(Long.valueOf(annotation.kakaoId()))
+                .phoneNumber(annotation.phoneNumber())
                 .build());
         final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(customUserDetails,
