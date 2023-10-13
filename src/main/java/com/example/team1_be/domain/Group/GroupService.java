@@ -50,4 +50,19 @@ public class GroupService {
                 .build();
         memberRepository.save(member);
     }
+
+    @Transactional
+    public void invitationAccept(User user, InvitationAccept.Request request) {
+        Invite invite = inviteRepository.findByCode(request.getInvitationKey())
+                .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다", HttpStatus.NOT_FOUND));
+        inviteService.checkInvitationExpired(invite);
+
+        Group group = invite.getGroup();
+        Member member = Member.builder()
+                .group(group)
+                .isAdmin(false)
+                .user(user)
+                .build();
+        memberRepository.save(member);
+    }
 }
