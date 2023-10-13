@@ -13,7 +13,9 @@ import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Week.WeekType;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import com.example.team1_be.utils.errors.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +40,11 @@ public class ScheduleService {
     @Transactional
     public void recruitSchedule(User user, RecruitSchedule.Request request) {
         if (request.getWeeklyAmount().size() != 7){
-            throw new RuntimeException("모든 요일에 대한 정보가 없습니다.");
+            throw new CustomException("모든 요일에 대한 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         }
         // member 찾기
         Member member = memberRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("등록되지 않은 멤버입니다."));
+                .orElseThrow(() -> new CustomException("등록되지 않은 멤버입니다.", HttpStatus.NOT_FOUND));
 
         // group 찾기
         Group group = member.getGroup();
