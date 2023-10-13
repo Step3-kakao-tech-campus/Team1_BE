@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Group.Invite;
 
+import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,12 @@ public class InviteService {
         if (invite.getRenewedAt().plusHours(invitationExpiredHours).isBefore(LocalDateTime.now())){
             throw new CustomException("만료된 코드입니다. 재발급 받으세요", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public InvitationCheck.Response invitationCheck(String invitationKey) {
+        Invite invite = inviteRepository.findByCode(invitationKey)
+                .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
+        checkValidation(invite);
+        return new InvitationCheck.Response(invite.getGroup());
     }
 }
