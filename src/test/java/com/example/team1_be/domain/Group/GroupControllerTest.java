@@ -28,7 +28,6 @@ public class GroupControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper om;
-
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
