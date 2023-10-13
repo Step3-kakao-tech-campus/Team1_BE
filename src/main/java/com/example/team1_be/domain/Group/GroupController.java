@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.DTO.Create;
+import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
 import com.example.team1_be.domain.Group.Invite.InviteService;
@@ -42,6 +43,13 @@ public class GroupController {
                                               @RequestBody @Valid InvitationAccept.Request request) {
         groupService.invitationAccept(userDetails.getUser(), request);
         ApiUtils.ApiResult<String> response = ApiUtils.success(null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getMembers(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        GetMembers.Response responseDTO = groupService.getMembers(userDetails.getUser());
+        ApiUtils.ApiResult<GetMembers.Response> response = ApiUtils.success(responseDTO);
         return ResponseEntity.ok(response);
     }
 }
