@@ -22,15 +22,10 @@ public class UserController {
 
     @GetMapping("/login/kakao")
     public @ResponseBody ResponseEntity<String> kakaoCallback(String code) throws JsonProcessingException {
-        System.out.println("로그인 처리중");
-        System.out.println("code : "+code);
         KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(code);
-        System.out.println("code : "+kakaoOAuthToken);
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
 
         String login = userService.login(kakaoOAuthProfile);
-        System.out.println("login : "+login);
-        System.out.println("Bearer "+login);
         return ResponseEntity.ok().header("Authorization", login).body(login);
     }
 

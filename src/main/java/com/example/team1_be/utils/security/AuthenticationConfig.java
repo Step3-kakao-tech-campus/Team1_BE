@@ -37,7 +37,7 @@ public class AuthenticationConfig {
                 .authorizeHttpRequests()
                 .antMatchers("/login/kakao").permitAll()
                 .antMatchers(HttpMethod.POST,"/error").permitAll()
-                .antMatchers(HttpMethod.POST,"/**").authenticated()
+                .antMatchers("/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
