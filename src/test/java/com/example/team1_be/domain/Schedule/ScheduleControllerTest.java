@@ -34,20 +34,20 @@ class ScheduleControllerTest {
     @DisplayName("스케줄 모집 성공")
     @Test
     void test1() throws Exception {
-        List<RecruitSchedule.Request.WokrtimeSchedule> mondayWorks = new ArrayList<>();
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        List<RecruitSchedule.Request.WorktimeSchedule> mondayWorks = new ArrayList<>();
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .title("오픈")
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
                 .amount(10)
                 .build());
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .title("미들")
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
                 .amount(10)
                 .build());
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .title("마감")
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
@@ -79,20 +79,20 @@ class ScheduleControllerTest {
     @DisplayName("스케줄 모집 실패(startDate 미기입)")
     @Test
     void test2() throws Exception {
-        List<RecruitSchedule.Request.WokrtimeSchedule> mondayWorks = new ArrayList<>();
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        List<RecruitSchedule.Request.WorktimeSchedule> mondayWorks = new ArrayList<>();
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .title("오픈")
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
                 .amount(10)
                 .build());
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .title("미들")
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
                 .amount(10)
                 .build());
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .title("마감")
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
@@ -179,8 +179,8 @@ class ScheduleControllerTest {
     @DisplayName("스케줄 모집 실패(WorktimeSchedule 미기입")
     @Test
     void test6() throws Exception {
-        List<RecruitSchedule.Request.WokrtimeSchedule> mondayWorks = new ArrayList<>();
-        mondayWorks.add(RecruitSchedule.Request.WokrtimeSchedule.builder()
+        List<RecruitSchedule.Request.WorktimeSchedule> mondayWorks = new ArrayList<>();
+        mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
                 .startTime(LocalTime.parse("10:00:00"))
                 .endTime(LocalTime.parse("12:00:00"))
                 .amount(10)
