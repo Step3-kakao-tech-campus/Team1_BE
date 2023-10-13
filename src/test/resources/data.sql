@@ -9,6 +9,16 @@ truncate table substitute;
 truncate table users;
 truncate table week;
 truncate table worktime;
+ALTER TABLE apply AUTO_INCREMENT=1;
+ALTER TABLE days AUTO_INCREMENT=1;
+ALTER TABLE groups AUTO_INCREMENT=1;
+ALTER TABLE member AUTO_INCREMENT=1;
+ALTER TABLE notification AUTO_INCREMENT=1;
+ALTER TABLE schedule AUTO_INCREMENT=1;
+ALTER TABLE substitute AUTO_INCREMENT=1;
+ALTER TABLE users AUTO_INCREMENT=1;
+ALTER TABLE week AUTO_INCREMENT=1;
+ALTER TABLE worktime AUTO_INCREMENT=1;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 insert into users (`id`,`kakao_id`,`name`,`phone_number`)
