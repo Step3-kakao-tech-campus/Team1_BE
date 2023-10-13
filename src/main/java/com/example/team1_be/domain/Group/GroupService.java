@@ -55,7 +55,7 @@ public class GroupService {
     public void invitationAccept(User user, InvitationAccept.Request request) {
         Invite invite = inviteRepository.findByCode(request.getInvitationKey())
                 .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다", HttpStatus.NOT_FOUND));
-        inviteService.checkInvitationExpired(invite);
+        inviteService.checkValidation(invite);
 
         Group group = invite.getGroup();
         Member member = Member.builder()
