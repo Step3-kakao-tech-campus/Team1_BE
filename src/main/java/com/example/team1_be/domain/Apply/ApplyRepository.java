@@ -15,5 +15,5 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Query("select a " +
             "from Apply a " +
             "where a.status = :status")
-    List<Apply> findAppliesByStatus(@Param("status") ApplyStatus applyStatus);
+    List<Apply> findAppliesByStatus(@Param("status") ApplyStatus status);
 }
