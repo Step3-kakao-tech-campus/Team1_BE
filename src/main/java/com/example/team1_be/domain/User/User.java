@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,11 +30,15 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
+    @OneToOne(mappedBy = "user")
+    private Member member;
+
     @Builder
-    public User(Long id, Long kakaoId, String name, String phoneNumber) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber, Member member) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.member = member;
     }
 }

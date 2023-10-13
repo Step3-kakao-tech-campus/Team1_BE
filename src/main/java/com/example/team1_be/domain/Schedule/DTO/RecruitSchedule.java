@@ -28,14 +28,14 @@ public class RecruitSchedule {
         @Builder
         public static class DailySchedule {
             @Valid
-            private List<WokrtimeSchedule> dailySchedules;
+            private List<WorktimeSchedule> dailySchedules;
         }
 
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
         @Builder
-        public static class WokrtimeSchedule {
+        public static class WorktimeSchedule {
             @NotBlank(message = "근무 이름을 기입해야 합니다.")
             private String title;
             @NotNull(message = "근무 시작 시간을 기입해야 합니다.")
