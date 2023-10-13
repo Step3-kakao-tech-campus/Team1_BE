@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.DTO.Create;
+import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.InviteRepository;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +67,15 @@ public class GroupService {
                 .user(user)
                 .build();
         memberRepository.save(member);
+    }
+
+    public GetMembers.Response getMembers(User user) {
+        Member member = memberRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
+
+        Group group = member.getGroup();
+        List<Member> members = memberRepository.findAllByGroup(group);
+
+        return new GetMembers.Response(group, members);
     }
 }

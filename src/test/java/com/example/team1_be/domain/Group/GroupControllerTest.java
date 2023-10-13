@@ -246,4 +246,30 @@ public class GroupControllerTest {
         perform.andExpect(status().isForbidden());
         perform.andDo(print());
     }
+
+    @DisplayName("그룹원 조회 성공")
+    @WithMockCustomUser
+    @Sql("group-getMembers1.sql")
+    @Test
+    void getMembers1() throws Exception {
+        // when
+        ResultActions perform = mvc.perform(get("/group"));
+
+        // then
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹원 조회 실패(멤버 등록안됨)")
+    @WithMockCustomUser
+    @Sql("group-getMembers2.sql")
+    @Test
+    void getMembers2() throws Exception {
+        // when
+        ResultActions perform = mvc.perform(get("/group"));
+
+        // then
+        perform.andExpect(status().isBadRequest());
+        perform.andDo(print());
+    }
 }
