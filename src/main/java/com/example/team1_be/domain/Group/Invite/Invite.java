@@ -35,4 +35,13 @@ public class Invite extends BaseEntity {
         this.renewedAt = renewedAt;
         this.group = group;
     }
+
+    public Invite renew() {
+        return Invite.builder()
+                .id(this.getId())
+                .group(this.getGroup())
+                .code(this.getCode())
+                .renewedAt(LocalDateTime.now())
+                .build();
+    }
 }

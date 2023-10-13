@@ -272,4 +272,43 @@ public class GroupControllerTest {
         perform.andExpect(status().isBadRequest());
         perform.andDo(print());
     }
+
+    @DisplayName("그룹 초대링크 발급 성공")
+    @WithMockCustomUser
+    @Sql("group-getInvitation1.sql")
+    @Test
+    void getInvitation1() throws Exception {
+        // when
+        ResultActions perform = mvc.perform(get("/group/invitation"));
+
+        // then
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹 초대링크 발급 실패(그룹 미등록으로 멤버가 아님)")
+    @WithMockCustomUser
+    @Sql("group-getInvitation2.sql")
+    @Test
+    void getInvitation2() throws Exception {
+        // when
+        ResultActions perform = mvc.perform(get("/group/invitation"));
+
+        // then
+        perform.andExpect(status().isBadRequest());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹 초대링크 발급 실패(그룹장 아님)")
+    @WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+    @Sql("group-getInvitation3.sql")
+    @Test
+    void getInvitation3() throws Exception {
+        // when
+        ResultActions perform = mvc.perform(get("/group/invitation"));
+
+        // then
+        perform.andExpect(status().isForbidden());
+        perform.andDo(print());
+    }
 }
