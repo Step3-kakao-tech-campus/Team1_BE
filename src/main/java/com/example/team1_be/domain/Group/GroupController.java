@@ -18,7 +18,8 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping
-    public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid Create.Request request) {
+    public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                    @RequestBody @Valid Create.Request request) {
         groupService.create(userDetails.getUser(), request);
         ApiUtils.ApiResult<String> response = ApiUtils.success(null);
         return ResponseEntity.ok(response);
