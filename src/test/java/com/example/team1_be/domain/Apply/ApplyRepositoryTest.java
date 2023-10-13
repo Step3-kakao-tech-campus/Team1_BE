@@ -101,7 +101,7 @@ class ApplyRepositoryTest extends BaseTest {
                         .id(apply.getId())
                         .member(apply.getMember())
                         .worktime(apply.getWorktime())
-                        .state(ApplyType.FIX)
+                        .status(ApplyStatus.FIX)
                         .build();
                 applyRepository.save(updateApply);
             }
@@ -124,7 +124,7 @@ class ApplyRepositoryTest extends BaseTest {
         System.out.println("신청 결과");
         System.out.println(requestMap);
         System.out.println("전체 신청 현황");
-        List<Apply> fixedApplies = applyRepository.findAppliesByStatus(ApplyType.FIX);
+        List<Apply> fixedApplies = applyRepository.findAppliesByStatus(ApplyStatus.FIX);
         System.out.println("전체 요구 근무 슬롯 수 : " + worktimeRepository.findCountByWeekId(1L));
         System.out.println("완료된 신청 수 : " + fixedApplies.size());
     }
