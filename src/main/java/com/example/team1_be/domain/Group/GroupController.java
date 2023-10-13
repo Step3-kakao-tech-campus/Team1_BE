@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.DTO.Create;
+import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,14 @@ public class GroupController {
     public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails,
                                     @RequestBody @Valid Create.Request request) {
         groupService.create(userDetails.getUser(), request);
+        ApiUtils.ApiResult<String> response = ApiUtils.success(null);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/invitation")
+    public ResponseEntity<?> invitationAccept(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                              @RequestBody @Valid InvitationAccept.Request request) {
+        groupService.invitationAccept(userDetails.getUser(), request);
         ApiUtils.ApiResult<String> response = ApiUtils.success(null);
         return ResponseEntity.ok(response);
     }
