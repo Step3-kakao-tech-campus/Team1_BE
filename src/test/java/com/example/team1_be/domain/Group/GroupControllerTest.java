@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -175,6 +176,74 @@ public class GroupControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹 초대장 확인 성공")
+    @WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+    @Sql("group-invitationCheck1.sql")
+    @Test
+    void invitationCheck1() throws Exception {
+        // given
+        String invitationKey = "testcode1";
+
+        // when
+        ResultActions perform = mvc.perform(
+                get(String.format("/group/invitation/information/%s", invitationKey)));
+
+        // then
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹 초대장 확인 실패(존재하지 않는 초대장)")
+    @WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+    @Sql("group-invitationCheck2.sql")
+    @Test
+    void invitationCheck2() throws Exception {
+        // given
+        String invitationKey = "testcode1";
+
+        // when
+        ResultActions perform = mvc.perform(
+                get(String.format("/group/invitation/information/%s", invitationKey)));
+
+        // then
+        perform.andExpect(status().isNotFound());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹 초대장 확인 실패(초대장 만료)")
+    @WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+    @Sql("group-invitationCheck3.sql")
+    @Test
+    void invitationCheck3() throws Exception {
+        // given
+        String invitationKey = "testcode1";
+
+        // when
+        ResultActions perform = mvc.perform(
+                get(String.format("/group/invitation/information/%s", invitationKey)));
+
+        // then
+        perform.andExpect(status().isBadRequest());
+        perform.andDo(print());
+    }
+
+    @DisplayName("그룹 초대장 확인 실패(초대장 미갱신)")
+    @WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+    @Sql("group-invitationCheck4.sql")
+    @Test
+    void invitationCheck4() throws Exception {
+        // given
+        String invitationKey = "testcode1";
+
+        // when
+        ResultActions perform = mvc.perform(
+                get(String.format("/group/invitation/information/%s", invitationKey)));
+
+        // then
+        perform.andExpect(status().isForbidden());
         perform.andDo(print());
     }
 }
