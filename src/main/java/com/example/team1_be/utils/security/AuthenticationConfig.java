@@ -35,6 +35,7 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
+                .antMatchers("/api/**","/swagger-ui/**","/v3/api-docs","/swagger-resources/**").permitAll()
                 .antMatchers("/login/kakao").permitAll()
                 .antMatchers(HttpMethod.POST,"/error").permitAll()
                 .antMatchers("/**").authenticated()
