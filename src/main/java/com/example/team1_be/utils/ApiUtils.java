@@ -15,7 +15,6 @@ public class ApiUtils {
     }
 
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class ApiResult<T> {
         private final boolean success;
@@ -24,7 +23,6 @@ public class ApiUtils {
     }
 
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class ApiError {
         private final String message;
