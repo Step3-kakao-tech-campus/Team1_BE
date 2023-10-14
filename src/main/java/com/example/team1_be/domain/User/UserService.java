@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.utils.errors.exception.Exception400;
 import com.example.team1_be.utils.errors.exception.Exception404;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
@@ -37,13 +38,18 @@ public class UserService {
     public String join(UserRequest.JoinDTO joinDTO) throws JsonProcessingException {
         String accessToken = joinDTO.getAccessToken();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
 
         if (kakaoOAuthProfile == null) {
             throw new Exception404("만료된 토큰입니다 : " +accessToken);
         }
 
+        userRepository.findByKakaoId(kakaoId).orElseThrow(
+                () -> new Exception400("이미 가입한 유저입니다 : " +accessToken)
+        );
+
         User user = User.builder()
-                .kakaoId(kakaoOAuthProfile.getId())
+                .kakaoId(kakaoId)
                 .name(joinDTO.getName())
                 .build();
         userRepository.save(user);
