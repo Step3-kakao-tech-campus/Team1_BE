@@ -48,7 +48,6 @@ public class UserService {
         if (user != null) {
             throw new Exception400("이미 가입한 유저입니다 : " + accessToken);
         }
-
         user = User.builder()
                 .kakaoId(kakaoId)
                 .name(joinDTO.getName())
