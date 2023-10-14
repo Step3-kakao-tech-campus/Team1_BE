@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.User;
 
 import com.example.team1_be.utils.errors.exception.Exception400;
+import com.example.team1_be.utils.errors.exception.Exception401;
 import com.example.team1_be.utils.errors.exception.Exception404;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
@@ -8,10 +9,8 @@ import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +36,17 @@ public class UserService {
     @Transactional
     public String join(UserRequest.JoinDTO joinDTO) throws JsonProcessingException {
         String accessToken = joinDTO.getAccessToken();
-        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
-        Long kakaoId = kakaoOAuthProfile.getId();
-
-        if (kakaoOAuthProfile == null) {
-            throw new Exception404("만료된 토큰입니다 : " +accessToken);
+        if (kakaoOAuth.getTokenValidation(accessToken) == false) {
+            throw new Exception400("유효하지 않은 토큰입니다" + accessToken);
         }
 
+        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
         if (user != null) {
             throw new Exception400("이미 가입한 유저입니다 : " + accessToken);
         }
+
         user = User.builder()
                 .kakaoId(kakaoId)
                 .name(joinDTO.getName())

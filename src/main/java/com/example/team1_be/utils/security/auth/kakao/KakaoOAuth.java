@@ -1,6 +1,8 @@
 package com.example.team1_be.utils.security.auth.kakao;
 
+import com.example.team1_be.utils.errors.exception.Exception401;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 @Component
 public class KakaoOAuth {
@@ -30,6 +35,25 @@ public class KakaoOAuth {
                 params,
                 KakaoOAuthToken.class
         );
+    }
+
+    public Boolean getTokenValidation(String accessToken) throws JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization","Bearer " + accessToken);
+
+        try {
+            executeRequest(
+                    "https://kapi.kakao.com/v1/user/access_token_info",
+                    HttpMethod.GET,
+                    headers,
+                    null,
+                    JsonNode.class
+            );
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
     public KakaoUserProfile getProfile(String accessToken) throws JsonProcessingException {
