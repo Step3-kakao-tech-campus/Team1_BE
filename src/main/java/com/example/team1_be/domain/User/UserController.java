@@ -3,6 +3,7 @@ package com.example.team1_be.domain.User;
 import com.example.team1_be.utils.ApiUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -28,12 +29,16 @@ public class UserController {
     @PostMapping("/auth/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) throws JsonProcessingException {
         String jwt = userService.join(joinDTO);
-        return ResponseEntity.ok(jwt);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + jwt);
+        return ResponseEntity.ok().headers(headers).build();
     }
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO loginDTO, Errors errors) throws JsonProcessingException {
         String jwt = userService.login(loginDTO);
-        return ResponseEntity.ok(jwt);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + jwt);
+        return ResponseEntity.ok().headers(headers).build();
     }
 }
