@@ -56,6 +56,32 @@ class UserControllerTest {
         perform.andExpect(status().isBadRequest());
     }
 
+    @DisplayName("회원가입 실패(이미 가입한 유저)")
+    @Test
+    void join_already_join_test() throws Exception {
+        UserRequest.JoinDTO joinDTO1 = UserRequest.JoinDTO.builder()
+                .name("최은진")
+                .accessToken(NEW_KAKAO_TOKEN)
+                .build();
+        String content1 = om.writeValueAsString(joinDTO1);
+
+        mvc.perform(post("/auth/join")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content1));
+
+        UserRequest.JoinDTO joinDTO2 = UserRequest.JoinDTO.builder()
+                .name("이재훈")
+                .accessToken(NEW_KAKAO_TOKEN)
+                .build();
+        String content2 = om.writeValueAsString(joinDTO2);
+
+        ResultActions perform = mvc.perform(post("/auth/join")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content2));
+
+        perform.andExpect(status().isBadRequest());
+    }
+
     @DisplayName("로그인 성공")
     @Test
     void login_success_test() throws Exception {
@@ -100,5 +126,19 @@ class UserControllerTest {
                 .content(loginDTOContent));
 
         perform.andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("로그인 실패(아직 가입하지 않은 유저)")
+    @Test
+    void login_without_join_test() throws Exception {
+        UserRequest.LoginDTO loginDTO = UserRequest.LoginDTO.builder()
+                .accessToken(NEW_KAKAO_TOKEN)
+                .build();
+        String loginDTOContent = om.writeValueAsString(loginDTO);
+        ResultActions perform = mvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(loginDTOContent));
+
+        perform.andExpect(status().isNotFound());
     }
 }
