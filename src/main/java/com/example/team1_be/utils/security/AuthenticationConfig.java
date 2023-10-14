@@ -36,10 +36,7 @@ public class AuthenticationConfig {
                 .antMatchers("/login/kakao").permitAll()
                 .antMatchers(HttpMethod.POST,"/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/error").permitAll()
-<<<<<<< HEAD
-=======
                 .antMatchers("/**").authenticated()
->>>>>>> 5015094b57aaa3ae4c83cda95ac88de8428310ba
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
