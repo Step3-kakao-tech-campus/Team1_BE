@@ -10,7 +10,7 @@ import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
-import com.example.team1_be.domain.Week.WeekType;
+import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import com.example.team1_be.utils.errors.exception.CustomException;
@@ -19,10 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -58,7 +56,7 @@ public class ScheduleService {
         // week 생성
         Week week = Week.builder()
                 .schedule(schedule)
-                .status(WeekType.STARTED)
+                .status(WeekRecruitmentStatus.STARTED)
                 .startDate(request.getWeekStartDate())
                 .build();
         weekRepository.save(week);
