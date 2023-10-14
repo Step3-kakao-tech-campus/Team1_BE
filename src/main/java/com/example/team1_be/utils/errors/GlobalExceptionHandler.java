@@ -2,6 +2,7 @@ package com.example.team1_be.utils.errors;
 
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.Exception404;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,13 @@ import org.springframework.web.client.HttpClientErrorException;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(Exception404.class)
+    public ResponseEntity<?> notFound(Exception404 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> unknownException(Exception exception) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
