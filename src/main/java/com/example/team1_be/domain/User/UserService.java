@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.utils.errors.exception.Exception404;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;

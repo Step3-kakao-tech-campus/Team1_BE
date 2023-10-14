@@ -28,9 +28,9 @@ class UserControllerTest {
     // 토큰 새로 발급받고 변경 필수 : https://kauth.kakao.com/oauth/authorize?client_id=ba5bf7b3c440fb54f054ac5c3bfff761&redirect_uri=http://localhost:8080/login/kakao&response_type=code
     private final String NEW_KAKAO_TOKEN = "U9fuJNXvhMvuuRY3ZhW2heGCfAk423eQc-su0hQGCj1zTgAAAYsVW77c";
 
-    @DisplayName("토큰기반 회원가입 성공")
+    @DisplayName("회원가입 성공")
     @Test
-    void test1() throws Exception {
+    void join_success_test() throws Exception {
         UserRequest.JoinDTO joinDTO = UserRequest.JoinDTO.builder()
                 .name("최은진")
                 .accessToken(NEW_KAKAO_TOKEN)
@@ -44,9 +44,9 @@ class UserControllerTest {
         perform.andExpect(status().isOk());
     }
 
-    @DisplayName("토큰기반 회원가입 실패(토큰분실)")
+    @DisplayName("회원가입 실패(토큰분실)")
     @Test
-    void test2() throws Exception {
+    void join_token_lost_test() throws Exception {
         UserRequest.JoinDTO joinDTO = UserRequest.JoinDTO.builder()
                 .name("최은진")
                 .build();
@@ -58,9 +58,9 @@ class UserControllerTest {
                 .isInstanceOf(NestedServletException.class);
     }
 
-    @DisplayName("토큰기반 회원가입 실패(토큰만료)")
+    @DisplayName("회원가입 실패(토큰만료)")
     @Test
-    void join_test_token_expiration() throws Exception {
+    void join_token_expiration_test() throws Exception {
         UserRequest.JoinDTO joinDTO = UserRequest.JoinDTO.builder()
                 .name("최은진")
                 .accessToken(EXPIRED_KAKAO_TOKEN)
@@ -73,9 +73,9 @@ class UserControllerTest {
                 .isInstanceOf(Exception404.class);
     }
 
-    @DisplayName("토큰기반 로그인 성공")
+    @DisplayName("로그인 성공")
     @Test
-    void test3() throws Exception {
+    void login_success_test() throws Exception {
         UserRequest.JoinDTO joinDTO = UserRequest.JoinDTO.builder()
                 .name("최은진")
                 .accessToken(NEW_KAKAO_TOKEN)
@@ -96,9 +96,9 @@ class UserControllerTest {
         perform.andExpect(status().isOk());
     }
 
-    @DisplayName("토큰기반 로그인 실패(토큰 분실)")
+    @DisplayName("로그인 실패(토큰 분실)")
     @Test
-    void test4() throws Exception {
+    void login_token_lost_test() throws Exception {
         UserRequest.JoinDTO joinDTO = UserRequest.JoinDTO.builder()
                 .name("최은진")
                 .accessToken(NEW_KAKAO_TOKEN)
@@ -117,9 +117,9 @@ class UserControllerTest {
                 .isInstanceOf(NestedServletException.class);
     }
 
-    @DisplayName("토큰기반 로그인 실패(토큰만료)")
+    @DisplayName("로그인 실패(토큰만료)")
     @Test
-    void login_test_token_expiration() throws Exception {
+    void login_token_expiration_test() throws Exception {
         UserRequest.JoinDTO joinDTO = UserRequest.JoinDTO.builder()
                 .name("최은진")
                 .accessToken(NEW_KAKAO_TOKEN)
