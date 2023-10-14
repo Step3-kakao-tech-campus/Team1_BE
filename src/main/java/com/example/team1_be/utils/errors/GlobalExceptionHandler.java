@@ -1,9 +1,7 @@
 package com.example.team1_be.utils.errors;
 
 import com.example.team1_be.utils.ApiUtils;
-import com.example.team1_be.utils.errors.exception.CustomException;
-import com.example.team1_be.utils.errors.exception.Exception400;
-import com.example.team1_be.utils.errors.exception.Exception404;
+import com.example.team1_be.utils.errors.exception.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,24 @@ public final class GlobalExceptionHandler {
         return new ResponseEntity<>(e.body(), e.status());
     }
 
+    @ExceptionHandler(Exception401.class)
+    public ResponseEntity<?> unAuthorized(Exception401 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
+
+    @ExceptionHandler(Exception403.class)
+    public ResponseEntity<?> forbidden(Exception403 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
+
+
     @ExceptionHandler(Exception404.class)
     public ResponseEntity<?> notFound(Exception404 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
+
+    @ExceptionHandler(Exception500.class)
+    public ResponseEntity<?> serverError(Exception500 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
 
