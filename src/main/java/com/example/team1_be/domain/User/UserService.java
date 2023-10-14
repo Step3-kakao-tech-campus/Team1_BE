@@ -26,7 +26,7 @@ public class UserService {
         User user = userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElse(null);
         Boolean alreadyJoin = user==null;
 
-        return new UserResponse.KakaoLoginDTO(accessToken, alreadyJoin);
+        return new UserResponse.KakaoLoginDTO(accessToken);
     }
 
     @Transactional

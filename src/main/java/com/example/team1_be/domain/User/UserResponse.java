@@ -13,12 +13,8 @@ public class UserResponse {
         @NotEmpty
         private String accessToken;
 
-        @NotEmpty
-        private Boolean alreadyJoin;
-
-        public KakaoLoginDTO(String accessToken, Boolean alreadyJoin) {
+        public KakaoLoginDTO(String accessToken) {
             this.accessToken = accessToken;
-            this.alreadyJoin = alreadyJoin;
         }
     }
 }
