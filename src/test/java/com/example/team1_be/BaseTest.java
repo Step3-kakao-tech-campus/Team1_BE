@@ -27,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ import java.util.List;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql("/data.sql")
 public class BaseTest {
     protected final UserRepository userRepository;
     protected final GroupRepository groupRepository;
