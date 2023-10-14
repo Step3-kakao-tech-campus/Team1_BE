@@ -6,8 +6,10 @@ import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +25,9 @@ public class UserService {
         String accessToken = kakaoOAuthToken.getAccess_token();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
 
-        User user = userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElse(null);
-        Boolean alreadyJoin = user==null;
+        userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "가입하지 않은 유저입니다 : " +accessToken)    // 익셉션핸들러로 수정 필요
+        );
 
         return new UserResponse.KakaoLoginDTO(accessToken);
     }
