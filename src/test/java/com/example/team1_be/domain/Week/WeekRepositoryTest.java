@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 
 import java.time.LocalDateTime;
 
+import static com.example.team1_be.domain.Week.WeekRecruitmentStatus.STARTED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,6 +34,6 @@ class WeekRepositoryTest extends BaseTest {
         assertThat(weekRepository.findById(1L).orElse(null))
                 .isNotEqualTo(null);
         assertThat(weekRepository.findById(1L).orElse(null).getStatus())
-                .isEqualTo("STARTED");
+                .isEqualTo(STARTED);
     }
 }
