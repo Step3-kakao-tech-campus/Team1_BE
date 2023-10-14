@@ -32,5 +32,7 @@ class WeekRepositoryTest extends BaseTest {
     void test1() {
         assertThat(weekRepository.findById(1L).orElse(null))
                 .isNotEqualTo(null);
+        assertThat(weekRepository.findById(1L).orElse(null).getStatus())
+                .isEqualTo("STARTED");
     }
 }
