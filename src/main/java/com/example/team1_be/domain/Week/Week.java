@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class Week extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private WeekType status;
+    private WeekRecruitmentStatus status;
 
     @NotNull
     private LocalDate startDate;
@@ -32,7 +31,7 @@ public class Week extends BaseEntity {
     private Schedule schedule;
 
     @Builder
-    public Week(Long id, WeekType status, LocalDate startDate, Schedule schedule) {
+    public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Schedule schedule) {
         this.id = id;
         this.status = status;
         this.startDate = startDate;

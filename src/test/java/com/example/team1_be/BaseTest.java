@@ -19,7 +19,7 @@ import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
-import com.example.team1_be.domain.Week.WeekType;
+import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -28,12 +28,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @DataJpaTest
@@ -165,7 +162,7 @@ public class BaseTest {
         notifications.add(etcNoti);
         notificationRepository.saveAll(notifications);
         
-        Week week = Week.builder().schedule(schedule).status(WeekType.STARTED).startDate(LocalDate.now()).build();
+        Week week = Week.builder().schedule(schedule).status(WeekRecruitmentStatus.STARTED).startDate(LocalDate.now()).build();
         weekRepository.save(week);
 
         List<Day> days = new ArrayList<>();
