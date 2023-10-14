@@ -36,7 +36,8 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	implementation 'ru.lanwen.verbalregex:java-verbal-expressions:1.8'
 	testImplementation 'org.springframework.security:spring-security-test'
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 }
 
 tasks.named('test') {
