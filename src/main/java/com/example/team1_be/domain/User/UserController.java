@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/join")
-    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) throws JsonProcessingException {
+    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO) throws JsonProcessingException {
         String jwt = userService.join(joinDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + jwt);
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO loginDTO, Errors errors) throws JsonProcessingException {
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO loginDTO) throws JsonProcessingException {
         String jwt = userService.login(loginDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + jwt);

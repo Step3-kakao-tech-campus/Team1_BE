@@ -37,6 +37,10 @@ public class UserService {
         String accessToken = joinDTO.getAccessToken();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
 
+        if (kakaoOAuthProfile == null) {
+            throw new Exception404("만료된 토큰입니다 : " +accessToken);
+        }
+
         User user = User.builder()
                 .kakaoId(kakaoOAuthProfile.getId())
                 .name(joinDTO.getName())
@@ -50,6 +54,10 @@ public class UserService {
     public String login(UserRequest.LoginDTO loginDTO) throws JsonProcessingException {
         String accessToken = loginDTO.getAccessToken();
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+
+        if (kakaoOAuthProfile == null) {
+            throw new Exception404("만료된 토큰입니다 : " +accessToken);
+        }
 
         User user = userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElse(null);
         Long result = (user!=null)?user.getId():null;
