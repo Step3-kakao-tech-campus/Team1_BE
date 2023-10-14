@@ -26,7 +26,7 @@ public class UserService {
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
 
         userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "가입하지 않은 유저입니다 : " +accessToken)    // 익셉션핸들러로 수정 필요
+                () -> new Exception404("가입하지 않은 유저입니다 : " +accessToken)
         );
 
         return new UserResponse.KakaoLoginDTO(accessToken);
