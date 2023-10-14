@@ -2,6 +2,7 @@ package com.example.team1_be.utils.errors;
 
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.Exception400;
 import com.example.team1_be.utils.errors.exception.Exception404;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,10 @@ import org.springframework.web.client.HttpClientErrorException;
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception400.class)
+    public ResponseEntity<?> badRequest(Exception400 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
 
     @ExceptionHandler(Exception404.class)
     public ResponseEntity<?> notFound(Exception404 e){
