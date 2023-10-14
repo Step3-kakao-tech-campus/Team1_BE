@@ -27,7 +27,6 @@ public class User extends BaseEntity {
     private String name;
 
     @Size(min = 13, max = 13)
-    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @OneToOne(mappedBy = "user")
