@@ -1,6 +1,6 @@
 package com.example.team1_be.domain.Week;
 
-public enum WeekType {
+public enum WeekRecruitmentStatus {
     STARTED,
     ENDED
 }
