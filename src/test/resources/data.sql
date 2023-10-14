@@ -119,7 +119,7 @@ VALUES
     (18, '06:00:00', '09:00:00', 2, 7);
 
 -- member2's applies
-INSERT INTO apply (`id`,`state`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
     (1, 'REMAIN', 2, 1),
     (2, 'REMAIN', 2, 2),
@@ -139,7 +139,7 @@ VALUES
     (17, 'REMAIN', 2, 18);
 
 -- member3's applies
-INSERT INTO apply (`id`,`state`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
     (18, 'REMAIN', 3, 2),
     (19, 'REMAIN', 3, 3),
@@ -159,7 +159,7 @@ VALUES
     (33, 'REMAIN', 3, 18);
 
 -- member4's applies
-INSERT INTO apply (`id`,`state`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
     (34, 'REMAIN', 4, 1),
     (35, 'REMAIN', 4, 3),
@@ -173,7 +173,7 @@ VALUES
     (43, 'REMAIN', 4, 18);
 
 -- member5's applies
-INSERT INTO apply (`id`,`state`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
     (44, 'REMAIN', 5, 1),
     (45, 'REMAIN', 5, 3),
@@ -190,7 +190,7 @@ VALUES
     (56, 'REMAIN', 5, 18);
 
 -- member6's applies
-INSERT INTO apply (`id`,`state`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
     (57, 'REMAIN', 6, 1),
     (58, 'REMAIN', 6, 3),

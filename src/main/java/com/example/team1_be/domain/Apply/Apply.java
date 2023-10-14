@@ -21,7 +21,7 @@ public class Apply extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private ApplyType state;
+    private ApplyStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -32,9 +32,9 @@ public class Apply extends BaseEntity {
     private Member member;
 
     @Builder
-    public Apply(Long id, ApplyType state, Worktime worktime, Member member) {
+    public Apply(Long id, ApplyStatus status, Worktime worktime, Member member) {
         this.id = id;
-        this.state = state;
+        this.status = status;
         this.worktime = worktime;
         this.member = member;
     }
