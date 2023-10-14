@@ -36,7 +36,7 @@ public class UserService {
     public String join(UserRequest.JoinDTO joinDTO) throws JsonProcessingException {
         String accessToken = joinDTO.getAccessToken();
         if (kakaoOAuth.getTokenValidation(accessToken) == false) {
-            throw new Exception400("유효하지 않은 토큰입니다" + accessToken);
+            throw new Exception400("유효하지 않은 토큰입니다 : " + accessToken);
         }
 
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
@@ -59,7 +59,7 @@ public class UserService {
     public String login(UserRequest.LoginDTO loginDTO) throws JsonProcessingException {
         String accessToken = loginDTO.getAccessToken();
         if (kakaoOAuth.getTokenValidation(accessToken) == false) {
-            throw new Exception400("유효하지 않은 토큰입니다" + accessToken);
+            throw new Exception400("유효하지 않은 토큰입니다 : " + accessToken);
         }
 
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
