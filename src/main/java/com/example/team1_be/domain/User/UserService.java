@@ -44,11 +44,12 @@ public class UserService {
             throw new Exception404("만료된 토큰입니다 : " +accessToken);
         }
 
-        userRepository.findByKakaoId(kakaoId).orElseThrow(
-                () -> new Exception400("이미 가입한 유저입니다 : " +accessToken)
-        );
+        User user = userRepository.findByKakaoId(kakaoId).orElse(null);
+        if (user != null) {
+            throw new Exception400("이미 가입한 유저입니다 : " + accessToken);
+        }
 
-        User user = User.builder()
+        user = User.builder()
                 .kakaoId(kakaoId)
                 .name(joinDTO.getName())
                 .build();
