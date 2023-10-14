@@ -1,7 +1,6 @@
 package com.example.team1_be.domain.User;
 
 import com.example.team1_be.utils.errors.exception.Exception400;
-import com.example.team1_be.utils.errors.exception.Exception401;
 import com.example.team1_be.utils.errors.exception.Exception404;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
@@ -59,14 +58,16 @@ public class UserService {
     @Transactional
     public String login(UserRequest.LoginDTO loginDTO) throws JsonProcessingException {
         String accessToken = loginDTO.getAccessToken();
-        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
-
-        if (kakaoOAuthProfile == null) {
-            throw new Exception404("만료된 토큰입니다 : " +accessToken);
+        if (kakaoOAuth.getTokenValidation(accessToken) == false) {
+            throw new Exception400("유효하지 않은 토큰입니다" + accessToken);
         }
 
-        User user = userRepository.findByKakaoId(kakaoOAuthProfile.getId()).orElse(null);
-        Long result = (user!=null)?user.getId():null;
-        return jwtProvider.createJwt(result);
+        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(accessToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
+        User user = userRepository.findByKakaoId(kakaoId).orElseThrow(
+                () -> new Exception404("가입하지 않은 유저입니다 : " + accessToken)
+        );
+
+        return jwtProvider.createJwt(user.getId());
     }
 }
