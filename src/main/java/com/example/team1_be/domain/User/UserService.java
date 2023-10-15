@@ -1,10 +1,14 @@
 package com.example.team1_be.domain.User;
 
 import com.example.team1_be.domain.Group.DTO.GetMembers;
+import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
+import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,30 +20,23 @@ public class UserService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public void register(User user){
+    public String join(Join.Request request) {
+        User user = User.builder()
+                .kakaoId(request.getKakaoId())
+                .name(request.getUserName())
+                .build();
         userRepository.save(user);
+
+        // isAdmin 처리 진행
+
+        return jwtProvider.createJwt(user.getId());
     }
 
     @Transactional
-    public Login.Response login(Long kakaoId){
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElse(null);
-
-        if (user == null) {
-            user = User.builder()
-                    .kakaoId(kakaoId)
-                    .name("안한주")
-                    .phoneNumber("010-8840-3048")
-                    .build();
-            register(user);
-        }
-        return new Login.Response(user.getName(), true, "");
-    }
-
-    @Transactional
-    public String getJwt(Long kakaoId){
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElse(null);
+    public String login(Long kakaoId){
+        User user = userRepository.findByKakaoId(kakaoId).orElseThrow(
+                () -> new CustomException("회원이 아닙니다."+kakaoId, HttpStatus.NOT_FOUND)    // kakaoId를 어떤 식으로 전달해야하는지
+        );
 
         return jwtProvider.createJwt(user.getId());
     }
