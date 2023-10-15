@@ -1,5 +1,7 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.domain.Group.DTO.GetMembers;
+import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +21,27 @@ public class UserService {
     }
 
     @Transactional
-    public String login(KakaoUserProfile kakaoUserProfile){
-        User user = userRepository.findByKakaoId(kakaoUserProfile.getId())
+    public Login.Response login(Long kakaoId){
+        User user = userRepository.findByKakaoId(kakaoId)
                 .orElse(null);
+
         if (user == null) {
             user = User.builder()
-                    .kakaoId(kakaoUserProfile.getId())
+                    .kakaoId(kakaoId)
                     .name("안한주")
                     .phoneNumber("010-8840-3048")
                     .build();
             register(user);
         }
+        return new Login.Response(user.getName(), true, "");
+    }
+
+    @Transactional
+    public String getJwt(Long kakaoId){
+        User user = userRepository.findByKakaoId(kakaoId)
+                .orElse(null);
+
         return jwtProvider.createJwt(user.getId());
     }
+
 }
