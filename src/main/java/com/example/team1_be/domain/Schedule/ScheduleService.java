@@ -76,6 +76,7 @@ public class ScheduleService {
                 .forEach(dayIdx -> weeklyAmount.get(dayIdx)
                         .getDailySchedules()
                         .forEach(worktime-> worktimeList.add(Worktime.builder()
+                                        .title(worktime.getTitle())
                                         .startTime(worktime.getStartTime())
                                         .endTime(worktime.getEndTime())
                                         .amount(worktime.getAmount())

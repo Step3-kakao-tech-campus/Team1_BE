@@ -27,6 +27,9 @@ public class Worktime extends BaseEntity {
     private LocalTime endTime;
 
     @NotNull
+    private String title;
+
+    @NotNull
     private int amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,10 +37,11 @@ public class Worktime extends BaseEntity {
     private Day day;
 
     @Builder
-    public Worktime(Long id, LocalTime startTime, LocalTime endTime, int amount, Day day) {
+    public Worktime(Long id, LocalTime startTime, LocalTime endTime, String title, int amount, Day day) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.title = title;
         this.amount = amount;
         this.day = day;
     }
