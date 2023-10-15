@@ -61,7 +61,8 @@ insert into schedule(`id`,`group_id`)
 values (1, 1);
 
 insert into week(`id`,`status`,`start_date`,`schedule_id`)
-values (1, 'STARTED', '2222-11-22', 1);
+values (1, 'ENDED', '2023-10-09', 1),
+       (2, 'STARTED', '2023-10-16', 1);
 
 insert into days(`id`,`day_of_week`,`week_id`)
 values (1,1,1),
@@ -72,51 +73,60 @@ values (1,1,1),
        (6,6,1),
        (7,7,1);
 
+insert into days(`id`,`day_of_week`,`week_id`)
+values (8,1,2),
+       (9,2,2),
+       (10,3,2),
+       (11,4,2),
+       (12,5,2),
+       (13,6,2),
+       (14,7,2);
+
 -- Monday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (1, '00:00:00', '06:00:00', 3, 1),
-    (2, '06:00:00', '09:00:00', 2, 1),
-    (3, '09:00:00', '15:00:00', 1, 1);
+    (1, '오픈', '00:00:00', '06:00:00', 3, 1),
+    (2, '오픈', '06:00:00', '09:00:00', 2, 1),
+    (3, '오픈', '09:00:00', '15:00:00', 1, 1);
 
 -- Tuesday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (4, '00:00:00', '06:00:00', 2, 2),
-    (5, '06:00:00', '09:00:00', 2, 2),
-    (6, '09:00:00', '15:00:00', 2, 2);
+    (4, '미들', '00:00:00', '06:00:00', 2, 2),
+    (5, '미들', '06:00:00', '09:00:00', 2, 2),
+    (6, '미들', '09:00:00', '15:00:00', 2, 2);
 
 -- Wednesday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (7, '00:00:00', '06:00:00', 3, 3),
-    (8, '06:00:00', '09:00:00', 3, 3);
+    (7, '마감', '00:00:00', '06:00:00', 3, 3),
+    (8, '마감', '06:00:00', '09:00:00', 3, 3);
 
 -- Thursday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (9, '00:00:00', '06:00:00', 1, 4),
-    (10, '06:00:00', '09:00:00', 1, 4),
-    (11, '09:00:00', '15:00:00', 1, 4);
+    (9, '오픈', '00:00:00', '06:00:00', 1, 4),
+    (10, '오픈', '06:00:00', '09:00:00', 1, 4),
+    (11, '오픈', '09:00:00', '15:00:00', 1, 4);
 
 -- Friday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (12, '00:00:00', '06:00:00', 1, 5),
-    (13, '06:00:00', '09:00:00', 2, 5),
-    (14, '09:00:00', '15:00:00', 1, 5);
+    (12, '미들', '00:00:00', '06:00:00', 1, 5),
+    (13, '미들', '06:00:00', '09:00:00', 2, 5),
+    (14, '미들', '09:00:00', '15:00:00', 1, 5);
 
 -- Saturday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (15, '00:00:00', '06:00:00', 1, 6),
-    (16, '06:00:00', '09:00:00', 1, 6);
+    (15, '토요일', '00:00:00', '06:00:00', 1, 6),
+    (16, '토요일', '06:00:00', '09:00:00', 1, 6);
 
 -- Sunday
-INSERT INTO worktime (`id`,`start_time`, `end_time`, `amount`, `day_id`)
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
 VALUES
-    (17, '00:00:00', '06:00:00', 2, 7),
-    (18, '06:00:00', '09:00:00', 2, 7);
+    (17, '마지막', '00:00:00', '06:00:00', 2, 7),
+    (18, '마지막', '06:00:00', '09:00:00', 2, 7);
 
 -- member2's applies
 INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
@@ -201,3 +211,133 @@ VALUES
     (63, 'REMAIN', 6, 10),
     (64, 'REMAIN', 6, 15),
     (65, 'REMAIN', 6, 17);
+
+-- Monday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (19, '오픈', '00:00:00', '06:00:00', 3, 8),
+    (20, '오픈', '06:00:00', '09:00:00', 2, 8),
+    (21, '오픈', '09:00:00', '15:00:00', 1, 8);
+
+-- Tuesday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (22, '미들', '00:00:00', '06:00:00', 2, 9),
+    (23, '미들', '06:00:00', '09:00:00', 2, 9),
+    (24, '미들', '09:00:00', '15:00:00', 2, 9);
+
+-- Wednesday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (25, '마감', '00:00:00', '06:00:00', 3, 10),
+    (26, '마감', '06:00:00', '09:00:00', 3, 10);
+
+-- Thursday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (27, '오픈', '00:00:00', '06:00:00', 1, 11),
+    (28, '오픈', '06:00:00', '09:00:00', 1, 11),
+    (29, '오픈', '09:00:00', '15:00:00', 1, 11);
+
+-- Friday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (30, '미들', '00:00:00', '06:00:00', 1, 12),
+    (31, '미들', '06:00:00', '09:00:00', 2, 12),
+    (32, '미들', '09:00:00', '15:00:00', 1, 12);
+
+-- Saturday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (33, '토요일', '00:00:00', '06:00:00', 1, 13),
+    (34, '토요일', '06:00:00', '09:00:00', 1, 13);
+
+-- Sunday
+INSERT INTO worktime (`id`,`title`,`start_time`, `end_time`, `amount`, `day_id`)
+VALUES
+    (35, '마지막', '00:00:00', '06:00:00', 2, 14),
+    (36, '마지막', '06:00:00', '09:00:00', 2, 14);
+
+-- member2's applies
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+VALUES
+    (65+1, 'REMAIN', 2, 18+1),
+    (65+2, 'REMAIN', 2, 18+2),
+    (65+3, 'REMAIN', 2, 18+3),
+    (65+4, 'REMAIN', 2, 18+4),
+    (65+5, 'REMAIN', 2, 18+5),
+    (65+6, 'REMAIN', 2, 18+7),
+    (65+7, 'REMAIN', 2, 18+8),
+    (65+8, 'REMAIN', 2, 18+9),
+    (65+9, 'REMAIN', 2, 18+10),
+    (65+11, 'REMAIN', 2, 18+12),
+    (65+12, 'REMAIN', 2, 18+13),
+    (65+13, 'REMAIN', 2, 18+14),
+    (65+14, 'REMAIN', 2, 18+15),
+    (65+15, 'REMAIN', 2, 18+16),
+    (65+16, 'REMAIN', 2, 18+17),
+    (65+17, 'REMAIN', 2, 18+18);
+
+-- member3's applies
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+VALUES
+    (65+18, 'REMAIN', 3, 18+2),
+    (65+19, 'REMAIN', 3, 18+3),
+    (65+20, 'REMAIN', 3, 18+4),
+    (65+21, 'REMAIN', 3, 18+5),
+    (65+22, 'REMAIN', 3, 18+6),
+    (65+23, 'REMAIN', 3, 18+8),
+    (65+24, 'REMAIN', 3, 18+9),
+    (65+25, 'REMAIN', 3, 18+10),
+    (65+26, 'REMAIN', 3, 18+11),
+    (65+27, 'REMAIN', 3, 18+12),
+    (65+28, 'REMAIN', 3, 18+13),
+    (65+29, 'REMAIN', 3, 18+14),
+    (65+30, 'REMAIN', 3, 18+15),
+    (65+31, 'REMAIN', 3, 18+16),
+    (65+32, 'REMAIN', 3, 18+17),
+    (65+33, 'REMAIN', 3, 18+18);
+
+-- member4's applies
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+VALUES
+    (65+34, 'REMAIN', 4, 18+1),
+    (65+35, 'REMAIN', 4, 18+3),
+    (65+36, 'REMAIN', 4, 18+4),
+    (65+37, 'REMAIN', 4, 18+5),
+    (65+38, 'REMAIN', 4, 18+7),
+    (65+39, 'REMAIN', 4, 18+9),
+    (65+40, 'REMAIN', 4, 18+10),
+    (65+41, 'REMAIN', 4, 18+15),
+    (65+42, 'REMAIN', 4, 18+17),
+    (65+43, 'REMAIN', 4, 18+18);
+
+-- member5's applies
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+VALUES
+    (65+44, 'REMAIN', 5, 18+1),
+    (65+45, 'REMAIN', 5, 18+3),
+    (65+46, 'REMAIN', 5, 18+4),
+    (65+47, 'REMAIN', 5, 18+5),
+    (65+48, 'REMAIN', 5, 18+6),
+    (65+49, 'REMAIN', 5, 18+7),
+    (65+50, 'REMAIN', 5, 18+8),
+    (65+51, 'REMAIN', 5, 18+9),
+    (65+52, 'REMAIN', 5, 18+10),
+    (65+53, 'REMAIN', 5, 18+15),
+    (65+54, 'REMAIN', 5, 18+16),
+    (65+55, 'REMAIN', 5, 18+17),
+    (65+56, 'REMAIN', 5, 18+18);
+
+-- member6's applies
+INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+VALUES
+    (65+57, 'REMAIN', 6, 18+1),
+    (65+58, 'REMAIN', 6, 18+3),
+    (65+59, 'REMAIN', 6, 18+4),
+    (65+60, 'REMAIN', 6, 18+5),
+    (65+61, 'REMAIN', 6, 18+7),
+    (65+62, 'REMAIN', 6, 18+9),
+    (65+63, 'REMAIN', 6, 18+10),
+    (65+64, 'REMAIN', 6, 18+15),
+    (65+65, 'REMAIN', 6, 18+17);
