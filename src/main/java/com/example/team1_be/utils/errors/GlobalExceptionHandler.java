@@ -19,35 +19,40 @@ public final class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception400.class)
     public ResponseEntity<?> badRequest(Exception400 e){
-        return new ResponseEntity<>(e.body(), e.status());
+        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", e.status());
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(Exception401.class)
     public ResponseEntity<?> unAuthorized(Exception401 e){
-        return new ResponseEntity<>(e.body(), e.status());
+        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", e.status());
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(Exception403.class)
     public ResponseEntity<?> forbidden(Exception403 e){
-        return new ResponseEntity<>(e.body(), e.status());
+        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", e.status());
+        return ResponseEntity.ok(error);
     }
 
 
     @ExceptionHandler(Exception404.class)
     public ResponseEntity<?> notFound(Exception404 e){
-        return new ResponseEntity<>(e.body(), e.status());
+        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", e.status());
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(Exception500.class)
     public ResponseEntity<?> serverError(Exception500 e){
-        return new ResponseEntity<>(e.body(), e.status());
+        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", e.status());
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> unknownException(Exception exception) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", status);
-        return ResponseEntity.status(status).body(error);
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -55,7 +60,7 @@ public final class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
                 status);
-        return ResponseEntity.status(status).body(error);
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(CustomException.class)
