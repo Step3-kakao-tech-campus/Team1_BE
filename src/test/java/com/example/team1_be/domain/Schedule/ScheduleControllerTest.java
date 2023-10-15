@@ -18,7 +18,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -200,5 +202,69 @@ class ScheduleControllerTest {
                 .content(request));
 
         perform.andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("주별 스케줄 신청 현황 조회 실패(매니저-모집중아님)")
+    @WithMockCustomUser
+    @Test
+    void weeklyScheduleCheck1() throws Exception {
+        LocalDate startWeekDate = LocalDate.parse("2023-10-09");
+        ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+
+        perform.andExpect(status().isNotFound());
+        perform.andDo(print());
+    }
+
+    @DisplayName("주별 스케줄 신청 현황 조회 실패(잘못된 날짜 양식)")
+    @WithMockCustomUser
+    @Test
+    void weeklyScheduleCheck2() throws Exception {
+        String wrongDate = "10-10";
+        ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", wrongDate)));
+
+        perform.andExpect(status().isBadRequest());
+        perform.andDo(print());
+    }
+
+    @DisplayName("주별 스케줄 신청 현황 조회 실패(매니저 시작한 주 신청아님)")
+    @WithMockCustomUser
+    @Test
+    void weeklyScheduleCheck3() throws Exception {
+        LocalDate startWeekDate = LocalDate.parse("2023-10-09");
+        ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+
+        perform.andExpect(status().isNotFound());
+    }
+
+    @DisplayName("주별 스케줄 신청 현황 조회 실패(알바생 마감한 주 신청아님)")
+    @WithMockCustomUser(userId = "2", kakaoId = "2")
+    @Test
+    void weeklyScheduleCheck4() throws Exception {
+        LocalDate startWeekDate = LocalDate.parse("2023-10-16");
+        ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+
+        perform.andExpect(status().isNotFound());
+    }
+
+    @DisplayName("주별 스케줄 신청 현황 조회 성공(매니저)")
+    @WithMockCustomUser
+    @Test
+    void weeklyScheduleCheck5() throws Exception {
+        LocalDate startWeekDate = LocalDate.parse("2023-10-16");
+        ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("주별 스케줄 신청 현황 조회 성공(알바생)")
+    @WithMockCustomUser(userId = "2", kakaoId = "2")
+    @Test
+    void weeklyScheduleCheck7() throws Exception {
+        LocalDate startWeekDate = LocalDate.parse("2023-10-09");
+        ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
     }
 }

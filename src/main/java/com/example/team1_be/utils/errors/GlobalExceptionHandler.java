@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -45,21 +46,25 @@ public final class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> unknownException(Exception exception) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", status);
-        return ResponseEntity.status(status).body(error);
+        ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) throws JsonProcessingException {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
-                status);
-        return ResponseEntity.status(status).body(error);
+        ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(error);
     }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleCustomException(CustomException e) {
-        return ResponseEntity.status(e.status()).body(e.body());
+        ApiUtils.ApiResult<?> error = ApiUtils.error(e.getMessage(), e.status());
+        return ResponseEntity.ok(error);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
+        ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(error);
     }
 }
