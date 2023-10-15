@@ -2,6 +2,7 @@ package com.example.team1_be.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -22,6 +23,7 @@ public class SwaggerConfig {
     @Bean
     public Docket swagger(){
         return new Docket(DocumentationType.OAS_30)
+                .ignoredParameterTypes(AuthenticationPrincipal.class)
                 .securitySchemes(Arrays.asList(apiKey()))
                 .securityContexts(Arrays.asList(securityContext()))
                 .select()
@@ -38,7 +40,7 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey(){
-        return new ApiKey("JWT", "Authorization", "header");
+        return new ApiKey("Authorization", "Authorization", "header");
     }
 
     private SecurityContext securityContext() {
