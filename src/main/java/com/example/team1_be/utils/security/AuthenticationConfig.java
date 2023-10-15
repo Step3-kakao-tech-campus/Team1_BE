@@ -40,6 +40,7 @@ public class AuthenticationConfig {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/**","/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**").permitAll()
                 .antMatchers("/login/kakao").permitAll()
+                .antMatchers(HttpMethod.POST,"/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/error").permitAll()
                 .antMatchers(HttpMethod.GET,"/error").permitAll()
                 .antMatchers("/**").authenticated()
