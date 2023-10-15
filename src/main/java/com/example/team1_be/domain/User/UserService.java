@@ -1,12 +1,8 @@
 package com.example.team1_be.domain.User;
 
-import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.User.DTO.Join;
-import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
-import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,13 +17,17 @@ public class UserService {
 
     @Transactional
     public String join(Join.Request request) {
-        User user = User.builder()
+        User user = userRepository.findByKakaoId(request.getKakaoId()).orElse(null);
+        if (user != null) {
+            throw new CustomException("잘못된 요청입니다. 이미 가입되었습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        user = User.builder()
                 .kakaoId(request.getKakaoId())
                 .name(request.getUserName())
+                .phoneNumber(null)
                 .build();
         userRepository.save(user);
-
-        // isAdmin 처리 진행
 
         return jwtProvider.createJwt(user.getId());
     }

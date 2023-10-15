@@ -28,10 +28,13 @@ public class UserController {
     private final UserService userService;
     private final KakaoOAuth kakaoOAuth;
 
-    @GetMapping("/login/kakao")
-    public @ResponseBody ResponseEntity<?> kakaoCallback(@RequestBody @Valid Login.Request request) throws JsonProcessingException {
-        System.out.println(request);
+    @GetMapping("/login/kakao") // code발급받기 test용
+    public @ResponseBody ResponseEntity<?> kakaoCallback(String code) {
+        return ResponseEntity.ok().body(code);
+    }
 
+    @PostMapping("/auth/login")
+    public ResponseEntity<?> login(@RequestBody @Valid Login.Request request) throws JsonProcessingException {
         KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(request.getCode());
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
 
@@ -40,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/join")
-    public ResponseEntity<?> join(@RequestBody @Valid Join.Request request) throws JsonProcessingException {
+    public ResponseEntity<?> join(@RequestBody @Valid Join.Request request) {
         String jwt = userService.join(request);
         return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(null);
     }

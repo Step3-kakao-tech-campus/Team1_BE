@@ -15,13 +15,10 @@ public class Join {
     @Builder
     public static class Request {
 
-        @NotBlank(message = "kakaoId가 누락되었습니다.")
         private Long kakaoId;
 
-        @NotBlank(message = "userName이 누락되었습니다.")
         private String userName;
 
-        @NotBlank(message = "isAdmin이 누락되었습니다.")
         private boolean isAdmin;
     }
 }
