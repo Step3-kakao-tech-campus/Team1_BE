@@ -19,7 +19,7 @@ public class Join {
 
         private String userName;
 
-        private boolean isAdmin;
+        private Boolean isAdmin;
     }
 
     @Getter

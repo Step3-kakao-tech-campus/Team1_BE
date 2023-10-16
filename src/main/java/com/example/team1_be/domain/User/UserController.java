@@ -37,15 +37,23 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody @Valid Login.Request request) throws JsonProcessingException {
         KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(request.getCode());
         KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
+        Long kakaoId = kakaoOAuthProfile.getId();
 
-        String jwt = userService.login(kakaoOAuthProfile.getId());
-        return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(null);
+        Login.Response responseDTO = userService.login(kakaoOAuthProfile.getId());
+        ApiUtils.ApiResult<Login.Response> response = ApiUtils.success(responseDTO);
+
+        String jwt = userService.getJWT(kakaoId);
+        return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(response);
     }
 
     @PostMapping("/auth/join")
     public ResponseEntity<?> join(@RequestBody @Valid Join.Request request) {
-        String jwt = userService.join(request);
-        return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(null);
+        String jwt = userService.getJWT(request.getKakaoId());  // 수정 필요
+
+        Join.Response responseDTO = userService.join(request);
+        ApiUtils.ApiResult<Join.Response> response = ApiUtils.success(responseDTO);
+
+        return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(response);
     }
 
 }
