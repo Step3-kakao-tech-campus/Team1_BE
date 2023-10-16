@@ -76,6 +76,6 @@ public class GroupService {
         Group group = member.getGroup();
         List<Member> members = memberRepository.findAllByGroup(group);
 
-        return new GetMembers.Response(group, members);
+        return new GetMembers.Response(group, user, members);
     }
 }
