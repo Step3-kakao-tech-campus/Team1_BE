@@ -14,11 +14,11 @@ public class Join {
     @NoArgsConstructor
     @Builder
     public static class Request {
-
-        private Long kakaoId;
-
+        @NotBlank(message = "code가 누락되었습니다.")
+        private String code;
+        @NotBlank(message = "userName이 누락되었습니다.")
         private String userName;
-
+        @NotBlank(message = "isAdmin이 누락되었습니다.")
         private Boolean isAdmin;
     }
 
