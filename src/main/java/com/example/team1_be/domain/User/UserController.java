@@ -4,6 +4,7 @@ import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
+import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
@@ -11,6 +12,7 @@ import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -34,25 +36,30 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody @Valid Login.Request request) throws JsonProcessingException {
-        KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(request.getCode());
-        KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
-        Long kakaoId = kakaoOAuthProfile.getId();
+    public ResponseEntity<?> login(@RequestBody @Valid Login.Request request) {
+        String code = request.getCode();
+        Long kakaoId = null;
+        try {
+            KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(code);
+            KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
+            kakaoId = kakaoOAuthProfile.getId();
+        } catch (Exception e) {
+            throw new CustomException("code가 만료되었습니다.", HttpStatus.BAD_REQUEST);
+        }
 
-        Login.Response responseDTO = userService.login(kakaoOAuthProfile.getId());
+        Login.Response responseDTO = userService.login(code, kakaoId);
         ApiUtils.ApiResult<Login.Response> response = ApiUtils.success(responseDTO);
-
         String jwt = userService.getJWT(kakaoId);
         return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(response);
     }
 
     @PostMapping("/auth/join")
     public ResponseEntity<?> join(@RequestBody @Valid Join.Request request) {
-        String jwt = userService.getJWT(request.getKakaoId());  // 수정 필요
+        Long kakaoId = userService.matchKakaoId(request.getCode());
 
-        Join.Response responseDTO = userService.join(request);
+        Join.Response responseDTO = userService.join(request, kakaoId);
         ApiUtils.ApiResult<Join.Response> response = ApiUtils.success(responseDTO);
-
+        String jwt = userService.getJWT(kakaoId);
         return ResponseEntity.ok().header("Authorization", "Bearer "+jwt).body(response);
     }
 

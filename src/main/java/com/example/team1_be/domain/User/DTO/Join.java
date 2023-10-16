@@ -18,7 +18,7 @@ public class Join {
         private String code;
         @NotBlank(message = "userName이 누락되었습니다.")
         private String userName;
-        @NotBlank(message = "isAdmin이 누락되었습니다.")
+
         private Boolean isAdmin;
     }
 
