@@ -20,14 +20,10 @@ public class Login {
 
     @Getter
     public static class Response {
-        private String userName;
-        private boolean isAdmin;
-        private String groupName;
+        private Boolean isAdmin;
 
-        public Response(String userName, boolean isAdmin, String groupName) {
-            this.userName = userName;
+        public Response(Boolean isAdmin) {
             this.isAdmin = isAdmin;
-            this.groupName = groupName;
         }
 
     }
