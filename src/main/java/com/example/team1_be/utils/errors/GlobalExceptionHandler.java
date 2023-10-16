@@ -47,24 +47,24 @@ public final class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> unknownException(Exception exception) {
         ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        return ResponseEntity.ok(error);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) throws JsonProcessingException {
         ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleCustomException(CustomException e) {
         ApiUtils.ApiResult<?> error = ApiUtils.error(e.getMessage(), e.status());
-        return ResponseEntity.ok(error);
+        return new ResponseEntity<>(error, e.getHttpStatus());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
         ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
