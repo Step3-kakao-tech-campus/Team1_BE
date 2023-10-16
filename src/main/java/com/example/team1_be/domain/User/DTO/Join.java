@@ -21,4 +21,14 @@ public class Join {
 
         private boolean isAdmin;
     }
+
+    @Getter
+    public static class Response {
+        private Boolean isAdmin;
+
+        public Response(Boolean isAdmin) {
+            this.isAdmin = isAdmin;
+        }
+
+    }
 }
