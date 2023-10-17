@@ -34,7 +34,7 @@ public class GroupControllerTest {
     private MemberRepository memberRepository;
 
     @DisplayName("그룹 생성하기 성공")
-    @WithMockCustomUser
+    @WithMockCustomUser(username = "eunjin", isAdmin="true")
     @Sql("group-create1.sql")
     @Test
     void postCreate1() throws Exception {
@@ -274,7 +274,7 @@ public class GroupControllerTest {
     }
 
     @DisplayName("그룹 초대링크 발급 성공")
-    @WithMockCustomUser
+    @WithMockCustomUser(username = "eunjin", isAdmin = "true")
     @Sql("group-getInvitation1.sql")
     @Test
     void getInvitation1() throws Exception {
