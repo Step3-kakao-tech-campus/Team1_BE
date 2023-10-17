@@ -131,22 +131,22 @@ VALUES
 -- member2's applies
 INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
-    (1, 'REMAIN', 2, 1),
-    (2, 'REMAIN', 2, 2),
-    (3, 'REMAIN', 2, 3),
-    (4, 'REMAIN', 2, 4),
-    (5, 'REMAIN', 2, 5),
-    (6, 'REMAIN', 2, 7),
-    (7, 'REMAIN', 2, 8),
-    (8, 'REMAIN', 2, 9),
-    (9, 'REMAIN', 2, 10),
-    (11, 'REMAIN', 2, 12),
-    (12, 'REMAIN', 2, 13),
-    (13, 'REMAIN', 2, 14),
-    (14, 'REMAIN', 2, 15),
-    (15, 'REMAIN', 2, 16),
-    (16, 'REMAIN', 2, 17),
-    (17, 'REMAIN', 2, 18);
+    (1, 'FIX', 2, 1),
+    (2, 'FIX', 2, 2),
+    (3, 'FIX', 2, 3),
+    (4, 'FIX', 2, 4),
+    (5, 'FIX', 2, 5),
+    (6, 'FIX', 2, 7),
+    (7, 'FIX', 2, 8),
+    (8, 'FIX', 2, 9),
+    (9, 'FIX', 2, 10),
+    (11, 'FIX', 2, 12),
+    (12, 'FIX', 2, 13),
+    (13, 'FIX', 2, 14),
+    (14, 'FIX', 2, 15),
+    (15, 'FIX', 2, 16),
+    (16, 'FIX', 2, 17),
+    (17, 'FIX', 2, 18);
 
 -- member3's applies
 INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
