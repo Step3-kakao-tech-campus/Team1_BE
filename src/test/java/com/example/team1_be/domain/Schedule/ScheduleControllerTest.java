@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -264,6 +265,30 @@ class ScheduleControllerTest {
         LocalDate startWeekDate = LocalDate.parse("2023-10-09");
         ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
 
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("확정 스케줄 조회 성공")
+    @WithMockCustomUser(userId = "2")
+    @Test
+    void getFixedWeeklySchedule1() throws Exception {
+        YearMonth month = YearMonth.parse("2023-10");
+        Long memberId = 2L;
+        ResultActions perform = mvc.perform(
+                get(String.format("/schedule/fix/month/%s/%s", month, memberId)));
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("확정 스케줄 조회 실패(파라미터 에러)")
+    @WithMockCustomUser(userId = "2")
+    @Test
+    void getFixedWeeklySchedule2() throws Exception {
+        YearMonth month = YearMonth.parse("2023");
+        Long memberId = 2L;
+        ResultActions perform = mvc.perform(
+                get(String.format("/schedule/fix/month/%s/%s", month, memberId)));
         perform.andExpect(status().isOk());
         perform.andDo(print());
     }
