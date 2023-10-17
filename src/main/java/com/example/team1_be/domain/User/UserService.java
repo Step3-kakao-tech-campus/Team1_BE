@@ -32,9 +32,7 @@ public class UserService {
             throw new CustomException("회원이 아닙니다.", HttpStatus.NOT_FOUND);
         }
 
-        Member member = memberRepository.findByUser(user).orElse(null);
-        Boolean isAdmin = (member == null) ? null : member.getIsAdmin();
-        return new Login.Response(isAdmin);
+        return new Login.Response(user.getIsAdmin());
     }
 
     // login 시도했던 code를 통해, join 시 kakaoId와 매칭
@@ -58,6 +56,7 @@ public class UserService {
                 .kakaoId(kakaoId)
                 .name(request.getUserName())
                 .phoneNumber(null)
+                .isAdmin(request.getIsAdmin())
                 .build();
         userRepository.save(user);
 

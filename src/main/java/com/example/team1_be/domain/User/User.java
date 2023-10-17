@@ -29,15 +29,19 @@ public class User {
     @Size(min = 13, max = 13)
     private String phoneNumber;
 
+    @NotNull
+    private Boolean isAdmin;
+
     @OneToOne(mappedBy = "user")
     private Member member;
 
     @Builder
-    public User(Long id, Long kakaoId, String name, String phoneNumber, Member member) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Member member) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.isAdmin = isAdmin;
         this.member = member;
     }
 }

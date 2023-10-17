@@ -55,7 +55,7 @@ public class InviteService {
     public GetInvitation.Response getInvitation(User user) {
         Member member = memberRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException("등록되지 않은 멤버입니다.", HttpStatus.BAD_REQUEST));
-        if (!member.getIsAdmin()) {
+        if (!user.getIsAdmin()) {
             throw new CustomException("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
         Group group = member.getGroup();

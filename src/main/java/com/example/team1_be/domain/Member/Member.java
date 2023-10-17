@@ -19,9 +19,6 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Boolean isAdmin;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     @NotNull
@@ -33,9 +30,8 @@ public class Member extends BaseEntity {
     private User user;
 
     @Builder
-    public Member(Long id, Boolean isAdmin, Group group, User user) {
+    public Member(Long id, Group group, User user) {
         this.id = id;
-        this.isAdmin = isAdmin;
         this.group = group;
         this.user = user;
     }

@@ -32,7 +32,7 @@ public class GetMembers {
             private MemberInfo(Member member) {
                 this.memberId = member.getId();
                 this.name = member.getUser().getName();
-                this.isAdmin = member.getIsAdmin();
+                this.isAdmin = member.getUser().getIsAdmin();
             }
         }
     }
