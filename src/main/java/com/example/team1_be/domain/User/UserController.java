@@ -5,6 +5,7 @@ import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.Exception400;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
@@ -44,7 +45,7 @@ public class UserController {
             KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
             kakaoId = kakaoOAuthProfile.getId();
         } catch (Exception e) {
-            throw new CustomException("code가 만료되었습니다.", HttpStatus.BAD_REQUEST);
+            throw new Exception400("code가 만료되었습니다.");
         }
 
         Login.Response responseDTO = userService.login(code, kakaoId);

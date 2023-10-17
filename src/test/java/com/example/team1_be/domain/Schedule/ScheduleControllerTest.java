@@ -157,7 +157,7 @@ class ScheduleControllerTest {
         perform.andExpect(status().isBadRequest());
     }
 
-    @WithMockCustomUser(username = "eunjin", isAdmin = "true")
+    @WithMockCustomUser(username = "eunjin")
     @DisplayName("스케줄 모집 성공(weeklyAmount 공백 데이터만 추가)")
     @Test
     void test5() throws Exception {
