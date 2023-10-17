@@ -2,8 +2,10 @@ package com.example.team1_be.domain.Schedule;
 
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
@@ -22,12 +24,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.prefs.BackingStoreException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -122,5 +127,22 @@ public class ScheduleService {
                         .collect(Collectors.toList())).collect(Collectors.toList());
 
         return new WeeklyScheduleCheck.Response(weeklyWorktime, applyList);
+    }
+
+    public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
+        Member member = memberRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+        Schedule schedule = scheduleRepository.findByGroup(member.getGroup())
+                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+
+        LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
+        LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
+        List<Week> weeks = weekRepository.findByScheduleAndYearMonthAndStatus(date, toDate, schedule.getId(), WeekRecruitmentStatus.ENDED);
+        List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
+        double monthly = memberWorktimes.stream()
+                .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
+                .reduce(0D, Double::sum);
+
+        return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly/weeks.size());
     }
 }
