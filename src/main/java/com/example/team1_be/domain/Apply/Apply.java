@@ -2,6 +2,7 @@ package com.example.team1_be.domain.Apply;
 
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Worktime.Worktime;
+import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +14,14 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 @Getter
 @Table
-public class Apply {
+public class Apply extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private ApplyType state;
+    private ApplyStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -31,9 +32,9 @@ public class Apply {
     private Member member;
 
     @Builder
-    public Apply(Long id, ApplyType state, Worktime worktime, Member member) {
+    public Apply(Long id, ApplyStatus status, Worktime worktime, Member member) {
         this.id = id;
-        this.state = state;
+        this.status = status;
         this.worktime = worktime;
         this.member = member;
     }

@@ -13,6 +13,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
+    @Transactional
     public void register(User user){
         userRepository.save(user);
     }

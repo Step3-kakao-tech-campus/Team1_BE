@@ -6,7 +6,6 @@ import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
-import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.UserRepository;
@@ -16,10 +15,11 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
+import static com.example.team1_be.domain.Week.WeekRecruitmentStatus.ENDED;
+import static com.example.team1_be.domain.Week.WeekRecruitmentStatus.STARTED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class WeekRepositoryTest extends BaseTest {
 
@@ -32,5 +32,21 @@ class WeekRepositoryTest extends BaseTest {
     void test1() {
         assertThat(weekRepository.findById(1L).orElse(null))
                 .isNotEqualTo(null);
+        assertThat(weekRepository.findById(1L).orElse(null).getStatus())
+                .isEqualTo(ENDED);
+    }
+
+    @DisplayName("시작일, 스케줄, 상태 기반 조회 성공")
+    @Test
+    void test2() {
+        assertThat(weekRepository.findByScheduleIdStartDateAndAndStatus(1L, LocalDate.parse("2023-10-09"), ENDED)
+                .orElse(null)).isNotEqualTo(null);
+    }
+
+    @DisplayName("시작일, 스케줄, 상태 기반 조회 실패")
+    @Test
+    void test3() {
+        assertThat(weekRepository.findByScheduleIdStartDateAndAndStatus(1L, LocalDate.parse("2023-10-09"), STARTED)
+                .orElse(null)).isEqualTo(null);
     }
 }
