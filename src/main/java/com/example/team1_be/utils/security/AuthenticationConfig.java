@@ -31,7 +31,8 @@ public class AuthenticationConfig {
                     return corsConfiguration;
                 })
                 .and()
-//                .headers().frameOptions().sameOrigin()
+                .headers().frameOptions().disable()
+                .and()
                 .authorizeHttpRequests()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/**","/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**").permitAll()
