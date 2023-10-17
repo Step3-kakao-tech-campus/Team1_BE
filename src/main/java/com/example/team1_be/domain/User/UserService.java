@@ -1,5 +1,4 @@
 package com.example.team1_be.domain.User;
-it
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
@@ -46,7 +45,6 @@ public class UserService {
     @Transactional
     public Join.Response join(Join.Request request, Long kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
-        // delete도 구현
         if (user != null) {
             throw new Exception400("이미 가입되었습니다.");
         }
