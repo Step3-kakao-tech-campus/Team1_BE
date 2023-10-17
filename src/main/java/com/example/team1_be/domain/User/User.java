@@ -2,6 +2,7 @@ package com.example.team1_be.domain.User;
 
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,8 @@ public class User {
     @NotNull
     private Boolean isAdmin;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonBackReference
     private Member member;
 
     @Builder
