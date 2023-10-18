@@ -123,7 +123,7 @@ public class ScheduleService {
         List<List<Worktime>> weeklyWorktime = days.stream().map(day -> worktimeRepository.findByDayId(day.getId())).collect(Collectors.toList());
         List<List<List<Apply>>> applyList = weeklyWorktime.stream()
                 .map(worktimes -> worktimes.stream()
-                        .map(worktime -> applyRepository.findappliesByWorktimeId(worktime.getId()))
+                        .map(worktime -> applyRepository.findAppliesByWorktimeId(worktime.getId()))
                         .collect(Collectors.toList())).collect(Collectors.toList());
 
         return new WeeklyScheduleCheck.Response(weeklyWorktime, applyList);
@@ -139,7 +139,7 @@ public class ScheduleService {
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
         List<Week> weeks = weekRepository.findByScheduleAndYearMonthAndStatus(date, toDate, schedule.getId(), WeekRecruitmentStatus.ENDED);
         List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
-        double monthly = memberWorktimes.stream()
+        Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
 
