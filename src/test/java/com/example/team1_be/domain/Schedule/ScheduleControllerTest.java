@@ -291,6 +291,14 @@ class ScheduleControllerTest {
         perform.andExpect(status().isBadRequest());
         perform.andDo(print());
     }
+
+    @DisplayName("추천 스케줄 후보 리스팅")
+    @WithMockCustomUser
+    @Test
+    void recommendSchedule1() throws Exception {
+        LocalDate date = LocalDate.parse("2023-10-16");
+        ResultActions perform = mvc.perform(
+                get(String.format("/schedule/recommend/%s", date)));
         perform.andExpect(status().isOk());
         perform.andDo(print());
     }
