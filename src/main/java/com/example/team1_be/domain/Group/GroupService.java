@@ -29,6 +29,10 @@ public class GroupService {
 
     @Transactional
     public void create(User user, Create.Request request) {
+        if (user.getIsAdmin() == false) {
+            throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
+        }
+
         if (memberRepository.findByUser(user).orElse(null) != null) {
             throw new CustomException("이미 그룹에 가입되어 있습니다.", HttpStatus.FORBIDDEN);
         }
@@ -48,7 +52,6 @@ public class GroupService {
 
         Member member = Member.builder()
                 .user(user)
-                .isAdmin(true)
                 .group(group)
                 .build();
         memberRepository.save(member);
@@ -56,6 +59,10 @@ public class GroupService {
 
     @Transactional
     public void invitationAccept(User user, InvitationAccept.Request request) {
+        if (user.getIsAdmin() == true) {
+            throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
+        }
+
         Invite invite = inviteRepository.findByCode(request.getInvitationKey())
                 .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다", HttpStatus.NOT_FOUND));
         inviteService.checkValidation(invite);
@@ -63,7 +70,6 @@ public class GroupService {
         Group group = invite.getGroup();
         Member member = Member.builder()
                 .group(group)
-                .isAdmin(false)
                 .user(user)
                 .build();
         memberRepository.save(member);

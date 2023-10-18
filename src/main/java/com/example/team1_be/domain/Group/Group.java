@@ -2,6 +2,7 @@ package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class Group extends BaseEntity {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    @JsonManagedReference
     private List<Member> members;
 
     @Builder
