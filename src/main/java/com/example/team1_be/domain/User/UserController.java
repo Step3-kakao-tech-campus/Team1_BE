@@ -1,21 +1,14 @@
 package com.example.team1_be.domain.User;
 
-import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
-import com.example.team1_be.utils.errors.exception.CustomException;
-import com.example.team1_be.utils.errors.exception.Exception400;
-import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +38,7 @@ public class UserController {
             KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
             kakaoId = kakaoOAuthProfile.getId();
         } catch (Exception e) {
-            throw new Exception400("code가 만료되었습니다.");
+            throw new BadRequestException("code가 만료되었습니다.");
         }
 
         Login.Response responseDTO = userService.login(code, kakaoId);
