@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Schedule.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,14 @@ public class IndividualScheduleConfirmed {
     @NoArgsConstructor
     private static class Response {
 
-        private List<DaySchedule> daySchedules;
+        private List<DaySchedule> schedule;
+
+        @JsonProperty("work_summary")
         private WorkSummary workSummary;
 
         class DaySchedule {
-            private int day;
-            private List<String> values;
+            private Integer date;
+            private List<String> workTime;
         }
 
         private class WorkSummary {
