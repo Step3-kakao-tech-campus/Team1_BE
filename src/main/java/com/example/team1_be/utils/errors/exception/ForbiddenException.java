@@ -5,16 +5,16 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class Exception404 extends RuntimeException {
-    public Exception404(String message) {
+public class ForbiddenException extends RuntimeException {
+    public ForbiddenException(String message) {
         super(message);
     }
 
     public ApiUtils.ApiResult<?> body(){
-        return ApiUtils.error(getMessage(), HttpStatus.NOT_FOUND);
+        return ApiUtils.error(getMessage(), HttpStatus.FORBIDDEN);
     }
 
     public HttpStatus status(){
-        return HttpStatus.NOT_FOUND;
+        return HttpStatus.FORBIDDEN;
     }
 }
