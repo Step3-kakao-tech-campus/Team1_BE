@@ -3,8 +3,8 @@ import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUserRepository;
-import com.example.team1_be.utils.errors.exception.Exception400;
-import com.example.team1_be.utils.errors.exception.Exception404;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class UserService {
                     .build();
             unfinishedUserRepository.save(unfinishedUser);
 
-            throw new Exception404("회원이 아닙니다.");
+            throw new NotFoundException("회원이 아닙니다.");
         }
 
         return new Login.Response(user.getIsAdmin());
@@ -37,7 +37,7 @@ public class UserService {
     @Transactional
     public Long matchKakaoId(String code) {
         UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
-                () -> new Exception400("유효하지 않은 code입니다.")
+                () -> new BadRequestException("유효하지 않은 code입니다.")
         );
         return unfinishedUser.getKakaoId();
     }
@@ -46,7 +46,7 @@ public class UserService {
     public Join.Response join(Join.Request request, Long kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
         if (user != null) {
-            throw new Exception400("이미 가입되었습니다.");
+            throw new BadRequestException("이미 가입되었습니다.");
         }
 
         user = User.builder()
