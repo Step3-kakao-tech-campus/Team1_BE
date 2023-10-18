@@ -151,12 +151,12 @@ VALUES
 -- member3's applies
 INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
-    (18, 'REMAIN', 3, 2),
-    (19, 'REMAIN', 3, 3),
-    (20, 'REMAIN', 3, 4),
-    (21, 'REMAIN', 3, 5),
-    (22, 'REMAIN', 3, 6),
-    (23, 'REMAIN', 3, 8),
+    (18, ''REMAIN'', 3, 2),
+    (19, ''REMAIN'', 3, 3),
+    (20, ''REMAIN'', 3, 4),
+    (21, ''REMAIN'', 3, 5),
+    (22, ''REMAIN'', 3, 6),
+    (23, ''REMAIN', 3, 8),
     (24, 'REMAIN', 3, 9),
     (25, 'REMAIN', 3, 10),
     (26, 'REMAIN', 3, 11),

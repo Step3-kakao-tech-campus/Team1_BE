@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final UnfinishedUserRepository unfinishedUserRepository;
+    private final UnfinishsedUserRepository unfinishedUserRepository;
     private final JwtProvider jwtProvider;
 
     public Login.Response login(String code, Long kakaoId) {
