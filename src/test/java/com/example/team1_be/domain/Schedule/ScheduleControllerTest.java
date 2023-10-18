@@ -285,10 +285,12 @@ class ScheduleControllerTest {
     @WithMockCustomUser(userId = "2")
     @Test
     void getFixedWeeklySchedule2() throws Exception {
-        YearMonth month = YearMonth.parse("2023");
         Long memberId = 2L;
         ResultActions perform = mvc.perform(
-                get(String.format("/schedule/fix/month/%s/%s", month, memberId)));
+                get(String.format("/schedule/fix/month/%s/%s", "2023", memberId)));
+        perform.andExpect(status().isBadRequest());
+        perform.andDo(print());
+    }
         perform.andExpect(status().isOk());
         perform.andDo(print());
     }
