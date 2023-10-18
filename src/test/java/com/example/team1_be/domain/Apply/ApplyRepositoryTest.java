@@ -3,7 +3,6 @@ package com.example.team1_be.domain.Apply;
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.GroupRepository;
-import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
@@ -17,11 +16,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ApplyRepositoryTest extends BaseTest {
 
@@ -36,7 +32,7 @@ class ApplyRepositoryTest extends BaseTest {
         List<Apply> applyList = applyRepository.findAll();
 
         List<Integer> collect = worktimes.stream().map(
-                        x -> x.getAmount() - applyRepository.findappliesByWorktimeId(x.getId()).size())
+                        x -> x.getAmount() - applyRepository.findAppliesByWorktimeId(x.getId()).size())
                 .collect(Collectors.toList());
         collect.forEach(System.out::println);
     }
@@ -72,7 +68,7 @@ class ApplyRepositoryTest extends BaseTest {
         for(i = 0; i< worktimeSize; i++) {
             Worktime worktime = worktimes.get(i);
             priorityTable[i][0] = worktime.getId();
-            priorityTable[i][1] = (long) (worktime.getAmount() - applyRepository.findappliesByWorktimeId(worktime.getId()).size());
+            priorityTable[i][1] = (long) (worktime.getAmount() - applyRepository.findAppliesByWorktimeId(worktime.getId()).size());
         }
         Arrays.sort(priorityTable, (a,b)->Long.compare(b[1],a[1])); // 여유 인원이 적은 곳 부터 할당하기 위해서 정렬
 
