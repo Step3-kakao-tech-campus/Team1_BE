@@ -157,7 +157,7 @@ class ScheduleControllerTest {
         perform.andExpect(status().isBadRequest());
     }
 
-    @WithMockCustomUser
+    @WithMockCustomUser(username = "eunjin")
     @DisplayName("스케줄 모집 성공(weeklyAmount 공백 데이터만 추가)")
     @Test
     void test5() throws Exception {
@@ -206,7 +206,7 @@ class ScheduleControllerTest {
     }
 
     @DisplayName("주별 스케줄 신청 현황 조회 실패(매니저-모집중아님)")
-    @WithMockCustomUser
+    @WithMockCustomUser(username = "eunjin", isAdmin = "true")
     @Test
     void weeklyScheduleCheck1() throws Exception {
         LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -228,7 +228,7 @@ class ScheduleControllerTest {
     }
 
     @DisplayName("주별 스케줄 신청 현황 조회 실패(매니저 시작한 주 신청아님)")
-    @WithMockCustomUser
+    @WithMockCustomUser(username = "eunjin", isAdmin = "true")
     @Test
     void weeklyScheduleCheck3() throws Exception {
         LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -248,7 +248,7 @@ class ScheduleControllerTest {
     }
 
     @DisplayName("주별 스케줄 신청 현황 조회 성공(매니저)")
-    @WithMockCustomUser
+    @WithMockCustomUser(username = "eunjin", isAdmin = "true")
     @Test
     void weeklyScheduleCheck5() throws Exception {
         LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -285,7 +285,7 @@ class ScheduleControllerTest {
     @WithMockCustomUser(userId = "2")
     @Test
     void getFixedWeeklySchedule2() throws Exception {
-        YearMonth month = YearMonth.parse("2023");
+        YearMonth month = YearMonth.parse("2023-10");
         Long memberId = 2L;
         ResultActions perform = mvc.perform(
                 get(String.format("/schedule/fix/month/%s/%s", month, memberId)));

@@ -107,7 +107,7 @@ public class ScheduleService {
                 .orElseThrow(() -> new CustomException("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
 
         Week week = null;
-        if (member.getIsAdmin()) {
+        if (user.getIsAdmin()) {
             week = weekRepository.findByScheduleIdStartDateAndAndStatus(schedule.getId(), request, WeekRecruitmentStatus.STARTED)
                     .orElseThrow(() -> new CustomException("모집 중인 스케줄을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
         } else {
