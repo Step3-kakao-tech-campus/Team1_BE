@@ -11,6 +11,7 @@
         <include resource="file-warn-appender.xml"/>
         <include resource="file-error-appender.xml"/>
 
+        <!-- 로컬 환경에서 출력할 root level 설정 -->
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE-INFO"/>
@@ -24,6 +25,8 @@
         <include resource="file-warn-appender.xml"/>
         <include resource="file-error-appender.xml"/>
 
+
+        <!-- 배포 환경에서 출력할 root level 설정 -->
         <root level="INFO">
             <appender-ref ref="FILE-INFO"/>
             <appender-ref ref="FILE-WARN"/>
