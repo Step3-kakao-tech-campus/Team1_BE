@@ -30,4 +30,14 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
                                                        @Param("toMonth") LocalDate toMonth,
                                                        @Param("memberId") Long id,
                                                        @Param("status") ApplyStatus status);
+
+    @Query("select a " +
+            "from Apply a " +
+            "where a.worktime.id = :worktimeId")
+    List<Apply> findAppliesByWorktimeId(@Param("worktimeId") Long id);
+
+    @Query("select a " +
+            "from Apply a " +
+            "where a.worktime.id in (:worktimeIds)")
+    List<Apply> findAppliesByWorktimeIds(@Param("worktimeIds") List<Long> worktimeIds);
 }
