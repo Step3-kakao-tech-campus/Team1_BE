@@ -24,7 +24,7 @@ public class NotificationInfo {
 
         @Getter
         @NoArgsConstructor
-        public class Notice {
+        public static class Notice {
             private String date;                // 알림 보낸 시각
             private String content;             // 알림 내용
             private String notificationType;    // 알림 타입
