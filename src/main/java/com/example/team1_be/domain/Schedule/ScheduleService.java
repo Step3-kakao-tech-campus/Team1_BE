@@ -10,6 +10,7 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Schedule.Recommend.*;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +34,7 @@ import java.util.stream.IntStream;
 @Transactional(readOnly = true)
 public class ScheduleService {
     private final int NUM_RECOMMENDS = 3;
+
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
     private final ScheduleRepository scheduleRepository;
@@ -39,6 +42,10 @@ public class ScheduleService {
     private final DayRepository dayRepository;
     private final WorktimeRepository worktimeRepository;
     private final ApplyRepository applyRepository;
+    private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
+    private final RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
+
+    private final EntityManager em;
 
     @Transactional
     public void recruitSchedule(User user, RecruitSchedule.Request request) {
@@ -185,8 +192,51 @@ public class ScheduleService {
 
 
         SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
-        List<List<Apply>> generatedSchedule = generator.generateSchedule(NUM_RECOMMENDS);
+        List<List<Apply>> generatedSchedules = generator.generateSchedule(NUM_RECOMMENDS);
 
-        return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedule);
+        for (List<Apply> generatedSchedule:generatedSchedules) {
+            List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
+            for (Worktime worktime : weeklyWorktimes) {
+                List<Apply> applies = generatedSchedule.stream()
+                        .filter(x -> x.getWorktime().getId().equals(worktime.getId()))
+                        .collect(Collectors.toList());
+
+                recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
+                                .worktime(worktime)
+                                .applies(applies)
+                                .build());
+            }
+            recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
+            recommendedWeeklyScheduleRepository.save(RecommendedWeeklySchedule.builder()
+                            .user(user)
+                            .recommendedWorktimeApplies(recommendedWorktimeApplies)
+                            .build());
+            System.out.println("완료");
+        }
+
+//        return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
+        return null;
+    }
+
+    @Transactional
+    public void fixSchedule(User user, FixSchedule.Request request) {
+        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user);
+        if (recommendedSchedule.isEmpty()) {
+            throw new CustomException("추천 일정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+        RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(0);
+
+        List<Apply> selectedApplies = new ArrayList<>();
+        recommendedWeeklySchedule.getRecommendedWorktimeApplies()
+                .stream()
+                .forEach(recommendedWorktimeApply -> recommendedWorktimeApply.getApplies()
+                        .forEach(apply -> selectedApplies.add(apply.updateStatus(ApplyStatus.FIX))));
+        applyRepository.saveAll(selectedApplies);
+        recommendedWeeklyScheduleRepository.deleteByUser(user);
+
+        List<RecommendedWorktimeApply> clearList = new ArrayList<>();
+        recommendedSchedule.forEach(schedule -> schedule.getRecommendedWorktimeApplies()
+                .forEach(x->clearList.add(x)));
+        recommendedWorktimeApplyRepository.deleteAll(clearList);
     }
 }
