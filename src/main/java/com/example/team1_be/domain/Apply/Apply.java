@@ -39,4 +39,13 @@ public class Apply extends BaseEntity {
         this.worktime = worktime;
         this.member = member;
     }
+
+    public Apply updateStatus(ApplyStatus status) {
+        return Apply.builder()
+                .id(this.id)
+                .status(status)
+                .worktime(this.worktime)
+                .member(this.member)
+                .build();
+    }
 }
