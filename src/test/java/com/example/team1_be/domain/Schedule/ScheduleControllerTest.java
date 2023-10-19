@@ -1,7 +1,13 @@
 package com.example.team1_be.domain.Schedule;
 
+import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
+import com.example.team1_be.domain.Schedule.Recommend.RecommendedWeeklySchedule;
+import com.example.team1_be.domain.Schedule.Recommend.RecommendedWeeklyScheduleRepository;
+import com.example.team1_be.domain.Schedule.Recommend.RecommendedWorktimeApply;
+import com.example.team1_be.domain.Schedule.Recommend.RecommendedWorktimeApplyRepository;
 import com.example.team1_be.util.WithMockCustomUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +25,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,6 +39,10 @@ class ScheduleControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper om;
+    @Autowired
+    private RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
+    @Autowired
+    private RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
 
     @WithMockCustomUser
     @DisplayName("스케줄 모집 성공")
@@ -300,6 +311,29 @@ class ScheduleControllerTest {
         ResultActions perform = mvc.perform(
                 get(String.format("/schedule/recommend/%s", date)));
         perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
+
+    @DisplayName("스케줄 확정하기 성공")
+    @WithMockCustomUser
+    @Test
+    void fixSchedule1() throws Exception {
+        // given
+        LocalDate date = LocalDate.parse("2023-10-16");
+        mvc.perform(
+                get(String.format("/schedule/recommend/%s", date)));
+
+        // when
+        FixSchedule.Request requestDTO = new FixSchedule.Request(1L);
+        String request = om.writeValueAsString(requestDTO);
+        ResultActions perform = mvc.perform(
+                post("/schedule/fix")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+        );
+        perform.andExpect(status().isOk());
+        assertThat(recommendedWeeklyScheduleRepository.findAll().size()).isEqualTo(0);
+        assertThat(recommendedWorktimeApplyRepository.findAll().size()).isEqualTo(0);
         perform.andDo(print());
     }
 }
