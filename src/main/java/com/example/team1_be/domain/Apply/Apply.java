@@ -24,6 +24,7 @@ public class Apply extends BaseEntity {
     private ApplyStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "worktime_id")
     @NotNull
     private Worktime worktime;
 
@@ -37,5 +38,14 @@ public class Apply extends BaseEntity {
         this.status = status;
         this.worktime = worktime;
         this.member = member;
+    }
+
+    public Apply updateStatus(ApplyStatus status) {
+        return Apply.builder()
+                .id(this.id)
+                .status(status)
+                .worktime(this.worktime)
+                .member(this.member)
+                .build();
     }
 }

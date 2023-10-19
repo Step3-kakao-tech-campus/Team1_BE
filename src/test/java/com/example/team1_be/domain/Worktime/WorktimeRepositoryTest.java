@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Worktime;
 
 import com.example.team1_be.BaseTest;
+import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
@@ -34,5 +35,25 @@ class WorktimeRepositoryTest extends BaseTest {
         Day firstOfDay = dayRepository.findByWeekId(week.getId()).get(0);
         List<Worktime> monday = worktimeRepository.findByDayId(firstOfDay.getId());
         assertThat(monday.size()).isEqualTo(3);
+    }
+
+    @DisplayName("양방향 매핑 조회 worktime 측면")
+    @Test
+    void bidirectionalSelect1() {
+        Worktime worktime = worktimeRepository.findById(1L)
+                .orElse(null);
+        assertThat(worktime).isNotEqualTo(null);
+        List<Apply> applyList = worktime.getApplyList();
+        assertThat(applyList.size()).isNotEqualTo(0);
+    }
+
+    @DisplayName("양방향 매핑 조회 apply 측면")
+    @Test
+    void bidirectionalSelect2() {
+        Apply apply = applyRepository.findById(1L)
+                        .orElse(null);
+        assertThat(apply).isNotEqualTo(null);
+        Worktime worktime = apply.getWorktime();
+        System.out.println(worktime.getId());
     }
 }
