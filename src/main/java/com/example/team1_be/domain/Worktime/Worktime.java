@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Worktime;
 
+import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -35,6 +37,9 @@ public class Worktime extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Day day;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "worktime")
+    private List<Apply> applyList;
 
     @Builder
     public Worktime(Long id, LocalTime startTime, LocalTime endTime, String title, int amount, Day day) {
