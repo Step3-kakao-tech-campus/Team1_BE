@@ -1,10 +1,13 @@
 package com.example.team1_be.domain.Worktime;
 
+import com.example.team1_be.domain.Schedule.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorktimeRepository extends JpaRepository<Worktime, Long> {
     @Query("select w " +
@@ -17,4 +20,10 @@ public interface WorktimeRepository extends JpaRepository<Worktime, Long> {
             "from Worktime w " +
             "where w.day.week.id = :weekId")
     Long findCountByWeekId(@Param("weekId") long weekId);
+
+    @Query("select w " +
+            "from Worktime w " +
+            "where w.day.week.startDate = :date " +
+            "and w.day.week.schedule.id = :scheduleId")
+    List<Worktime> findByDateAndScheduleId(@Param("date")LocalDate date, @Param("scheduleId")Long scheduleId);
 }

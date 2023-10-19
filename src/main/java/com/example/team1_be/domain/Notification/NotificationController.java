@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Notification;
 
+import com.example.team1_be.domain.Notification.DTO.NotificationInfo;
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class NotificationController {
 
     @GetMapping
     public ResponseEntity<ApiUtils.ApiResult> findAllNotification(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        NotificationResponse notificationResponse = notificationService.findAllNotification(userDetails.getUser());
-        return ResponseEntity.ok(ApiUtils.success(notificationResponse));
+        NotificationInfo.Response notificationInfo = notificationService.findAllNotification(userDetails.getUser());
+        return ResponseEntity.ok(ApiUtils.success(notificationInfo));
     }
 }
