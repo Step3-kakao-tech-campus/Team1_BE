@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Schedule;
+package com.example.team1_be.domain.Schedule.Recommend;
 
 import com.example.team1_be.domain.Apply.Apply;
 import org.apache.el.util.ReflectionUtil;
