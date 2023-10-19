@@ -18,20 +18,16 @@ public class UserService {
     private final UnfinishedUserRepository unfinishedUserRepository;
     private final JwtProvider jwtProvider;
 
-    @Transactional
-    public void saveUnfinishedUser(String code, Long kakaoId) {
-        UnfinishedUser unfinishedUser = UnfinishedUser.builder()
-                .code(code)
-                .kakaoId(kakaoId)
-                .build();
-        unfinishedUserRepository.save(unfinishedUser);
-    }
-
     @Transactional(noRollbackFor = NotFoundException.class)
     public Login.Response login(String code, Long kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
         if (user == null) {
-            saveUnfinishedUser(code, kakaoId);
+            UnfinishedUser unfinishedUser = UnfinishedUser.builder()
+                    .code(code)
+                    .kakaoId(kakaoId)
+                    .build();
+            unfinishedUserRepository.save(unfinishedUser);
+
             throw new NotFoundException("회원이 아닙니다.");
         }
 
