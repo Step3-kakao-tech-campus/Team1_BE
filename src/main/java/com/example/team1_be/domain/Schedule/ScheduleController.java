@@ -37,7 +37,6 @@ public class ScheduleController {
         ApiUtils.ApiResult<WeeklyScheduleCheck.Response> response = ApiUtils.success(responseDTO);
         return ResponseEntity.ok(response);
     }
-
     @GetMapping("/fix/month/{requestMonth}/{memberId}")
     public ResponseEntity<?> getFixedWeeklySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @PathVariable("requestMonth") @DateTimeFormat(pattern = "yyyy-MM") YearMonth requestMonth,
@@ -52,6 +51,14 @@ public class ScheduleController {
                                                @PathVariable("weekStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         RecommendSchedule.Response responseDTO = scheduleService.recommendSchedule(userDetails.getUser(), date);
         ApiUtils.ApiResult<RecommendSchedule.Response> response = ApiUtils.success(responseDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/fix")
+    public ResponseEntity<?> fixSchedule(@AuthenticationPrincipal CustomUserDetails userDetail,
+                                         @RequestBody FixSchedule.Request request) {
+        scheduleService.fixSchedule(userDetail.getUser(), request);
+        ApiUtils.ApiResult<Object> response = ApiUtils.success(null);
         return ResponseEntity.ok(response);
     }
 }
