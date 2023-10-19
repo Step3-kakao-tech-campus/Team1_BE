@@ -15,18 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final UnfinishsedUserRepository unfinishedUserRepository;
+    private final UnfinishedUserRepository unfinishedUserRepository;
     private final JwtProvider jwtProvider;
 
+    @Transactional
+    public void saveUnfinishedUser(String code, Long kakaoId) {
+        UnfinishedUser unfinishedUser = UnfinishedUser.builder()
+                .code(code)
+                .kakaoId(kakaoId)
+                .build();
+        unfinishedUserRepository.save(unfinishedUser);
+    }
+
+    @Transactional(noRollbackFor = NotFoundException.class)
     public Login.Response login(String code, Long kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
         if (user == null) {
-            UnfinishedUser unfinishedUser = UnfinishedUser.builder()
-                    .code(code)
-                    .kakaoId(kakaoId)
-                    .build();
-            unfinishedUserRepository.save(unfinishedUser);
-
+            saveUnfinishedUser(code, kakaoId);
             throw new NotFoundException("회원이 아닙니다.");
         }
 
@@ -34,7 +39,6 @@ public class UserService {
     }
 
     // login 시도했던 code를 통해, join 시 kakaoId와 매칭
-    @Transactional
     public Long matchKakaoId(String code) {
         UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
                 () -> new BadRequestException("유효하지 않은 code입니다.")
@@ -60,7 +64,6 @@ public class UserService {
         return new Join.Response(request.getIsAdmin());
     }
 
-    @Transactional
     public String getJWT(Long kakaoId){
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
         return jwtProvider.createJwt(user.getId());
