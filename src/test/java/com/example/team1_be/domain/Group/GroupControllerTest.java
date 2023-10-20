@@ -16,6 +16,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -341,9 +343,9 @@ public class GroupControllerTest {
 
         assertThat(member).isNotEqualTo(null);
         assertThat(member.getCreatedBy()).isNotEqualTo(null);
-        assertThat(member.getCreatedAt()).isNotEqualTo(null);
         assertThat(member.getLastUpdatedBy()).isNotEqualTo(null);
-        assertThat(member.getUpdatedAt()).isNotEqualTo(null);
+        assertThat(member.getCreatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
+        assertThat(member.getUpdatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
 
     }
 }
