@@ -42,10 +42,17 @@ public class JwtProvider {
                     .setSigningKey(secretKey)
                     .parseClaimsJws(jwtString);
             return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            return false;
+        } catch (UnsupportedJwtException e) {
+            return false;
+        } catch (IllegalArgumentException e) {
+            return false;
+        } catch (ExpiredJwtException e) {
+            return false;
         } catch (Exception e){
-            System.out.println(e.toString());
+            return false;
         }
-        return false;
     }
 
     public Authentication getAuthentication(String token) {

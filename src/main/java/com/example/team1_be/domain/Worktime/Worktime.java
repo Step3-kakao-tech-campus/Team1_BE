@@ -2,14 +2,13 @@ package com.example.team1_be.domain.Worktime;
 
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 

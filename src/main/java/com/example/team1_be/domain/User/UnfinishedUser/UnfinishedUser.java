@@ -1,6 +1,5 @@
 package com.example.team1_be.domain.User.UnfinishedUser;
 
-import com.example.team1_be.utils.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

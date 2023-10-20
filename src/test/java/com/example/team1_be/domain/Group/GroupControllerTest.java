@@ -2,6 +2,7 @@ package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
+import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.util.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -310,5 +313,39 @@ public class GroupControllerTest {
         // then
         perform.andExpect(status().isForbidden());
         perform.andDo(print());
+    }
+
+    @DisplayName("그룹 생성시 Auditing 확인")
+    @WithMockCustomUser(isAdmin="true")
+    @Sql("group-create1.sql")
+    @Test
+    void userAuditing1() throws Exception {
+        // given
+        Create.Request requestDTO = Create.Request.builder()
+                .marketName("kakao")
+                .marketNumber("10-31223442")
+                .mainAddress("금강로 279번길 19")
+                .detailAddress("ㅁㅁ건물 2층 ㅇㅇ상가")
+                .build();
+        String request = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions perform = mvc.perform(post("/group")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        // then
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+        assertThat(groupRepository.findAll().size()).isEqualTo(1);
+        assertThat(memberRepository.findAll().size()).isEqualTo(1);
+        Member member = memberRepository.findById(1L).orElse(null);
+
+        assertThat(member).isNotEqualTo(null);
+        assertThat(member.getCreatedBy()).isNotEqualTo(null);
+        assertThat(member.getLastUpdatedBy()).isNotEqualTo(null);
+        assertThat(member.getCreatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
+        assertThat(member.getUpdatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
+
     }
 }
