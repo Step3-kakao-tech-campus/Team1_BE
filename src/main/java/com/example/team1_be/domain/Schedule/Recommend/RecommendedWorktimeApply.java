@@ -1,20 +1,15 @@
 package com.example.team1_be.domain.Schedule.Recommend;
 
 import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
-import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor

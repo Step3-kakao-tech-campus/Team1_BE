@@ -34,6 +34,7 @@ import java.util.stream.IntStream;
 @Transactional(readOnly = true)
 public class ScheduleService {
     private final int NUM_RECOMMENDS = 3;
+    private final int NUM_DAYS_OF_WEEK = 7;
 
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
@@ -49,7 +50,7 @@ public class ScheduleService {
 
     @Transactional
     public void recruitSchedule(User user, RecruitSchedule.Request request) {
-        if (request.getWeeklyAmount().size() != 7){
+        if (request.getWeeklyAmount().size() != NUM_DAYS_OF_WEEK){
             throw new CustomException("모든 요일에 대한 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         }
         // member 찾기

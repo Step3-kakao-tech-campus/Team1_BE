@@ -2,7 +2,7 @@ package com.example.team1_be.domain.Apply;
 
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
