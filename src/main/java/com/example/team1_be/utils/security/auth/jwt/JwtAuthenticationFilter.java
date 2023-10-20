@@ -2,6 +2,7 @@ package com.example.team1_be.utils.security.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -24,8 +25,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if (authorization != null && authorization.startsWith("Bearer ")) {
             token = authorization.substring(7);
             if (jwtProvider.verify(token)) {
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
                 Authentication authentication = jwtProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                context.setAuthentication(authentication);
             }
 
         }
