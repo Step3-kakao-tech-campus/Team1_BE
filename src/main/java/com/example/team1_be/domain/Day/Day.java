@@ -1,7 +1,7 @@
 package com.example.team1_be.domain.Day;
 
 import com.example.team1_be.domain.Week.Week;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

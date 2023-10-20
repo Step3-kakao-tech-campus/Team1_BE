@@ -2,7 +2,7 @@ package com.example.team1_be.domain.Member;
 
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.User.User;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
