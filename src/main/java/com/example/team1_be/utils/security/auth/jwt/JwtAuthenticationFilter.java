@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String authorization = ((HttpServletRequest) request).getHeader("Authorization");
         String token;
-        if (authorization != null && authorization.startsWith("Bearer ")) {
+        if (isAuthorizationValid(authorization)) {
             token = authorization.substring(7);
             if (jwtProvider.verify(token)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -32,5 +32,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         }
         chain.doFilter(request, response);
+    }
+
+    private boolean isAuthorizationValid(String authorization) {
+        return authorization != null && authorization.startsWith("Bearer ");
     }
 }
