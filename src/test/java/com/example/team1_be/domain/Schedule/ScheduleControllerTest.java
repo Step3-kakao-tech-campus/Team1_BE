@@ -168,8 +168,8 @@ class ScheduleControllerTest {
         perform.andExpect(status().isBadRequest());
     }
 
-    @WithMockCustomUser(username = "eunjin")
-    @DisplayName("스케줄 모집 성공(weeklyAmount 공백 데이터만 추가)")
+    @WithMockCustomUser
+    @DisplayName("스케줄 모집 성공(중첩 빈배열)")
     @Test
     void test5() throws Exception {
         ArrayList arrayList = new ArrayList();
@@ -180,7 +180,6 @@ class ScheduleControllerTest {
                 .weeklyAmount(arrayList)
                 .build();
         String request = om.writeValueAsString(requestDTO);
-        System.out.println(request);
 
         ResultActions perform = mvc.perform(post("/schedule/worktime")
                 .contentType(MediaType.APPLICATION_JSON)
