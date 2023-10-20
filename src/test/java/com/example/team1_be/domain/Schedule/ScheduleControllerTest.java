@@ -169,7 +169,7 @@ class ScheduleControllerTest {
     }
 
     @WithMockCustomUser
-    @DisplayName("스케줄 모집 성공(중첩 빈배열)")
+    @DisplayName("스케줄 모집 실패(중첩 빈배열)")
     @Test
     void test5() throws Exception {
         ArrayList arrayList = new ArrayList();
