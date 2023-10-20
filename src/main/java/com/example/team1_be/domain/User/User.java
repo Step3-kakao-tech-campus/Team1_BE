@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @Getter
 @Table(name="users")
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
