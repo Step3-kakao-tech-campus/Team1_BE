@@ -200,24 +200,22 @@ public class ScheduleService {
 
     @Transactional
     public void fixSchedule(User user, FixSchedule.Request request) {
-        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user);
-        if (recommendedSchedule.isEmpty()) {
-            throw new CustomException("추천 일정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
-        }
-        RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(0);
+        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user.getId());
+        RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
+
+        Week week = recommendedWeeklySchedule.getRecommendedWorktimeApplies().get(0).getApply().getWorktime().getDay().getWeek();
+
+        weekRepository.save(week.updateStatus(WeekRecruitmentStatus.ENDED));
 
         List<Apply> selectedApplies = new ArrayList<>();
         recommendedWeeklySchedule.getRecommendedWorktimeApplies()
-                .stream()
-                .forEach(recommendedWorktimeApply -> recommendedWorktimeApply.getApplies()
-                        .forEach(apply -> selectedApplies.add(apply.updateStatus(ApplyStatus.FIX))));
+                .forEach(recommendedWorktimeApply ->
+                        selectedApplies.add(recommendedWorktimeApply.getApply().updateStatus(ApplyStatus.FIX)));
         applyRepository.saveAll(selectedApplies);
-        recommendedWeeklyScheduleRepository.deleteByUser(user);
 
-        List<RecommendedWorktimeApply> clearList = new ArrayList<>();
-        recommendedSchedule.forEach(schedule -> schedule.getRecommendedWorktimeApplies()
-                .forEach(x->clearList.add(x)));
-        recommendedWorktimeApplyRepository.deleteAll(clearList);
+
+        recommendedSchedule.forEach(x->recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
+        recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
     }
 
     public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
