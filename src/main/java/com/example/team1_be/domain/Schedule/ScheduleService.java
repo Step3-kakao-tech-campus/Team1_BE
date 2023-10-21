@@ -34,7 +34,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ScheduleService {
-    private final int NUM_RECOMMENDS = 3;
     private final int NUM_DAYS_OF_WEEK = 7;
 
     private final MemberRepository memberRepository;
