@@ -20,6 +20,7 @@ public class Invite extends BaseEntity {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String code;
 
     private LocalDateTime renewedAt;
