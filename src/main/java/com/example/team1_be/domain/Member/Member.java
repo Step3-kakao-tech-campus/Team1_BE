@@ -23,13 +23,11 @@ public class Member extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    @JsonBackReference
     @NotNull
     private Group group;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
     @NotNull
     private User user;
 
