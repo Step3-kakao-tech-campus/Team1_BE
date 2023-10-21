@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Apply;
 
 import com.example.team1_be.domain.Member.Member;
+import com.example.team1_be.domain.Schedule.Recommend.RecommendedWorktimeApply;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -32,12 +34,16 @@ public class Apply extends BaseEntity {
     @NotNull
     private Member member;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "apply")
+    private List<RecommendedWorktimeApply> recommendedWorktimeApplies;
+
     @Builder
-    public Apply(Long id, ApplyStatus status, Worktime worktime, Member member) {
+    public Apply(Long id, ApplyStatus status, Worktime worktime, Member member, List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
         this.id = id;
         this.status = status;
         this.worktime = worktime;
         this.member = member;
+        this.recommendedWorktimeApplies = recommendedWorktimeApplies;
     }
 
     public Apply updateStatus(ApplyStatus status) {

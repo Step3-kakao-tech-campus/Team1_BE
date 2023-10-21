@@ -9,16 +9,17 @@ public class SchduleGenerator {
     private List<Apply> applyList;
     private Map<Long, Integer> requestMap;
     private List<List<Apply>> generatedApplies;
+    private final int GEN_LIMIT = 3;
     private int limit;
 
     public SchduleGenerator(List<Apply> applyList, Map<Long, Integer> requestMap) {
         this.applyList = applyList;
         this.requestMap = requestMap;
         this.generatedApplies = new ArrayList<>();
+        this.limit = GEN_LIMIT;
     }
 
-    public List<List<Apply>> generateSchedule(int limit) {
-        this.limit = limit;
+    public List<List<Apply>> generateSchedule() {
         recursiveSearch(this.applyList, 0, this.requestMap, new ArrayList<>());
         return generatedApplies;
     }

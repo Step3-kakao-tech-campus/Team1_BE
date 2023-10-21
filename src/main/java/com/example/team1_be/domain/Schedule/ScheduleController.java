@@ -61,4 +61,12 @@ public class ScheduleController {
         ApiUtils.ApiResult<Object> response = ApiUtils.success(null);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/fix/day/{selectedDate}")
+    public ResponseEntity<?> getDailyFixedApplies(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                  @PathVariable("selectedDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate) {
+        GetDailyFixedApplies.Response responseDTO = scheduleService.getDailyFixedApplies(userDetails.getUser(), selectedDate);
+        ApiUtils.ApiResult<Object> response = ApiUtils.success(responseDTO);
+        return ResponseEntity.ok(response);
+    }
 }

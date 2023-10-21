@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Schedule.Recommend;
 
 import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,8 +24,7 @@ public class RecommendedWeeklySchedule extends BaseEntity {
     @NotNull
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @NotNull
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "recommendedWeeklySchedule", orphanRemoval = true)
     private List<RecommendedWorktimeApply> recommendedWorktimeApplies;
 
     @Builder

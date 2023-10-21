@@ -36,7 +36,6 @@ public class Group extends BaseEntity {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-    @JsonManagedReference
     private List<Member> members;
 
     @Builder

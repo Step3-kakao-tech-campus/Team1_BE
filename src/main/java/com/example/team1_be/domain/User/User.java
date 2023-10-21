@@ -34,7 +34,6 @@ public class User extends BaseEntity {
     private Boolean isAdmin;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonBackReference
     private Member member;
 
     @Builder

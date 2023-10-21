@@ -17,7 +17,9 @@ import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ScheduleService {
-    private final int NUM_RECOMMENDS = 3;
     private final int NUM_DAYS_OF_WEEK = 7;
 
     private final MemberRepository memberRepository;
@@ -156,88 +157,89 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findByGroup(group)
                 .orElseThrow(() -> new CustomException("스케줄이 등록되어 있지 않습니다.", HttpStatus.FORBIDDEN));
 
-        List<Worktime> weeklyWorktimes = worktimeRepository.findByDateAndScheduleId(date, schedule.getId());
-
+        List<Worktime> weeklyWorktimes = worktimeRepository.findByStartDateAndScheduleId(date, schedule.getId());
         if (weeklyWorktimes.size() == 0) {
             throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
         }
+
         List<Long> worktimeIds = weeklyWorktimes.stream()
                 .map(Worktime::getId)
                 .collect(Collectors.toList());
 
         List<Apply> applyList = applyRepository.findAppliesByWorktimeIds(worktimeIds);
 
-//        int applySize = applyList.size();
-
         Map<Long,Integer> requestMap = weeklyWorktimes.stream()
                 .collect(Collectors.toMap(Worktime::getId, Worktime::getAmount));
 
-//        Long [][] priorityTable = new Long[weeklyWorktimes.size()][2];
-//        for(int i = 0; i< weeklyWorktimes.size(); i++) {
-//            Worktime worktime = weeklyWorktimes.get(i);
-//            priorityTable[i][0] = worktime.getId();
-//            priorityTable[i][1] = (long) (worktime.getAmount() - applyRepository.findAppliesByWorktimeId(worktime.getId()).size());
-//        }
-//        Arrays.sort(priorityTable, (a, b)->Long.compare(b[1],a[1])); // 여유 인원이 적은 곳 부터 할당하기 위해서 정렬
-
-//        Long [][] applyTable = new Long[applySize][3];
-//        for(i=0;i<applySize;i++) {
-//            Apply apply = applyList.get(i);
-//            applyTable[i][0] = apply.getId();
-//            applyTable[i][1] = apply.getWorktime().getId();
-//            applyTable[i][2] = Arrays.stream(priorityTable)
-//                    .filter(x->x[0]==apply.getWorktime().getId())
-//                    .findFirst().get()[1];
-//        }
-//        Arrays.sort(applyTable, (a,b)->Long.compare(b[2],a[2]));
-
-
         SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
-        List<List<Apply>> generatedSchedules = generator.generateSchedule(NUM_RECOMMENDS);
+        List<List<Apply>> generatedSchedules = generator.generateSchedule();
 
         for (List<Apply> generatedSchedule:generatedSchedules) {
+            RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
+                    .user(user)
+                    .build();
+            recommendedWeeklyScheduleRepository.save(weeklySchedule);
+
             List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
             for (Worktime worktime : weeklyWorktimes) {
                 List<Apply> applies = generatedSchedule.stream()
                         .filter(x -> x.getWorktime().getId().equals(worktime.getId()))
                         .collect(Collectors.toList());
 
-                recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
-                                .worktime(worktime)
-                                .applies(applies)
-                                .build());
-            }
-            recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
-            recommendedWeeklyScheduleRepository.save(RecommendedWeeklySchedule.builder()
-                            .user(user)
-                            .recommendedWorktimeApplies(recommendedWorktimeApplies)
+                for(Apply apply: applies) {
+                    recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
+                            .recommendedWeeklySchedule(weeklySchedule)
+                            .apply(apply)
                             .build());
-            System.out.println("완료");
-        }
+                }
+            }
 
-//        return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
-        return null;
+            recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
+        }
+        return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
     }
 
     @Transactional
     public void fixSchedule(User user, FixSchedule.Request request) {
-        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user);
-        if (recommendedSchedule.isEmpty()) {
-            throw new CustomException("추천 일정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
-        }
-        RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(0);
+        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user.getId());
+        RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
+
+        Week week = recommendedWeeklySchedule.getRecommendedWorktimeApplies().get(0).getApply().getWorktime().getDay().getWeek();
+
+        weekRepository.save(week.updateStatus(WeekRecruitmentStatus.ENDED));
 
         List<Apply> selectedApplies = new ArrayList<>();
         recommendedWeeklySchedule.getRecommendedWorktimeApplies()
-                .stream()
-                .forEach(recommendedWorktimeApply -> recommendedWorktimeApply.getApplies()
-                        .forEach(apply -> selectedApplies.add(apply.updateStatus(ApplyStatus.FIX))));
+                .forEach(recommendedWorktimeApply ->
+                        selectedApplies.add(recommendedWorktimeApply.getApply().updateStatus(ApplyStatus.FIX)));
         applyRepository.saveAll(selectedApplies);
-        recommendedWeeklyScheduleRepository.deleteByUser(user);
 
-        List<RecommendedWorktimeApply> clearList = new ArrayList<>();
-        recommendedSchedule.forEach(schedule -> schedule.getRecommendedWorktimeApplies()
-                .forEach(x->clearList.add(x)));
-        recommendedWorktimeApplyRepository.deleteAll(clearList);
+
+        recommendedSchedule.forEach(x->recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
+        recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
+    }
+
+    public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
+        Group group = groupRepository.findByUser(user.getId())
+                .orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
+        Schedule schedule = scheduleRepository.findByGroup(group)
+                .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
+
+        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
+        int dayOfWeek = selectedDate.getDayOfWeek().getValue();
+        List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
+        if (worktimes.isEmpty()) {
+            throw new BadRequestException("확정된 스케줄이 아닙니다.");
+        }
+
+        List<List<Apply>> dailyApplies = new ArrayList<>();
+        for(Worktime worktime: worktimes) {
+            List<Apply> applies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
+            if (applies.size() != worktime.getAmount()) {
+                throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
+            }
+            dailyApplies.add(applies);
+        }
+        return new GetDailyFixedApplies.Response(worktimes, dailyApplies);
     }
 }

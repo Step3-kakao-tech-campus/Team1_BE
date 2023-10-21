@@ -34,6 +34,7 @@ public class Worktime extends BaseEntity {
     private int amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "day_id")
     @NotNull
     private Day day;
 
