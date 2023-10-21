@@ -174,27 +174,28 @@ public class ScheduleService {
         List<List<Apply>> generatedSchedules = generator.generateSchedule();
 
         for (List<Apply> generatedSchedule:generatedSchedules) {
+            RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
+                    .user(user)
+                    .build();
+            recommendedWeeklyScheduleRepository.save(weeklySchedule);
+
             List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
             for (Worktime worktime : weeklyWorktimes) {
                 List<Apply> applies = generatedSchedule.stream()
                         .filter(x -> x.getWorktime().getId().equals(worktime.getId()))
                         .collect(Collectors.toList());
 
-                recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
-                                .worktime(worktime)
-                                .applies(applies)
-                                .build());
-            }
-            recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
-            recommendedWeeklyScheduleRepository.save(RecommendedWeeklySchedule.builder()
-                            .user(user)
-                            .recommendedWorktimeApplies(recommendedWorktimeApplies)
+                for(Apply apply: applies) {
+                    recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
+                            .recommendedWeeklySchedule(weeklySchedule)
+                            .apply(apply)
                             .build());
-            System.out.println("완료");
-        }
+                }
+            }
 
-//        return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
-        return null;
+            recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
+        }
+        return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
     }
 
     @Transactional
