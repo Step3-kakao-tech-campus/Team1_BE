@@ -24,4 +24,14 @@ public interface WorktimeRepository extends JpaRepository<Worktime, Long> {
             "where w.day.week.startDate = :date " +
             "and w.day.week.schedule.id = :scheduleId")
     List<Worktime> findByStartDateAndScheduleId(@Param("date")LocalDate date, @Param("scheduleId")Long scheduleId);
+
+    @Query("select w " +
+            "from Worktime w " +
+            "where w.day.week.startDate = :date " +
+            "and w.day.dayOfWeek = :dayOfWeek " +
+            "and w.day.week.schedule.id = :scheduleId " +
+            "and w.day.week.status = 'ENDED'")
+    List<Worktime> findBySpecificDateAndScheduleId(@Param("date") LocalDate date,
+                                                   @Param("dayOfWeek")int dayOfWeek,
+                                                   @Param("scheduleId") Long scheduleId);
 }
