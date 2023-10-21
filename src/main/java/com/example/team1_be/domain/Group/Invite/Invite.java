@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table
+@Table(indexes = @Index(name = "groupInviteCode", columnList = "code",unique = true))
 public class Invite extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
