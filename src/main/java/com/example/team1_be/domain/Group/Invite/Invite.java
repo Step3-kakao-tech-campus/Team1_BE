@@ -13,14 +13,13 @@ import java.time.LocalDateTime;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table
+@Table(indexes = @Index(name = "groupInviteCode", columnList = "code",unique = true))
 public class Invite extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    @Column(unique = true)
     private String code;
 
     private LocalDateTime renewedAt;
