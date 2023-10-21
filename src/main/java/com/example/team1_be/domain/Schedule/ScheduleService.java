@@ -157,40 +157,18 @@ public class ScheduleService {
                 .orElseThrow(() -> new CustomException("스케줄이 등록되어 있지 않습니다.", HttpStatus.FORBIDDEN));
 
         List<Worktime> weeklyWorktimes = worktimeRepository.findByStartDateAndScheduleId(date, schedule.getId());
-
         if (weeklyWorktimes.size() == 0) {
             throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
         }
+
         List<Long> worktimeIds = weeklyWorktimes.stream()
                 .map(Worktime::getId)
                 .collect(Collectors.toList());
 
         List<Apply> applyList = applyRepository.findAppliesByWorktimeIds(worktimeIds);
 
-//        int applySize = applyList.size();
-
         Map<Long,Integer> requestMap = weeklyWorktimes.stream()
                 .collect(Collectors.toMap(Worktime::getId, Worktime::getAmount));
-
-//        Long [][] priorityTable = new Long[weeklyWorktimes.size()][2];
-//        for(int i = 0; i< weeklyWorktimes.size(); i++) {
-//            Worktime worktime = weeklyWorktimes.get(i);
-//            priorityTable[i][0] = worktime.getId();
-//            priorityTable[i][1] = (long) (worktime.getAmount() - applyRepository.findAppliesByWorktimeId(worktime.getId()).size());
-//        }
-//        Arrays.sort(priorityTable, (a, b)->Long.compare(b[1],a[1])); // 여유 인원이 적은 곳 부터 할당하기 위해서 정렬
-
-//        Long [][] applyTable = new Long[applySize][3];
-//        for(i=0;i<applySize;i++) {
-//            Apply apply = applyList.get(i);
-//            applyTable[i][0] = apply.getId();
-//            applyTable[i][1] = apply.getWorktime().getId();
-//            applyTable[i][2] = Arrays.stream(priorityTable)
-//                    .filter(x->x[0]==apply.getWorktime().getId())
-//                    .findFirst().get()[1];
-//        }
-//        Arrays.sort(applyTable, (a,b)->Long.compare(b[2],a[2]));
-
 
         SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
         List<List<Apply>> generatedSchedules = generator.generateSchedule();
