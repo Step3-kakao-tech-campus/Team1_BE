@@ -20,19 +20,18 @@ public class RecommendedWorktimeApply extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @NotNull
-    private Worktime worktime;
-
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apply_id")
-    @NotNull
-    private List<Apply> applies;
+    private Apply apply;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recommendedWeeklySchedule_id")
+    private RecommendedWeeklySchedule recommendedWeeklySchedule;
 
     @Builder
-    public RecommendedWorktimeApply(Long id, Worktime worktime, List<Apply> applies) {
+    public RecommendedWorktimeApply(Long id, Apply apply, RecommendedWeeklySchedule recommendedWeeklySchedule) {
         this.id = id;
-        this.worktime = worktime;
-        this.applies = applies;
+        this.apply = apply;
+        this.recommendedWeeklySchedule = recommendedWeeklySchedule;
     }
 }
