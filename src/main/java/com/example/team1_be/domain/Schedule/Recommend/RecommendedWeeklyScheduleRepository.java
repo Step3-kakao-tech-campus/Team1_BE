@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface RecommendedWeeklyScheduleRepository extends JpaRepository<RecommendedWeeklySchedule, Long> {
     List<RecommendedWeeklySchedule> findByUser(User user);
-
-    void deleteByUser(User user);
 }
