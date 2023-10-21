@@ -3,6 +3,7 @@ package com.example.team1_be.domain.Schedule.Recommend;
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
@@ -18,10 +19,11 @@ import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
 
@@ -32,7 +34,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
 
@@ -119,5 +120,21 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
 
         em.flush();
         em.clear();
+
+        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
+        int dayOfWeek = selectedDate.getDayOfWeek().getValue();
+        List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
+        if (worktimes.isEmpty()) {
+            throw new BadRequestException("확정된 스케줄이 아닙니다.");
+        }
+
+        List<List<Apply>> dailyApplies = new ArrayList<>();
+        for(Worktime worktime: worktimes) {
+            List<Apply> applies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
+            if (applies.size() != worktime.getAmount()) {
+                throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
+            }
+            dailyApplies.add(applies);
+        }
     }
 }
