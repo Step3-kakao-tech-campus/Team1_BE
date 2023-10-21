@@ -17,6 +17,7 @@ import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -223,11 +224,22 @@ public class ScheduleService {
                 .orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
         Schedule schedule = scheduleRepository.findByGroup(group)
                 .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
+
         LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
         int dayOfWeek = selectedDate.getDayOfWeek().getValue();
         List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
+        if (worktimes.isEmpty()) {
+            throw new BadRequestException("확정된 스케줄이 아닙니다.");
+        }
+
         List<List<Apply>> dailyApplies = new ArrayList<>();
-        worktimes.forEach(worktime -> dailyApplies.add(applyRepository.findappliesByWorktimeId(worktime.getId())));
+        for(Worktime worktime: worktimes) {
+            List<Apply> applies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
+            if (applies.size() != worktime.getAmount()) {
+                throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
+            }
+            dailyApplies.add(applies);
+        }
         return new GetDailyFixedApplies.Response(worktimes, dailyApplies);
     }
 }
