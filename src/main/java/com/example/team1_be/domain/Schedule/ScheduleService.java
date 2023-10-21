@@ -18,6 +18,7 @@ import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -156,7 +157,7 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findByGroup(group)
                 .orElseThrow(() -> new CustomException("스케줄이 등록되어 있지 않습니다.", HttpStatus.FORBIDDEN));
 
-        List<Worktime> weeklyWorktimes = worktimeRepository.findByDateAndScheduleId(date, schedule.getId());
+        List<Worktime> weeklyWorktimes = worktimeRepository.findByStartDateAndScheduleId(date, schedule.getId());
 
         if (weeklyWorktimes.size() == 0) {
             throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
@@ -239,5 +240,18 @@ public class ScheduleService {
         recommendedSchedule.forEach(schedule -> schedule.getRecommendedWorktimeApplies()
                 .forEach(x->clearList.add(x)));
         recommendedWorktimeApplyRepository.deleteAll(clearList);
+    }
+
+    public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
+        Group group = groupRepository.findByUser(user.getId())
+                .orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
+        Schedule schedule = scheduleRepository.findByGroup(group)
+                .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
+        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
+        int dayOfWeek = selectedDate.getDayOfWeek().getValue();
+        List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
+        List<List<Apply>> dailyApplies = new ArrayList<>();
+        worktimes.forEach(worktime -> dailyApplies.add(applyRepository.findappliesByWorktimeId(worktime.getId())));
+        return new GetDailyFixedApplies.Response(worktimes, dailyApplies);
     }
 }
