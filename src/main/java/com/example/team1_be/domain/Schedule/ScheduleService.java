@@ -194,7 +194,7 @@ public class ScheduleService {
 
 
         SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
-        List<List<Apply>> generatedSchedules = generator.generateSchedule(NUM_RECOMMENDS);
+        List<List<Apply>> generatedSchedules = generator.generateSchedule();
 
         for (List<Apply> generatedSchedule:generatedSchedules) {
             List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
