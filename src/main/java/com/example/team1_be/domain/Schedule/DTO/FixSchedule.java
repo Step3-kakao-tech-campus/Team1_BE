@@ -9,6 +9,6 @@ public class FixSchedule {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Request {
-        private Long selection;
+        private int selection;
     }
 }

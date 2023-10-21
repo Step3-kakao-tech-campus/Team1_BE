@@ -323,7 +323,7 @@ class ScheduleControllerTest {
                 get(String.format("/schedule/recommend/%s", date)));
 
         // when
-        FixSchedule.Request requestDTO = new FixSchedule.Request(1L);
+        FixSchedule.Request requestDTO = new FixSchedule.Request(1);
         String request = om.writeValueAsString(requestDTO);
         ResultActions perform = mvc.perform(
                 post("/schedule/fix")
