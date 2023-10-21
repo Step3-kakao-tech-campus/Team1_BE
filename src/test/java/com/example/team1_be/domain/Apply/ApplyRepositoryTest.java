@@ -19,6 +19,8 @@ import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class ApplyRepositoryTest extends BaseTest {
 
     public ApplyRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
@@ -123,5 +125,11 @@ class ApplyRepositoryTest extends BaseTest {
         List<Apply> fixedApplies = applyRepository.findAppliesByStatus(ApplyStatus.FIX);
         System.out.println("전체 요구 근무 슬롯 수 : " + worktimeRepository.findCountByWeekId(1L));
         System.out.println("완료된 신청 수 : " + fixedApplies.size());
+    }
+
+    @DisplayName("worktime에 해당하는 fix 상태 apply 조회")
+    @Test
+    void test3() {
+        assertThat(applyRepository.findFixedAppliesByWorktimeId(1L).size()).isNotEqualTo(0);
     }
 }
