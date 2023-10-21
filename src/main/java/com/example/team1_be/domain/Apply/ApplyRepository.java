@@ -18,6 +18,12 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     @Query("select a " +
             "from Apply a " +
+            "where a.worktime.id = :worktimeId " +
+            "and a.status = 'FIX'")
+    List<Apply> findFixedAppliesByWorktimeId(@Param("worktimeId") Long worktimeId);
+
+    @Query("select a " +
+            "from Apply a " +
             "where a.status = :status")
     List<Apply> findAppliesByStatus(@Param("status") ApplyStatus status);
 
