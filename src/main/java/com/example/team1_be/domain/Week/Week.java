@@ -37,4 +37,9 @@ public class Week extends BaseEntity {
         this.startDate = startDate;
         this.schedule = schedule;
     }
+
+    public Week updateStatus(WeekRecruitmentStatus status) {
+        this.status = status;
+        return this;
+    }
 }
