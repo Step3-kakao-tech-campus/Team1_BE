@@ -13,6 +13,8 @@ import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
+import com.example.team1_be.domain.Week.Week;
+import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
@@ -97,5 +99,25 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
         em.flush();
         em.clear();
 
+        int selected = 1;
+        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user.getId());
+        RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(selected);
+
+        Week week = recommendedWeeklySchedule.getRecommendedWorktimeApplies().get(0).getApply().getWorktime().getDay().getWeek();
+
+        weekRepository.save(week.updateStatus(WeekRecruitmentStatus.ENDED));
+
+        List<Apply> selectedApplies = new ArrayList<>();
+        recommendedWeeklySchedule.getRecommendedWorktimeApplies()
+                .forEach(recommendedWorktimeApply ->
+                        selectedApplies.add(recommendedWorktimeApply.getApply().updateStatus(ApplyStatus.FIX)));
+        applyRepository.saveAll(selectedApplies);
+
+
+        recommendedSchedule.forEach(x->recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
+        recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
+
+        em.flush();
+        em.clear();
     }
 }
