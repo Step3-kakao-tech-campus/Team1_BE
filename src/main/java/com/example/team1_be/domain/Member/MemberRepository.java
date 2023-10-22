@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUser(User user);
 
+
     List<Member> findAllByGroup(Group group);
 }

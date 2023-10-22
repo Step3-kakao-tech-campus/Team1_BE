@@ -10,6 +10,8 @@ truncate table substitute;
 truncate table users;
 truncate table week;
 truncate table worktime;
+truncate table recommended_worktime_apply;
+truncate table recommended_weekly_schedule;
 ALTER TABLE apply AUTO_INCREMENT=1;
 ALTER TABLE days AUTO_INCREMENT=1;
 ALTER TABLE groups AUTO_INCREMENT=1;
@@ -21,16 +23,18 @@ ALTER TABLE substitute AUTO_INCREMENT=1;
 ALTER TABLE users AUTO_INCREMENT=1;
 ALTER TABLE week AUTO_INCREMENT=1;
 ALTER TABLE worktime AUTO_INCREMENT=1;
+ALTER TABLE recommended_worktime_apply AUTO_INCREMENT=1;
+ALTER TABLE recommended_weekly_schedule AUTO_INCREMENT=1;
 SET REFERENTIAL_INTEGRITY TRUE;
 
-insert into users (`id`,`kakao_id`,`name`,`phone_number`)
-values (1, 1, '이재훈', '010-0000-0001'),
-       (2, 2, '안한주', '010-0000-0002'),
-       (3, 3, '차지원', '010-0000-0003'),
-       (4, 4, '최은진', '010-0000-0004'),
-       (5, 5, '이현지', '010-0000-0005'),
-       (6, 6, '민하린', '010-0000-0006'),
-       (7, 7, '홍길동', '010-0000-0007');
+insert into users (`id`,`kakao_id`,`name`,`phone_number`, `is_admin`)
+values (1, 1, '이재훈', '010-0000-0001', true),
+       (2, 2, '안한주', '010-0000-0002', false),
+       (3, 3, '차지원', '010-0000-0003', false),
+       (4, 4, '최은진', '010-0000-0004', false),
+       (5, 5, '이현지', '010-0000-0005', false),
+       (6, 6, '민하린', '010-0000-0006', false),
+       (7, 7, '홍길동', '010-0000-0007', false);
 
 insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`)
 values (1, '백소정 부산대점', '011-0000-0001', 1, '부산광역시');
@@ -39,22 +43,22 @@ insert into invite (`id`, `code`, `group_id`)
 values (1, 'testcode1', 1);
 
 -- admin
-insert into member (`id`,`is_admin`,`group_id`,`user_id`)
-values (1, true, 1, 1);
+insert into member (`id`,`group_id`,`user_id`)
+values (1, 1, 1);
 
 -- normal
-insert into member (`id`,`is_admin`,`group_id`,`user_id`)
-values (2, false, 1, 2),
-       (3, false, 1, 3),
-       (4, false, 1, 4),
-       (5, false, 1, 5),
-       (6, false, 1, 6);
+insert into member (`id`,`group_id`,`user_id`)
+values (2, 1, 2),
+       (3, 1, 3),
+       (4, 1, 4),
+       (5, 1, 5),
+       (6, 1, 6);
 
 INSERT INTO notification (`id`, `content`, `type`, `is_read`, `user_id`, `created_by`, `created_at`, `last_updated_by`, `updated_at`)
-VALUES (1, 'ㅁㅁㅁ 님! 새로운 모임을 만들어보세요~', 'START', false, 3, '사용자1', '2022-11-22 12:34:56', '사용자1', '2022-11-22 12:34:56'),
-       (2, 'ㅇㅇㅇ 님! 새로운 알림입니다.', 'START', true, 4, '사용자1', '2023-10-13 10:00:00', '사용자1', '2023-10-13 10:00:00'),
-       (3, 'ㅇㅇㅇ 님! 새로운 알림입니다.', 'START', true, 3, '사용자1', '2023-10-13 10:00:00', '사용자1', '2023-10-13 10:00:00'),
-       (4, 'ㅁㅁ 님! 새로운 모임을 만들어보세요~', 'START', false, 2, '사용자1', '2023-10-13 10:00:00', '사용자1', '2023-10-13 10:00:00');
+VALUES (1, 'ㅁㅁㅁ 님! 새로운 모임을 만들어보세요~', 'START', false, 3, 1, '2022-11-22 12:34:56', 1, '2022-11-22 12:34:56'),
+       (2, 'ㅇㅇㅇ 님! 새로운 알림입니다.', 'START', true, 4, 1, '2023-10-13 10:00:00', 1, '2023-10-13 10:00:00'),
+       (3, 'ㅇㅇㅇ 님! 새로운 알림입니다.', 'START', true, 3, 1, '2023-10-13 10:00:00', 1, '2023-10-13 10:00:00'),
+       (4, 'ㅁㅁ 님! 새로운 모임을 만들어보세요~', 'START', false, 2, 1, '2023-10-13 10:00:00', 1, '2023-10-13 10:00:00');
 
 
 insert into schedule(`id`,`group_id`)
@@ -131,22 +135,22 @@ VALUES
 -- member2's applies
 INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
 VALUES
-    (1, 'REMAIN', 2, 1),
-    (2, 'REMAIN', 2, 2),
-    (3, 'REMAIN', 2, 3),
-    (4, 'REMAIN', 2, 4),
-    (5, 'REMAIN', 2, 5),
-    (6, 'REMAIN', 2, 7),
-    (7, 'REMAIN', 2, 8),
-    (8, 'REMAIN', 2, 9),
-    (9, 'REMAIN', 2, 10),
-    (11, 'REMAIN', 2, 12),
-    (12, 'REMAIN', 2, 13),
-    (13, 'REMAIN', 2, 14),
-    (14, 'REMAIN', 2, 15),
-    (15, 'REMAIN', 2, 16),
-    (16, 'REMAIN', 2, 17),
-    (17, 'REMAIN', 2, 18);
+    (1, 'FIX', 2, 1),
+    (2, 'FIX', 2, 2),
+    (3, 'FIX', 2, 3),
+    (4, 'FIX', 2, 4),
+    (5, 'FIX', 2, 5),
+    (6, 'FIX', 2, 7),
+    (7, 'FIX', 2, 8),
+    (8, 'FIX', 2, 9),
+    (9, 'FIX', 2, 10),
+    (11, 'FIX', 2, 12),
+    (12, 'FIX', 2, 13),
+    (13, 'FIX', 2, 14),
+    (14, 'FIX', 2, 15),
+    (15, 'FIX', 2, 16),
+    (16, 'FIX', 2, 17),
+    (17, 'FIX', 2, 18);
 
 -- member3's applies
 INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)

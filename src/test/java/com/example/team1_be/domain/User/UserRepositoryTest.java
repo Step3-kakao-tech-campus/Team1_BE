@@ -33,6 +33,7 @@ class UserRepositoryTest extends BaseTest {
                 .kakaoId(7L)
                 .name("dlwogns")
                 .phoneNumber("010-1111-1111")
+                .isAdmin(true)
                 .build();
 
         userRepository.save(user);

@@ -1,7 +1,7 @@
 package com.example.team1_be.domain.Week;
 
 import com.example.team1_be.domain.Schedule.Schedule;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +36,10 @@ public class Week extends BaseEntity {
         this.status = status;
         this.startDate = startDate;
         this.schedule = schedule;
+    }
+
+    public Week updateStatus(WeekRecruitmentStatus status) {
+        this.status = status;
+        return this;
     }
 }

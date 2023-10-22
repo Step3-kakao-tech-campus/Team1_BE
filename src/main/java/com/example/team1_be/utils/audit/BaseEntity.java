@@ -1,5 +1,6 @@
-package com.example.team1_be.utils;
+package com.example.team1_be.utils.audit;
 
+import com.example.team1_be.domain.User.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,9 +19,9 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BaseEntity {
     @CreatedBy
-    private String createdBy;
+    private Long createdBy;
     @LastModifiedBy
-    private String lastUpdatedBy;
+    private Long lastUpdatedBy;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate

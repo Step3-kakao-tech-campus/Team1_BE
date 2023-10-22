@@ -3,7 +3,6 @@ package com.example.team1_be.domain.Member;
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
@@ -39,13 +38,13 @@ class MemberRepositoryTest extends BaseTest {
     @DisplayName("멤버 전체 조회")
     @Test
     void test2() throws JsonProcessingException {
-        List<Member> members = memberRepository.findAll();
+        Member me = memberRepository.findById(1L).orElse(null);
+        List<Member> members = memberRepository.findAllByGroup(me.getGroup());
+
         ObjectMapper om = new ObjectMapper();
 
         for(Member member:members) {
-            Group group = member.getGroup();
-            User user = member.getUser();
-            String result = om.writeValueAsString(member);
+            String result = om.writeValueAsString(member.getUser().getName());
             System.out.println(result);
         }
     }

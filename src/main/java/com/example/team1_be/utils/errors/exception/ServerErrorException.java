@@ -5,16 +5,16 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class Exception401 extends RuntimeException {
-    public Exception401(String message) {
+public class ServerErrorException extends RuntimeException {
+    public ServerErrorException(String message) {
         super(message);
     }
 
     public ApiUtils.ApiResult<?> body(){
-        return ApiUtils.error(getMessage(), HttpStatus.UNAUTHORIZED);
+        return ApiUtils.error(getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public HttpStatus status(){
-        return HttpStatus.UNAUTHORIZED;
+        return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 }

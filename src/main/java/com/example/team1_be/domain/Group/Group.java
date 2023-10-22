@@ -1,7 +1,8 @@
 package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
