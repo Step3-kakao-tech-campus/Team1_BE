@@ -69,4 +69,12 @@ public class ScheduleController {
         ApiUtils.ApiResult<Object> response = ApiUtils.success(responseDTO);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/fix/month/{requestMonth}")
+    public ResponseEntity<?> getUsersFixedWeeklySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                    @PathVariable("requestMonth") @DateTimeFormat(pattern = "yyyy-MM") YearMonth requestMonth) {
+        GetFixedWeeklySchedule.Response responseDTO =  scheduleService.getUsersFixedWeeklySchedule(userDetails.getUser(), requestMonth);
+        ApiUtils.ApiResult<?> response = ApiUtils.success(responseDTO);
+        return ResponseEntity.ok(response);
+    }
 }
