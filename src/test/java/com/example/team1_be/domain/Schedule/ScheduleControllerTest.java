@@ -279,8 +279,8 @@ class ScheduleControllerTest {
         perform.andDo(print());
     }
 
-    @DisplayName("확정 스케줄 조회 성공")
-    @WithMockCustomUser(userId = "2")
+    @DisplayName("멤버별 확정 스케줄 조회 성공")
+    @WithMockCustomUser
     @Test
     void getFixedWeeklySchedule1() throws Exception {
         YearMonth month = YearMonth.parse("2023-10");
@@ -291,8 +291,8 @@ class ScheduleControllerTest {
         perform.andDo(print());
     }
 
-    @DisplayName("확정 스케줄 조회 실패(파라미터 에러)")
-    @WithMockCustomUser(userId = "2")
+    @DisplayName("멤버별 확정 스케줄 조회 실패(파라미터 에러)")
+    @WithMockCustomUser
     @Test
     void getFixedWeeklySchedule2() throws Exception {
         Long memberId = 2L;
