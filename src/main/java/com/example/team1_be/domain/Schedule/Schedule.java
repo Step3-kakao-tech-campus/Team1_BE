@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Schedule;
 
 import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 @Getter
 @Table
-public class Schedule {
+public class Schedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

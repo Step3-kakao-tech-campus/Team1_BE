@@ -7,18 +7,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
     @Override
     public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
         final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         final CustomUserDetails customUserDetails = new CustomUserDetails(User.builder()
-                .id(1L)
+                .id(Long.valueOf(annotation.userId()))
                 .name(annotation.username())
-                .kakaoId(1L)
-                .phoneNumber("010-1111-1111")
+                .kakaoId(Long.valueOf(annotation.kakaoId()))
+                .phoneNumber(annotation.phoneNumber())
+                .isAdmin(Boolean.valueOf(annotation.isAdmin()))
                 .build());
         final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(customUserDetails,

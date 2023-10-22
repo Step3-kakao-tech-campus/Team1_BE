@@ -1,5 +1,8 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.domain.Member.Member;
+import com.example.team1_be.utils.audit.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +15,7 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @Getter
 @Table(name="users")
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,18 +24,25 @@ public class User {
     private Long kakaoId;
 
     @Size(min = 2, max = 10)
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
     @Size(min = 13, max = 13)
-    @NotNull
     private String phoneNumber;
 
+    @NotNull
+    private Boolean isAdmin;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private Member member;
+
     @Builder
-    public User(Long id, Long kakaoId, String name, String phoneNumber) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Member member) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.isAdmin = isAdmin;
+        this.member = member;
     }
 }

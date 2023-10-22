@@ -20,7 +20,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
 class UserRepositoryTest extends BaseTest {
 
     public UserRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
@@ -34,6 +33,7 @@ class UserRepositoryTest extends BaseTest {
                 .kakaoId(7L)
                 .name("dlwogns")
                 .phoneNumber("010-1111-1111")
+                .isAdmin(true)
                 .build();
 
         userRepository.save(user);
