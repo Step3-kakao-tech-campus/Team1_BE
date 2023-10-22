@@ -133,7 +133,7 @@ public class ScheduleService {
     }
 
     public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
-        Member member = memberRepository.findByUser(user)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
         Schedule schedule = scheduleRepository.findByGroup(member.getGroup())
                 .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
@@ -241,5 +241,22 @@ public class ScheduleService {
             dailyApplies.add(applies);
         }
         return new GetDailyFixedApplies.Response(worktimes, dailyApplies);
+    }
+
+    public GetFixedWeeklySchedule.Response getUsersFixedWeeklySchedule(User user, YearMonth requestMonth) {
+        Member member = memberRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+        Schedule schedule = scheduleRepository.findByGroup(member.getGroup())
+                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+
+        LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
+        LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
+        List<Week> weeks = weekRepository.findByScheduleAndYearMonthAndStatus(date, toDate, schedule.getId(), WeekRecruitmentStatus.ENDED);
+        List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
+        Double monthly = memberWorktimes.stream()
+                .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
+                .reduce(0D, Double::sum);
+
+        return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly/weeks.size());
     }
 }
