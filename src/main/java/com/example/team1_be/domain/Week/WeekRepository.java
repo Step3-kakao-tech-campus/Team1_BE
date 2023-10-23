@@ -34,7 +34,7 @@ public interface WeekRepository extends JpaRepository<Week, Long> {
             "where w.schedule.id = :scheduleId " +
             "and w.status = :weekStatus " +
             "order by w.id desc")
-    Page<Week> findByScheduleAndStatus(@Param("scheduleId") Long id,
-                                       @Param("weekStatus") WeekRecruitmentStatus weekRecruitmentStatus,
-                                       Pageable pageable);
+    Page<Week> findLatestByScheduleAndStatus(@Param("scheduleId") Long id,
+                                             @Param("weekStatus") WeekRecruitmentStatus weekRecruitmentStatus,
+                                             Pageable pageable);
 }

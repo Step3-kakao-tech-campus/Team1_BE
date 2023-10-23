@@ -266,7 +266,7 @@ public class ScheduleService {
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
 
-        List<Week> latestWeeks = weekRepository.findByScheduleAndStatus(schedule.getId(),
+        List<Week> latestWeeks = weekRepository.findLatestByScheduleAndStatus(schedule.getId(),
                 WeekRecruitmentStatus.ENDED,
                 PageRequest.of(0, 1)).getContent();
         if (latestWeeks.isEmpty()) {

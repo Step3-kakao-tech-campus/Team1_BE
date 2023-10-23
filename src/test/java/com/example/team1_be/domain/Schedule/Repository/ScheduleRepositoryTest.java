@@ -42,7 +42,7 @@ class ScheduleRepositoryTest extends BaseTest {
     @Test
     void test2() {
         Schedule schedule = scheduleRepository.findById(1L).orElse(null);
-        Week lastestWeek = weekRepository.findByScheduleAndStatus(schedule.getId(),
+        Week lastestWeek = weekRepository.findLatestByScheduleAndStatus(schedule.getId(),
                 WeekRecruitmentStatus.ENDED,
                 PageRequest.of(0, 1)).getContent().get(0);
         assertThat(lastestWeek).isNotEqualTo(null);
