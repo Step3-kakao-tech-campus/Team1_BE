@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Sql("/data.sql")
-public class GetUsersFixedWeeklySchedule {
+public class GetUsersFixedWeeklyScheduleTest {
     @Autowired
     private MockMvc mvc;
     @Autowired
