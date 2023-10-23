@@ -3,7 +3,6 @@ package com.example.team1_be.domain.Schedule.Repository;
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
@@ -17,13 +16,15 @@ import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import javax.persistence.EntityManager;
 
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ScheduleRepositoryTest extends BaseTest {
 
@@ -51,5 +52,15 @@ class ScheduleRepositoryTest extends BaseTest {
                 .stream()
                 .forEach(x->System.out.println(x.getTitle()));
 
+    }
+
+    @DisplayName("주별 상태 조회")
+    @Test
+    void test3() {
+        LocalDate startDate = LocalDate.parse("2023-10-09");
+        Schedule schedule = scheduleRepository.findById(1L).orElse(null);
+        Week week = weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startDate).orElse(null);
+        assertThat(week).isNotEqualTo(null);
+        System.out.println(week.getStatus());
     }
 }
