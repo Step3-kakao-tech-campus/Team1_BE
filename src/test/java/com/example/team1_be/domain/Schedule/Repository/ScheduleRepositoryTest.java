@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Schedule;
+package com.example.team1_be.domain.Schedule.Repository;
 
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Apply.ApplyRepository;
@@ -7,6 +7,7 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
+import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.WeekRepository;
