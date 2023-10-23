@@ -85,4 +85,12 @@ public class ScheduleController {
         ApiUtils.ApiResult<?> response = ApiUtils.success(responseDTO);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/status/{startWeekDate}")
+    public ResponseEntity<?> getWeekStatus(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
+        GetWeekStatus.Response responseDTO = scheduleService.getWeekStatus(userDetails.getUser(), startWeekDate);
+        ApiUtils.ApiResult<GetWeekStatus.Response> response = ApiUtils.success(responseDTO);
+        return ResponseEntity.ok(response);
+    }
 }
