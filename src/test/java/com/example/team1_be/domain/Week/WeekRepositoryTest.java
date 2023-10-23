@@ -39,14 +39,14 @@ class WeekRepositoryTest extends BaseTest {
     @DisplayName("시작일, 스케줄, 상태 기반 조회 성공")
     @Test
     void test2() {
-        assertThat(weekRepository.findByScheduleIdStartDateAndAndStatus(1L, LocalDate.parse("2023-10-09"), ENDED)
+        assertThat(weekRepository.findByScheduleIdStartDateAndStatus(1L, LocalDate.parse("2023-10-09"), ENDED)
                 .orElse(null)).isNotEqualTo(null);
     }
 
     @DisplayName("시작일, 스케줄, 상태 기반 조회 실패")
     @Test
     void test3() {
-        assertThat(weekRepository.findByScheduleIdStartDateAndAndStatus(1L, LocalDate.parse("2023-10-09"), STARTED)
+        assertThat(weekRepository.findByScheduleIdStartDateAndStatus(1L, LocalDate.parse("2023-10-09"), STARTED)
                 .orElse(null)).isEqualTo(null);
     }
 }
