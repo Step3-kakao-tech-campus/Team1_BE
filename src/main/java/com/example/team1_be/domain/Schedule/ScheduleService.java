@@ -112,10 +112,10 @@ public class ScheduleService {
 
         Week week = null;
         if (user.getIsAdmin()) {
-            week = weekRepository.findByScheduleIdStartDateAndAndStatus(schedule.getId(), request, WeekRecruitmentStatus.STARTED)
+            week = weekRepository.findByScheduleIdStartDateAndStatus(schedule.getId(), request, WeekRecruitmentStatus.STARTED)
                     .orElseThrow(() -> new CustomException("모집 중인 스케줄을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
         } else {
-            week = weekRepository.findByScheduleIdStartDateAndAndStatus(schedule.getId(), request, WeekRecruitmentStatus.ENDED)
+            week = weekRepository.findByScheduleIdStartDateAndStatus(schedule.getId(), request, WeekRecruitmentStatus.ENDED)
                     .orElseThrow(() -> new CustomException("모집 완료된 스케줄이 없습니다.", HttpStatus.NOT_FOUND));
         }
 
@@ -266,15 +266,28 @@ public class ScheduleService {
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
 
-        List<Week> latestWeeks = weekRepository.findByScheduleAndStatus(schedule.getId(),
+        List<Week> latestWeeks = weekRepository.findLatestByScheduleAndStatus(schedule.getId(),
                 WeekRecruitmentStatus.ENDED,
                 PageRequest.of(0, 1)).getContent();
         if (latestWeeks.isEmpty()) {
             throw new NotFoundException("최근 스케줄을 찾을 수 없습니다.");
         }
 
-        List<Worktime> lastestWorktimes = latestWeeks.get(0).getDay().get(0).getWorktimes();
+        List<Worktime> latestWorktimes = latestWeeks.get(0).getDay().get(0).getWorktimes();
 
-        return new LoadLatestSchedule.Response(lastestWorktimes);
+        return new LoadLatestSchedule.Response(latestWorktimes);
+    }
+
+    public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
+        Group group = groupRepository.findByUser(user.getId()).orElse(null);
+
+        Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
+        Week week = weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startWeekDate).orElse(null);
+
+        if (week == null) {
+            return new GetWeekStatus.Response(null);
+        } else {
+            return new GetWeekStatus.Response(week.getStatus());
+        }
     }
 }

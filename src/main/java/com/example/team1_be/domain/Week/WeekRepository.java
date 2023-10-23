@@ -1,6 +1,5 @@
 package com.example.team1_be.domain.Week;
 
-import com.example.team1_be.domain.Schedule.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +17,7 @@ public interface WeekRepository extends JpaRepository<Week, Long> {
             "where w.schedule.id = :scheduleId" +
             " and w.startDate = :startDate " +
             "and w.status = :status")
-    Optional<Week> findByScheduleIdStartDateAndAndStatus(@Param("scheduleId") Long scheduleId, @Param("startDate")LocalDate startDate, @Param("status") WeekRecruitmentStatus status);
+    Optional<Week> findByScheduleIdStartDateAndStatus(@Param("scheduleId") Long scheduleId, @Param("startDate")LocalDate startDate, @Param("status") WeekRecruitmentStatus status);
 
     @Query("select w " +
             "from Week w " +
@@ -35,7 +34,14 @@ public interface WeekRepository extends JpaRepository<Week, Long> {
             "where w.schedule.id = :scheduleId " +
             "and w.status = :weekStatus " +
             "order by w.id desc")
-    Page<Week> findByScheduleAndStatus(@Param("scheduleId") Long id,
-                                       @Param("weekStatus") WeekRecruitmentStatus weekRecruitmentStatus,
-                                       Pageable pageable);
+    Page<Week> findLatestByScheduleAndStatus(@Param("scheduleId") Long id,
+                                             @Param("weekStatus") WeekRecruitmentStatus weekRecruitmentStatus,
+                                             Pageable pageable);
+
+    @Query("select w " +
+            "from Week w " +
+            "where w.schedule.id = :scheduleId " +
+            "and w.startDate = :startDate")
+    Optional<Week> findByScheduleIdAndStartDate(@Param("scheduleId") Long id,
+                                       @Param("startDate") LocalDate startDate);
 }
