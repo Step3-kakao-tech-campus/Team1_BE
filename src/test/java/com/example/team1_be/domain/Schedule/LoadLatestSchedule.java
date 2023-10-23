@@ -1,6 +1,5 @@
 package com.example.team1_be.domain.Schedule;
 
-
 import com.example.team1_be.util.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Sql("/data.sql")
-public class GetUsersFixedWeeklySchedule {
+public class LoadLatestSchedule {
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -30,21 +29,11 @@ public class GetUsersFixedWeeklySchedule {
     @DisplayName("개인 확정 스케줄 조회 성공")
     @WithMockCustomUser(userId = "2")
     @Test
-    void GetUsersFixedWeeklySchedule1() throws Exception {
-        YearMonth month = YearMonth.parse("2023-10");
+    void test1() throws Exception {
+        LocalDate startWeekDate = LocalDate.parse("2023-10-16");
         ResultActions perform = mvc.perform(
-                get(String.format("/schedule/fix/month/%s", month)));
+                get(String.format("/schedule/worktime/%s", startWeekDate)));
         perform.andExpect(status().isOk());
-        perform.andDo(print());
-    }
-
-    @DisplayName("개인 확정 스케줄 조회 실패(파라미터 에러)")
-    @WithMockCustomUser(userId = "2")
-    @Test
-    void GetUsersFixedWeeklySchedule2() throws Exception {
-        ResultActions perform = mvc.perform(
-                get(String.format("/schedule/fix/month/%s", "2023")));
-        perform.andExpect(status().isBadRequest());
         perform.andDo(print());
     }
 }

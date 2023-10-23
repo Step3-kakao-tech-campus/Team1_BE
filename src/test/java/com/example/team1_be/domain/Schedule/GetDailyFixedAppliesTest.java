@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Sql("/data.sql")
-public class GetDailyFixedApplies {
+public class GetDailyFixedAppliesTest {
     @Autowired
     private MockMvc mvc;
     @Autowired

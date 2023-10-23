@@ -21,6 +21,7 @@ import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -258,5 +259,22 @@ public class ScheduleService {
                 .reduce(0D, Double::sum);
 
         return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly/weeks.size());
+    }
+
+    public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
+        Group group = groupRepository.findByUser(user.getId()).orElse(null);
+
+        Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
+
+        List<Week> latestWeeks = weekRepository.findByScheduleAndStatus(schedule.getId(),
+                WeekRecruitmentStatus.ENDED,
+                PageRequest.of(0, 1)).getContent();
+        if (latestWeeks.isEmpty()) {
+            throw new NotFoundException("최근 스케줄을 찾을 수 없습니다.");
+        }
+
+        List<Worktime> lastestWorktimes = latestWeeks.get(0).getDay().get(0).getWorktimes();
+
+        return new LoadLatestSchedule.Response(lastestWorktimes);
     }
 }
