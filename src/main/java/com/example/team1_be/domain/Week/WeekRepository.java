@@ -1,6 +1,8 @@
 package com.example.team1_be.domain.Week;
 
 import com.example.team1_be.domain.Schedule.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +29,13 @@ public interface WeekRepository extends JpaRepository<Week, Long> {
                                                    @Param("toDate")LocalDate toDate,
                                                    @Param("scheduleId") Long scheduleId,
                                                    @Param("status") WeekRecruitmentStatus weekRecruitmentStatus);
+
+    @Query("select w " +
+            "from Week w " +
+            "where w.schedule.id = :scheduleId " +
+            "and w.status = :weekStatus " +
+            "order by w.id desc")
+    Page<Week> findByScheduleAndStatus(@Param("scheduleId") Long id,
+                                       @Param("weekStatus") WeekRecruitmentStatus weekRecruitmentStatus,
+                                       Pageable pageable);
 }
