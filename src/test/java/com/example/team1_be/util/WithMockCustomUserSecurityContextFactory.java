@@ -16,6 +16,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
                 .name(annotation.username())
                 .kakaoId(Long.valueOf(annotation.kakaoId()))
                 .phoneNumber(annotation.phoneNumber())
+                .isAdmin(Boolean.valueOf(annotation.isAdmin()))
                 .build());
         final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(customUserDetails,

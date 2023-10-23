@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Notification;
 
+import com.example.team1_be.domain.Notification.DTO.NotificationInfo;
 import com.example.team1_be.domain.User.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,21 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public NotificationResponse findAllNotification(User user) {
+    public NotificationInfo.Response findAllNotification(User user) {
         // 알림 조회
         List<Notification> notifications = notificationRepository.findAllByUser(user);
 
         // notification to notice convert
-        List<NotificationResponse.Notice> notices = notifications.stream().map(notification ->
-                NotificationResponse.Notice.builder()
+        List<NotificationInfo.Response.Notice> notices = notifications.stream().map(notification ->
+                NotificationInfo.Response.Notice.builder()
                         .content(notification.getContent())
                         .notificationType(notification.getType().toString())
                         .date(notification.getCreatedAt().toString()).build()
         ).collect(Collectors.toList());
 
         // response body 생성
-        NotificationResponse notificationResponse = new NotificationResponse(notices);
+        NotificationInfo.Response notificationInfo = new NotificationInfo.Response(notices);
 
-        return notificationResponse;
+        return notificationInfo;
     }
 }

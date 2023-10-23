@@ -1,7 +1,8 @@
 package com.example.team1_be.domain.User;
 
 import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.utils.BaseEntity;
+import com.example.team1_be.utils.audit.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +28,21 @@ public class User extends BaseEntity {
     private String name;
 
     @Size(min = 13, max = 13)
-    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user")
+    @NotNull
+    private Boolean isAdmin;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private Member member;
 
     @Builder
-    public User(Long id, Long kakaoId, String name, String phoneNumber, Member member) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Member member) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.isAdmin = isAdmin;
         this.member = member;
     }
 }
