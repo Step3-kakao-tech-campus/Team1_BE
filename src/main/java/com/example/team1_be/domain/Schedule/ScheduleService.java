@@ -273,8 +273,8 @@ public class ScheduleService {
             throw new NotFoundException("최근 스케줄을 찾을 수 없습니다.");
         }
 
-        List<Worktime> lastestWorktimes = latestWeeks.get(0).getDay().get(0).getWorktimes();
+        List<Worktime> latestWorktimes = latestWeeks.get(0).getDay().get(0).getWorktimes();
 
-        return new LoadLatestSchedule.Response(lastestWorktimes);
+        return new LoadLatestSchedule.Response(latestWorktimes);
     }
 }
