@@ -30,6 +30,14 @@ public class ScheduleController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/worktime/{startWeekDate}")
+    public ResponseEntity<?> loadLatestSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                @PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
+        LoadLatestSchedule.Response responseDTO = scheduleService.loadLatestSchedule(userDetails.getUser(), startWeekDate);
+        ApiUtils.ApiResult<LoadLatestSchedule.Response> result = ApiUtils.success(responseDTO);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/remain/week/{startWeekDate}")
     public ResponseEntity<?> weeklyScheduleCheck(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                  @PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
