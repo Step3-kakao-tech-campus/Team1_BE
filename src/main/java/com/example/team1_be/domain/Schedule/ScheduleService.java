@@ -277,4 +277,17 @@ public class ScheduleService {
 
         return new LoadLatestSchedule.Response(latestWorktimes);
     }
+
+    public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
+        Group group = groupRepository.findByUser(user.getId()).orElse(null);
+
+        Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
+        Week week = weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startWeekDate).orElse(null);
+
+        if (week == null) {
+            return new GetWeekStatus.Response(null);
+        } else {
+            return new GetWeekStatus.Response(week.getStatus());
+        }
+    }
 }
