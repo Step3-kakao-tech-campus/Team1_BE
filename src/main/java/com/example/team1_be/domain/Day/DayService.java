@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +17,9 @@ public class DayService {
     private final DayRepository dayRepository;
 
     @Transactional
-    public void createDays(List<Day> days) {
-        dayRepository.saveAll(days);
+    public List<Day> createDays(List<Day> days) {
+        days = dayRepository.saveAll(days);
+        return dayRepository.findAllById(days.stream().map(Day::getId).collect(Collectors.toList()));
     }
 
     public List<Day> findByWeek(Week week) {
