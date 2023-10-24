@@ -107,14 +107,9 @@ public class ScheduleService {
 
         Member member = memberService.findByUser(user);
 
-        Week week = null;
-        if (user.getIsAdmin()) {
-            week = weekRepository.findByScheduleIdStartDateAndStatus(schedule.getId(), request, WeekRecruitmentStatus.STARTED)
-                    .orElseThrow(() -> new CustomException("모집 중인 스케줄을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-        } else {
-            week = weekRepository.findByScheduleIdStartDateAndStatus(schedule.getId(), request, WeekRecruitmentStatus.ENDED)
-                    .orElseThrow(() -> new CustomException("모집 완료된 스케줄이 없습니다.", HttpStatus.NOT_FOUND));
-        }
+        Week week = user.getIsAdmin() ?
+                weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.STARTED) :
+                weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.ENDED);
 
         List<Day> days = dayRepository.findByWeekId(week.getId());
         if (days.size() == 0) {
