@@ -17,4 +17,9 @@ public class MemberService {
         return memberRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
     }
+
+    public Member findByMemberId(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+    }
 }

@@ -8,7 +8,6 @@ import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupService;
 import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.Schedule.DTO.*;
 import com.example.team1_be.domain.Schedule.Recommend.*;
@@ -41,7 +40,6 @@ import java.util.stream.IntStream;
 public class ScheduleService {
     private final int NUM_DAYS_OF_WEEK = 7;
 
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
@@ -118,8 +116,7 @@ public class ScheduleService {
     }
 
     public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+        Member member = memberService.findByMemberId(memberId);
         Schedule schedule = findByGroup(member.getGroup());
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
