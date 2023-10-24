@@ -4,7 +4,7 @@ import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.Day.DayService;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupService;
 import com.example.team1_be.domain.Member.Member;
@@ -44,7 +44,7 @@ public class ScheduleService {
     private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
     private final WeekService weekService;
-    private final DayRepository dayRepository;
+    private final DayService dayService;
     private final WorktimeRepository worktimeRepository;
     private final ApplyRepository applyRepository;
     private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
@@ -76,7 +76,7 @@ public class ScheduleService {
                         .dayOfWeek(dayOfWeek)
                         .build()
                 ).collect(Collectors.toList());
-        dayRepository.saveAll(days);
+        dayService.createDays(days);
 
         List<Worktime> worktimeList = new ArrayList<>();
         IntStream.range(0, days.size())
@@ -101,10 +101,7 @@ public class ScheduleService {
                 weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.STARTED) :
                 weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.ENDED);
 
-        List<Day> days = dayRepository.findByWeekId(week.getId());
-        if (days.size() == 0) {
-            throw new CustomException("잘못된 요청입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Day> days = dayService.findByWeek(week);
 
         List<List<Worktime>> weeklyWorktime = days.stream().map(day -> worktimeRepository.findByDayId(day.getId())).collect(Collectors.toList());
         List<List<List<Apply>>> applyList = weeklyWorktime.stream()
