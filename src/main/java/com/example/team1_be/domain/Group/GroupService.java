@@ -84,4 +84,9 @@ public class GroupService {
 
         return new GetMembers.Response(group, user, members);
     }
+
+    public Group findByUser(User user) {
+        return groupRepository.findByUser(user.getId())
+                .orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
+    }
 }

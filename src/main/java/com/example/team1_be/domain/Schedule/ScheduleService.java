@@ -5,6 +5,7 @@ import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.Group.GroupService;
 import com.example.team1_be.domain.Schedule.DTO.*;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
@@ -39,7 +40,7 @@ public class ScheduleService {
     private final int NUM_DAYS_OF_WEEK = 7;
 
     private final MemberRepository memberRepository;
-    private final GroupRepository groupRepository;
+    private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
     private final WeekRepository weekRepository;
     private final DayRepository dayRepository;
@@ -53,12 +54,9 @@ public class ScheduleService {
         if (request.getWeeklyAmount().size() != NUM_DAYS_OF_WEEK){
             throw new CustomException("모든 요일에 대한 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         }
-        // member 찾기
-        Member member = memberRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException("등록되지 않은 멤버입니다.", HttpStatus.NOT_FOUND));
 
         // group 찾기
-        Group group = member.getGroup();
+        Group group = groupService.findByUser(user);
 
         // 스케줄 생성
         Schedule schedule = Schedule.builder()
@@ -99,8 +97,7 @@ public class ScheduleService {
     }
 
     public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
-        Group group = groupRepository.findByUser(user.getId())
-                .orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = scheduleRepository.findByGroup(group)
                 .orElseThrow(() -> new CustomException("등록된 스케줄이 없습니다.", HttpStatus.FORBIDDEN));
@@ -150,8 +147,7 @@ public class ScheduleService {
 
     @Transactional
     public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
-        Group group = groupRepository.findByUser(user.getId())
-                .orElseThrow(() -> new CustomException("그룹에 등록되어 있지 않습니다.", HttpStatus.FORBIDDEN));
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = scheduleRepository.findByGroup(group)
                 .orElseThrow(() -> new CustomException("스케줄이 등록되어 있지 않습니다.", HttpStatus.FORBIDDEN));
@@ -219,8 +215,7 @@ public class ScheduleService {
     }
 
     public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
-        Group group = groupRepository.findByUser(user.getId())
-                .orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
+        Group group = groupService.findByUser(user);
         Schedule schedule = scheduleRepository.findByGroup(group)
                 .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
 
@@ -260,7 +255,7 @@ public class ScheduleService {
     }
 
     public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
-        Group group = groupRepository.findByUser(user.getId()).orElse(null);
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
 
@@ -277,7 +272,7 @@ public class ScheduleService {
     }
 
     public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
-        Group group = groupRepository.findByUser(user.getId()).orElse(null);
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
         Week week = weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startWeekDate).orElse(null);
