@@ -16,8 +16,7 @@ import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Week.WeekService;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.domain.Worktime.WorktimeRepository;
-import com.example.team1_be.utils.errors.exception.BadRequestException;
+import com.example.team1_be.domain.Worktime.WorktimeService;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final WeekService weekService;
     private final DayService dayService;
-    private final WorktimeRepository worktimeRepository;
+    private final WorktimeService worktimeService;
     private final ApplyRepository applyRepository;
     private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
     private final RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
@@ -89,7 +88,8 @@ public class ScheduleService {
                                 .amount(worktime.getAmount())
                                 .day(days.get(dayIdx))
                                 .build())));
-        worktimeRepository.saveAll(worktimeList);
+
+        worktimeService.createWorktimes(worktimeList);
     }
 
     public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
@@ -103,7 +103,8 @@ public class ScheduleService {
 
         List<Day> days = dayService.findByWeek(week);
 
-        List<List<Worktime>> weeklyWorktime = days.stream().map(day -> worktimeRepository.findByDayId(day.getId())).collect(Collectors.toList());
+        List<List<Worktime>> weeklyWorktime = worktimeService.findWorktimesByDays(days);
+
         List<List<List<Apply>>> applyList = weeklyWorktime.stream()
                 .map(worktimes -> worktimes.stream()
                         .map(worktime -> applyRepository.findAppliesByWorktimeId(worktime.getId()))
@@ -133,10 +134,7 @@ public class ScheduleService {
 
         Schedule schedule = findByGroup(group);
 
-        List<Worktime> weeklyWorktimes = worktimeRepository.findByStartDateAndScheduleId(date, schedule.getId());
-        if (weeklyWorktimes.size() == 0) {
-            throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
-        }
+        List<Worktime> weeklyWorktimes = worktimeService.findByStartDateAndSchedule(date, schedule);
 
         List<Long> worktimeIds = weeklyWorktimes.stream()
                 .map(Worktime::getId)
@@ -201,10 +199,7 @@ public class ScheduleService {
 
         LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
         int dayOfWeek = selectedDate.getDayOfWeek().getValue();
-        List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
-        if (worktimes.isEmpty()) {
-            throw new BadRequestException("확정된 스케줄이 아닙니다.");
-        }
+        List<Worktime> worktimes = worktimeService.findBySpecificDateAndSchedule(date, dayOfWeek, schedule);
 
         List<List<Apply>> dailyApplies = new ArrayList<>();
         for (Worktime worktime : worktimes) {
