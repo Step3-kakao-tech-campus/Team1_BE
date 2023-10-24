@@ -99,8 +99,7 @@ public class ScheduleService {
     public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
         Group group = groupService.findByUser(user);
 
-        Schedule schedule = scheduleRepository.findByGroup(group)
-                .orElseThrow(() -> new CustomException("등록된 스케줄이 없습니다.", HttpStatus.FORBIDDEN));
+        Schedule schedule = findByGroup(group);
 
         Member member = memberRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
@@ -131,8 +130,7 @@ public class ScheduleService {
     public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
-        Schedule schedule = scheduleRepository.findByGroup(member.getGroup())
-                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+        Schedule schedule = findByGroup(member.getGroup());
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
@@ -149,8 +147,7 @@ public class ScheduleService {
     public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
         Group group = groupService.findByUser(user);
 
-        Schedule schedule = scheduleRepository.findByGroup(group)
-                .orElseThrow(() -> new CustomException("스케줄이 등록되어 있지 않습니다.", HttpStatus.FORBIDDEN));
+        Schedule schedule = findByGroup(group);
 
         List<Worktime> weeklyWorktimes = worktimeRepository.findByStartDateAndScheduleId(date, schedule.getId());
         if (weeklyWorktimes.size() == 0) {
@@ -216,8 +213,7 @@ public class ScheduleService {
 
     public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
         Group group = groupService.findByUser(user);
-        Schedule schedule = scheduleRepository.findByGroup(group)
-                .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
+        Schedule schedule = findByGroup(group);
 
         LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
         int dayOfWeek = selectedDate.getDayOfWeek().getValue();
@@ -240,8 +236,7 @@ public class ScheduleService {
     public GetFixedWeeklySchedule.Response getUsersFixedWeeklySchedule(User user, YearMonth requestMonth) {
         Member member = memberRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
-        Schedule schedule = scheduleRepository.findByGroup(member.getGroup())
-                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+        Schedule schedule = findByGroup(member.getGroup());
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
@@ -257,7 +252,7 @@ public class ScheduleService {
     public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
         Group group = groupService.findByUser(user);
 
-        Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
+        Schedule schedule = findByGroup(group);
 
         List<Week> latestWeeks = weekRepository.findLatestByScheduleAndStatus(schedule.getId(),
                 WeekRecruitmentStatus.ENDED,
@@ -274,7 +269,7 @@ public class ScheduleService {
     public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
         Group group = groupService.findByUser(user);
 
-        Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
+        Schedule schedule = findByGroup(group);
         Week week = weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startWeekDate).orElse(null);
 
         if (week == null) {
@@ -282,5 +277,10 @@ public class ScheduleService {
         } else {
             return new GetWeekStatus.Response(week.getStatus());
         }
+    }
+
+    public Schedule findByGroup(Group group) {
+        return scheduleRepository.findByGroup(group)
+                .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
     }
 }
