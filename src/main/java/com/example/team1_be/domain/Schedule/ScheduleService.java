@@ -48,8 +48,6 @@ public class ScheduleService {
     private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
     private final RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
 
-    private final EntityManager em;
-
     @Transactional
     public void recruitSchedule(User user, RecruitSchedule.Request request) {
         if (request.getWeeklyAmount().size() != NUM_DAYS_OF_WEEK){
