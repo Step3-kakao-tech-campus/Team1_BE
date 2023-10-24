@@ -15,14 +15,13 @@ import com.example.team1_be.domain.Schedule.Recommend.*;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
-import com.example.team1_be.domain.Week.WeekRepository;
+import com.example.team1_be.domain.Week.WeekService;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +45,7 @@ public class ScheduleService {
     private final MemberService memberService;
     private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
-    private final WeekRepository weekRepository;
+    private final WeekService weekService;
     private final DayRepository dayRepository;
     private final WorktimeRepository worktimeRepository;
     private final ApplyRepository applyRepository;
@@ -69,12 +68,7 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
 
         // week 생성
-        Week week = Week.builder()
-                .schedule(schedule)
-                .status(WeekRecruitmentStatus.STARTED)
-                .startDate(request.getWeekStartDate())
-                .build();
-        weekRepository.save(week);
+        Week week = weekService.createWeek(schedule, request.getWeekStartDate());
 
         // 각 요일 정보(Day) 기입
         List<RecruitSchedule.Request.DailySchedule> weeklyAmount = request.getWeeklyAmount();
@@ -132,7 +126,7 @@ public class ScheduleService {
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
-        List<Week> weeks = weekRepository.findByScheduleAndYearMonthAndStatus(date, toDate, schedule.getId(), WeekRecruitmentStatus.ENDED);
+        List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule, WeekRecruitmentStatus.ENDED);
         List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
         Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
@@ -196,7 +190,7 @@ public class ScheduleService {
 
         Week week = recommendedWeeklySchedule.getRecommendedWorktimeApplies().get(0).getApply().getWorktime().getDay().getWeek();
 
-        weekRepository.save(week.updateStatus(WeekRecruitmentStatus.ENDED));
+        weekService.updateWeekStatus(week, WeekRecruitmentStatus.ENDED);
 
         List<Apply> selectedApplies = new ArrayList<>();
         recommendedWeeklySchedule.getRecommendedWorktimeApplies()
@@ -237,7 +231,7 @@ public class ScheduleService {
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
-        List<Week> weeks = weekRepository.findByScheduleAndYearMonthAndStatus(date, toDate, schedule.getId(), WeekRecruitmentStatus.ENDED);
+        List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule, WeekRecruitmentStatus.ENDED);
         List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
         Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
@@ -251,9 +245,7 @@ public class ScheduleService {
 
         Schedule schedule = findByGroup(group);
 
-        List<Week> latestWeeks = weekRepository.findLatestByScheduleAndStatus(schedule.getId(),
-                WeekRecruitmentStatus.ENDED,
-                PageRequest.of(0, 1)).getContent();
+        List<Week> latestWeeks = weekService.findLatestByScheduleAndStatus(schedule, WeekRecruitmentStatus.ENDED);
         if (latestWeeks.isEmpty()) {
             throw new NotFoundException("최근 스케줄을 찾을 수 없습니다.");
         }
@@ -267,7 +259,7 @@ public class ScheduleService {
         Group group = groupService.findByUser(user);
 
         Schedule schedule = findByGroup(group);
-        Week week = weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startWeekDate).orElse(null);
+        Week week = weekService.findByScheduleAndStartDate(schedule, startWeekDate);
 
         if (week == null) {
             return new GetWeekStatus.Response(null);
