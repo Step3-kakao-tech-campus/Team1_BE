@@ -99,8 +99,6 @@ public class ScheduleService {
 
         Schedule schedule = findByGroup(group);
 
-        Member member = memberService.findByUser(user);
-
         Week week = user.getIsAdmin() ?
                 weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.STARTED) :
                 weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.ENDED);
