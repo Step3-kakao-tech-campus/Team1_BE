@@ -5,17 +5,17 @@ import com.example.team1_be.domain.Apply.ApplyRepository;
 import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayRepository;
-import com.example.team1_be.domain.Group.GroupService;
-import com.example.team1_be.domain.Schedule.DTO.*;
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Group.GroupRepository;
+import com.example.team1_be.domain.Group.GroupService;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Member.MemberService;
+import com.example.team1_be.domain.Schedule.DTO.*;
 import com.example.team1_be.domain.Schedule.Recommend.*;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
-import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
+import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import com.example.team1_be.utils.errors.exception.BadRequestException;
@@ -27,9 +27,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.*;
-import java.util.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,6 +43,7 @@ public class ScheduleService {
     private final int NUM_DAYS_OF_WEEK = 7;
 
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
     private final WeekRepository weekRepository;
@@ -51,7 +55,7 @@ public class ScheduleService {
 
     @Transactional
     public void recruitSchedule(User user, RecruitSchedule.Request request) {
-        if (request.getWeeklyAmount().size() != NUM_DAYS_OF_WEEK){
+        if (request.getWeeklyAmount().size() != NUM_DAYS_OF_WEEK) {
             throw new CustomException("모든 요일에 대한 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         }
 
@@ -86,12 +90,12 @@ public class ScheduleService {
         IntStream.range(0, days.size())
                 .forEach(dayIdx -> weeklyAmount.get(dayIdx)
                         .getDailySchedules()
-                        .forEach(worktime-> worktimeList.add(Worktime.builder()
-                                        .title(worktime.getTitle())
-                                        .startTime(worktime.getStartTime())
-                                        .endTime(worktime.getEndTime())
-                                        .amount(worktime.getAmount())
-                                        .day(days.get(dayIdx))
+                        .forEach(worktime -> worktimeList.add(Worktime.builder()
+                                .title(worktime.getTitle())
+                                .startTime(worktime.getStartTime())
+                                .endTime(worktime.getEndTime())
+                                .amount(worktime.getAmount())
+                                .day(days.get(dayIdx))
                                 .build())));
         worktimeRepository.saveAll(worktimeList);
     }
@@ -101,8 +105,7 @@ public class ScheduleService {
 
         Schedule schedule = findByGroup(group);
 
-        Member member = memberRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
+        Member member = memberService.findByUser(user);
 
         Week week = null;
         if (user.getIsAdmin()) {
@@ -140,7 +143,7 @@ public class ScheduleService {
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
 
-        return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly/weeks.size());
+        return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly / weeks.size());
     }
 
     @Transactional
@@ -160,13 +163,13 @@ public class ScheduleService {
 
         List<Apply> applyList = applyRepository.findAppliesByWorktimeIds(worktimeIds);
 
-        Map<Long,Integer> requestMap = weeklyWorktimes.stream()
+        Map<Long, Integer> requestMap = weeklyWorktimes.stream()
                 .collect(Collectors.toMap(Worktime::getId, Worktime::getAmount));
 
         SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
         List<List<Apply>> generatedSchedules = generator.generateSchedule();
 
-        for (List<Apply> generatedSchedule:generatedSchedules) {
+        for (List<Apply> generatedSchedule : generatedSchedules) {
             RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
                     .user(user)
                     .build();
@@ -178,7 +181,7 @@ public class ScheduleService {
                         .filter(x -> x.getWorktime().getId().equals(worktime.getId()))
                         .collect(Collectors.toList());
 
-                for(Apply apply: applies) {
+                for (Apply apply : applies) {
                     recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
                             .recommendedWeeklySchedule(weeklySchedule)
                             .apply(apply)
@@ -207,7 +210,7 @@ public class ScheduleService {
         applyRepository.saveAll(selectedApplies);
 
 
-        recommendedSchedule.forEach(x->recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
+        recommendedSchedule.forEach(x -> recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
         recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
     }
 
@@ -215,7 +218,7 @@ public class ScheduleService {
         Group group = groupService.findByUser(user);
         Schedule schedule = findByGroup(group);
 
-        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
+        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
         int dayOfWeek = selectedDate.getDayOfWeek().getValue();
         List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
         if (worktimes.isEmpty()) {
@@ -223,7 +226,7 @@ public class ScheduleService {
         }
 
         List<List<Apply>> dailyApplies = new ArrayList<>();
-        for(Worktime worktime: worktimes) {
+        for (Worktime worktime : worktimes) {
             List<Apply> applies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
             if (applies.size() != worktime.getAmount()) {
                 throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
@@ -234,8 +237,7 @@ public class ScheduleService {
     }
 
     public GetFixedWeeklySchedule.Response getUsersFixedWeeklySchedule(User user, YearMonth requestMonth) {
-        Member member = memberRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException("유효하지 않은 요청", HttpStatus.BAD_REQUEST));
+        Member member = memberService.findByUser(user);
         Schedule schedule = findByGroup(member.getGroup());
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
@@ -246,7 +248,7 @@ public class ScheduleService {
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
 
-        return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly/weeks.size());
+        return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly / weeks.size());
     }
 
     public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
