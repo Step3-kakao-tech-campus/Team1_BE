@@ -135,7 +135,7 @@ VALUES
     (18, '마지막', '06:00:00', '09:00:00', 2, 7);
 
 -- member2's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (1, 'FIX', 2, 1),
     (2, 'FIX', 2, 2),
@@ -155,7 +155,7 @@ VALUES
     (17, 'FIX', 2, 18);
 
 -- member3's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (18, 'REMAIN', 3, 2),
     (19, 'REMAIN', 3, 3),
@@ -175,7 +175,7 @@ VALUES
     (33, 'REMAIN', 3, 18);
 
 -- member4's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (34, 'REMAIN', 4, 1),
     (35, 'REMAIN', 4, 3),
@@ -189,7 +189,7 @@ VALUES
     (43, 'REMAIN', 4, 18);
 
 -- member5's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (44, 'REMAIN', 5, 1),
     (45, 'REMAIN', 5, 3),
@@ -206,7 +206,7 @@ VALUES
     (56, 'REMAIN', 5, 18);
 
 -- member6's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (57, 'REMAIN', 6, 1),
     (58, 'REMAIN', 6, 3),
@@ -265,7 +265,7 @@ VALUES
     (36, '마지막', '06:00:00', '09:00:00', 2, 14);
 
 -- member2's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (65+1, 'REMAIN', 2, 18+1),
     (65+2, 'REMAIN', 2, 18+2),
@@ -285,7 +285,7 @@ VALUES
     (65+17, 'REMAIN', 2, 18+18);
 
 -- member3's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (65+18, 'REMAIN', 3, 18+2),
     (65+19, 'REMAIN', 3, 18+3),
@@ -305,7 +305,7 @@ VALUES
     (65+33, 'REMAIN', 3, 18+18);
 
 -- member4's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (65+34, 'REMAIN', 4, 18+1),
     (65+35, 'REMAIN', 4, 18+3),
@@ -319,7 +319,7 @@ VALUES
     (65+43, 'REMAIN', 4, 18+18);
 
 -- member5's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (65+44, 'REMAIN', 5, 18+1),
     (65+45, 'REMAIN', 5, 18+3),
@@ -336,7 +336,7 @@ VALUES
     (65+56, 'REMAIN', 5, 18+18);
 
 -- member6's applies
-INSERT INTO apply (`id`,`status`,`member_id`,`worktime_id`)
+INSERT INTO apply (`id`,`status`,`user_id`,`worktime_id`)
 VALUES
     (65+57, 'REMAIN', 6, 18+1),
     (65+58, 'REMAIN', 6, 18+3),

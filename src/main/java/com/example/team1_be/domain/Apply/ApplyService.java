@@ -1,6 +1,6 @@
 package com.example.team1_be.domain.Apply;
 
-import com.example.team1_be.domain.Member.Member;
+import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,8 @@ public class ApplyService {
         return applyRepository.findAppliesByWorktimeId(worktime.getId());
     }
 
-    public List<Worktime> findWorktimesByYearMonthAndStatusAndMember(LocalDate fromDate, LocalDate toDate, Member member, ApplyStatus status) {
-        return applyRepository.findByYearMonthAndStatusAndMemberId(fromDate, toDate, member.getId(), status);
+    public List<Worktime> findWorktimesByYearMonthAndStatusAndUser(LocalDate fromDate, LocalDate toDate, User user, ApplyStatus status) {
+        return applyRepository.findByYearMonthAndStatusAndMemberId(fromDate, toDate, user.getId(), status);
     }
 
     @Transactional

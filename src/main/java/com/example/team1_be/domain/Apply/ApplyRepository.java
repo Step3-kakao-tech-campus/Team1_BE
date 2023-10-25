@@ -23,11 +23,11 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Query("SELECT a.worktime " +
             "FROM Apply a " +
             "WHERE a.worktime.day.week.startDate between :requestMonth and :toMonth " +
-            "AND a.member.id = :memberId " +
+            "AND a.user.id = :userId " +
             "AND a.status = :status")
     List<Worktime> findByYearMonthAndStatusAndMemberId(@Param("requestMonth") LocalDate requestMonth,
                                                        @Param("toMonth") LocalDate toMonth,
-                                                       @Param("memberId") Long id,
+                                                       @Param("userId") Long id,
                                                        @Param("status") ApplyStatus status);
 
     @Query("select a " +

@@ -49,8 +49,8 @@ public class RecommendSchedule {
                 private String name;
 
                 public Worker(Apply apply) {
-                    this.memberId = apply.getMember().getId();
-                    this.name = apply.getMember().getUser().getName();
+                    this.memberId = apply.getUser().getId();
+                    this.name = apply.getUser().getName();
                 }
             }
         }

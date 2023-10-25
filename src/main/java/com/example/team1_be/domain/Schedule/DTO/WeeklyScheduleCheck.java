@@ -1,7 +1,7 @@
 package com.example.team1_be.domain.Schedule.DTO;
 
 import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Member.Member;
+import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,20 +58,20 @@ public class WeeklyScheduleCheck {
                 this.startTime = worktimeList.getStartTime();
                 this.endTime = worktimeList.getEndTime();
                 this.workerList = applyList.stream()
-                        .map(apply -> apply.getMember())
-                        .map(member -> new Worker(member))
+                        .map(Apply::getUser)
+                        .map(Worker::new)
                         .collect(toList());
             }
         }
 
         @Getter
         public static class Worker {
-            private Long memberId;
+            private Long userId;
             private String name;
 
-            public Worker(Member member) {
-                this.memberId = member.getId();
-                this.name = member.getUser().getName();
+            public Worker(User user) {
+                this.userId = user.getId();
+                this.name = user.getName();
             }
         }
     }

@@ -120,13 +120,13 @@ public class ScheduleService {
     }
 
     public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
-        Member member = memberService.findByMemberId(memberId);
+        User member = userService.findById(memberId);
         Schedule schedule = findByGroup(member.getGroup());
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
         List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule, WeekRecruitmentStatus.ENDED);
-        List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndMember(date, toDate, member, ApplyStatus.FIX);
+        List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndUser(date, toDate, member, ApplyStatus.FIX);
         Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
