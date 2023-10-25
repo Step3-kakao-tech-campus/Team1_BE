@@ -1,7 +1,7 @@
 package com.example.team1_be.domain.Schedule;
 
 import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Apply.ApplyService;
 import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayService;
@@ -45,7 +45,7 @@ public class ScheduleService {
     private final WeekService weekService;
     private final DayService dayService;
     private final WorktimeService worktimeService;
-    private final ApplyRepository applyRepository;
+    private final ApplyService applyService;
     private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
     private final RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
 
@@ -107,7 +107,7 @@ public class ScheduleService {
 
         List<List<List<Apply>>> applyList = weeklyWorktime.stream()
                 .map(worktimes -> worktimes.stream()
-                        .map(worktime -> applyRepository.findAppliesByWorktimeId(worktime.getId()))
+                        .map(applyService::findAppliesByWorktime)
                         .collect(Collectors.toList())).collect(Collectors.toList());
 
         return new WeeklyScheduleCheck.Response(weeklyWorktime, applyList);
@@ -120,7 +120,7 @@ public class ScheduleService {
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
         List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule, WeekRecruitmentStatus.ENDED);
-        List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
+        List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndMember(date, toDate, member, ApplyStatus.FIX);
         Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
@@ -136,16 +136,12 @@ public class ScheduleService {
 
         List<Worktime> weeklyWorktimes = worktimeService.findByStartDateAndSchedule(date, schedule);
 
-        List<Long> worktimeIds = weeklyWorktimes.stream()
-                .map(Worktime::getId)
-                .collect(Collectors.toList());
-
-        List<Apply> applyList = applyRepository.findAppliesByWorktimeIds(worktimeIds);
+        List<Apply> weeklyApplies = applyService.findAppliesByWorktimes(weeklyWorktimes);
 
         Map<Long, Integer> requestMap = weeklyWorktimes.stream()
                 .collect(Collectors.toMap(Worktime::getId, Worktime::getAmount));
 
-        SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
+        SchduleGenerator generator = new SchduleGenerator(weeklyApplies, requestMap);
         List<List<Apply>> generatedSchedules = generator.generateSchedule();
 
         for (List<Apply> generatedSchedule : generatedSchedules) {
@@ -186,8 +182,7 @@ public class ScheduleService {
         recommendedWeeklySchedule.getRecommendedWorktimeApplies()
                 .forEach(recommendedWorktimeApply ->
                         selectedApplies.add(recommendedWorktimeApply.getApply().updateStatus(ApplyStatus.FIX)));
-        applyRepository.saveAll(selectedApplies);
-
+        applyService.createApplies(selectedApplies);
 
         recommendedSchedule.forEach(x -> recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
         recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
@@ -203,8 +198,9 @@ public class ScheduleService {
 
         List<List<Apply>> dailyApplies = new ArrayList<>();
         for (Worktime worktime : worktimes) {
-            List<Apply> applies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
+            List<Apply> applies = applyService.findFixedAppliesByWorktime(worktime);
             if (applies.size() != worktime.getAmount()) {
+                System.out.println(applies.size() + ", " + worktime.getAmount());
                 throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
             }
             dailyApplies.add(applies);
@@ -219,7 +215,7 @@ public class ScheduleService {
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
         List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule, WeekRecruitmentStatus.ENDED);
-        List<Worktime> memberWorktimes = applyRepository.findByYearMonthAndStatusAndMemberId(date, toDate, member.getId(), ApplyStatus.FIX);
+        List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndMember(date, toDate, member, ApplyStatus.FIX);
         Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
