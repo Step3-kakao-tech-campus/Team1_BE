@@ -6,16 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.Date;
 import java.util.List;
 
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
-    @Query("select a " +
-            "from Apply a " +
-            "where a.worktime.id = :worktimeId")
-    List<Apply> findappliesByWorktimeId(@Param("worktimeId") Long worktimeId);
-
     @Query("select a " +
             "from Apply a " +
             "where a.worktime.id = :worktimeId " +
