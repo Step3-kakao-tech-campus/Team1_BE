@@ -58,7 +58,7 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
         User user = userRepository.findById(1L).orElse(null);
         assertThat(user).isNotEqualTo(null);
 
-        Group group = groupRepository.findByUser(1L).orElse(null);
+        Group group = userRepository.findByUser(1L).orElse(null);
         assertThat(group).isNotEqualTo(null);
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);

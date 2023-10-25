@@ -16,18 +16,13 @@ import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRepository;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WorktimeRepositoryTest extends BaseTest {
@@ -59,7 +54,7 @@ class WorktimeRepositoryTest extends BaseTest {
     @Test
     void bidirectionalSelect2() {
         Apply apply = applyRepository.findById(1L)
-                        .orElse(null);
+                .orElse(null);
         assertThat(apply).isNotEqualTo(null);
         Worktime worktime = apply.getWorktime();
         System.out.println(worktime.getId());
@@ -75,13 +70,13 @@ class WorktimeRepositoryTest extends BaseTest {
         User user = userRepository.findById(1L).orElse(null);
         assertThat(user).isNotEqualTo(null);
 
-        Group group = groupRepository.findByUser(user.getId()).orElse(null);
+        Group group = userRepository.findByUser(user.getId()).orElse(null);
         assertThat(group).isNotEqualTo(null);
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
         assertThat(schedule).isNotEqualTo(null);
 
-        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
+        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
         int dayOfWeek = selectedDate.getDayOfWeek().getValue();
         List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
         assertThat(worktimes.size()).isNotEqualTo(0);

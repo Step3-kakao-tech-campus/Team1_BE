@@ -6,9 +6,11 @@ import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUserRepository;
 import com.example.team1_be.utils.errors.exception.BadRequestException;
+import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,5 +74,10 @@ public class UserService {
     public void updateGroup(User user, Group group) {
         user.updateGroup(group);
         userRepository.save(user);
+    }
+
+    public Group findGroupByUser(User user) {
+        return userRepository.findByUser(user.getId())
+                .orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
     }
 }
