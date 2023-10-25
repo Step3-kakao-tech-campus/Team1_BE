@@ -48,6 +48,7 @@ public class InviteService {
         return new InvitationCheck.Response(invite.getGroup());
     }
 
+    @Transactional
     public GetInvitation.Response getInvitation(User user) {
         Member member = memberService.findByUser(user);
         if (!user.getIsAdmin()) {
@@ -55,13 +56,18 @@ public class InviteService {
         }
         Group group = member.getGroup();
         Invite invite = findByGroup(group);
-        inviteRepository.save(invite.renew());
+        renewInvitation(invite);
         return new GetInvitation.Response(invite.getCode());
     }
 
     @Transactional
     public Invite createInvite(Invite invite) {
         return inviteRepository.save(invite);
+    }
+
+    @Transactional
+    public void renewInvitation(Invite invite) {
+        createInvite(invite.renew());
     }
 
     public Invite findByCode(String invitationKey) {
