@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Schedule.Recommend;
+package com.example.team1_be.domain.Schedule.Recommend.WorktimeApply;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
