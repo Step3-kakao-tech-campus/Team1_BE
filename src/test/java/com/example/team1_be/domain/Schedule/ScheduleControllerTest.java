@@ -2,12 +2,9 @@ package com.example.team1_be.domain.Schedule;
 
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
-import com.example.team1_be.domain.Schedule.Recommend.RecommendedWeeklySchedule;
-import com.example.team1_be.domain.Schedule.Recommend.RecommendedWeeklyScheduleRepository;
-import com.example.team1_be.domain.Schedule.Recommend.RecommendedWorktimeApply;
-import com.example.team1_be.domain.Schedule.Recommend.RecommendedWorktimeApplyRepository;
+import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleRepository;
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyRepository;
 import com.example.team1_be.util.WithMockCustomUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

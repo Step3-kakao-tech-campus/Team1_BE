@@ -1,7 +1,7 @@
-package com.example.team1_be.domain.Schedule.Recommend;
+package com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule;
 
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.User.User;
-import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;

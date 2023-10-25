@@ -1,9 +1,11 @@
 package com.example.team1_be.domain.Schedule.Recommend;
 
 import com.example.team1_be.domain.Apply.Apply;
-import org.apache.el.util.ReflectionUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SchduleGenerator {
     private List<Apply> applyList;

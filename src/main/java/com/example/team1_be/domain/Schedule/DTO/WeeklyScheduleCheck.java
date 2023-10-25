@@ -1,20 +1,18 @@
 package com.example.team1_be.domain.Schedule.DTO;
 
 import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Member.Member;
+import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 public class WeeklyScheduleCheck {
     @Getter
@@ -35,7 +33,7 @@ public class WeeklyScheduleCheck {
                     (weeklyIdx) -> {
                         List<Worktime> dailyWorktime = weeklyWorktime.get(weeklyIdx);
                         List<List<Apply>> dailyApply = applyList.get(weeklyIdx);
-                        List<ApplyStatus> dailyApplyStatusList= new ArrayList<>();
+                        List<ApplyStatus> dailyApplyStatusList = new ArrayList<>();
                         IntStream.range(0, dailyWorktime.size()).forEach(
                                 (dailyIndex) -> {
                                     dailyApplyStatusList.add(new ApplyStatus(dailyWorktime.get(dailyIndex), dailyApply.get(dailyIndex)));
@@ -58,20 +56,20 @@ public class WeeklyScheduleCheck {
                 this.startTime = worktimeList.getStartTime();
                 this.endTime = worktimeList.getEndTime();
                 this.workerList = applyList.stream()
-                        .map(apply -> apply.getMember())
-                        .map(member -> new Worker(member))
+                        .map(Apply::getUser)
+                        .map(Worker::new)
                         .collect(toList());
             }
         }
 
         @Getter
         public static class Worker {
-            private Long memberId;
+            private Long userId;
             private String name;
 
-            public Worker(Member member) {
-                this.memberId = member.getId();
-                this.name = member.getUser().getName();
+            public Worker(User user) {
+                this.userId = user.getId();
+                this.name = user.getName();
             }
         }
     }

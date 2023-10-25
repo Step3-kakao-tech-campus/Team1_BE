@@ -8,7 +8,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class RecommendSchedule {
     @Getter
@@ -17,11 +16,11 @@ public class RecommendSchedule {
 
         public Response(List<Worktime> weeklyWorktimes, List<List<Apply>> generatedSchedules) {
             this.recommends = new ArrayList<>();
-            for(List<Apply> generatedSchedule: generatedSchedules) {
+            for (List<Apply> generatedSchedule : generatedSchedules) {
                 List<DailyWorkTimeList> dailyWorkTimeLists = new ArrayList<>();
-                for(Worktime worktime:weeklyWorktimes) {
+                for (Worktime worktime : weeklyWorktimes) {
                     List<Apply> applicants = generatedSchedule.stream()
-                            .filter(x->x.getWorktime().getId().equals(worktime.getId()))
+                            .filter(x -> x.getWorktime().getId().equals(worktime.getId()))
                             .collect(Collectors.toList());
                     dailyWorkTimeLists.add(new DailyWorkTimeList(worktime, applicants));
                 }
@@ -49,8 +48,8 @@ public class RecommendSchedule {
                 private String name;
 
                 public Worker(Apply apply) {
-                    this.memberId = apply.getMember().getId();
-                    this.name = apply.getMember().getUser().getName();
+                    this.memberId = apply.getUser().getId();
+                    this.name = apply.getUser().getName();
                 }
             }
         }

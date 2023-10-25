@@ -16,7 +16,7 @@ public class GetDailyFixedApplies {
 
         public Response(List<Worktime> worktimes, List<List<Apply>> dailyAplies) {
             this.schedule = new ArrayList<>();
-            IntStream.range(0,worktimes.size())
+            IntStream.range(0, worktimes.size())
                     .forEach(i -> schedule.add(new DailyWorktimeApply(worktimes.get(i), dailyAplies.get(i))));
         }
 
@@ -32,17 +32,17 @@ public class GetDailyFixedApplies {
                 this.startTime = worktime.getStartTime();
                 this.endTime = worktime.getEndTime();
                 this.workerList = new ArrayList<>();
-                applies.stream().forEach(apply -> workerList.add(new Worker(apply)));
+                applies.forEach(apply -> workerList.add(new Worker(apply)));
             }
 
             @Getter
             private class Worker {
-                private Long memberId;
+                private Long userId;
                 private String name;
 
                 public Worker(Apply apply) {
-                    this.memberId = apply.getMember().getId();
-                    this.name = apply.getMember().getUser().getName();
+                    this.userId = apply.getUser().getId();
+                    this.name = apply.getUser().getName();
                 }
             }
         }

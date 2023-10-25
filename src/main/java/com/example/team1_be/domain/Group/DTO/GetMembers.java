@@ -1,7 +1,6 @@
 package com.example.team1_be.domain.Group.DTO;
 
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.User.User;
 import lombok.Getter;
 
@@ -15,10 +14,10 @@ public class GetMembers {
         private String userName;
         private List<MemberInfo> members;
 
-        public Response(Group group, User user, List<Member> members) {
+        public Response(Group group, User user, List<User> users) {
             this.groupName = group.getName();
             this.userName = user.getName();
-            this.members = members.stream()
+            this.members = users.stream()
                     .map(member -> new MemberInfo(member))
                     .collect(Collectors.toList());
         }
@@ -29,10 +28,10 @@ public class GetMembers {
             private String name;
             private Boolean isAdmin;
 
-            private MemberInfo(Member member) {
+            private MemberInfo(User member) {
                 this.memberId = member.getId();
-                this.name = member.getUser().getName();
-                this.isAdmin = member.getUser().getIsAdmin();
+                this.name = member.getName();
+                this.isAdmin = member.getIsAdmin();
             }
         }
     }

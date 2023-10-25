@@ -42,12 +42,13 @@ public class Worktime extends BaseEntity {
     private List<Apply> applyList;
 
     @Builder
-    public Worktime(Long id, LocalTime startTime, LocalTime endTime, String title, int amount, Day day) {
+    public Worktime(Long id, LocalTime startTime, LocalTime endTime, String title, int amount, Day day, List<Apply> applyList) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.title = title;
         this.amount = amount;
         this.day = day;
+        this.applyList = applyList;
     }
 }
