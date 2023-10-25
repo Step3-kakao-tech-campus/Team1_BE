@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.audit.BaseEntity;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -40,8 +42,11 @@ public class User extends BaseEntity {
     @JoinColumn
     private Group group;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Apply> applies;
+
     @Builder
-    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Member member, Group group) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Member member, Group group, List<Apply> applies) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
@@ -49,6 +54,7 @@ public class User extends BaseEntity {
         this.isAdmin = isAdmin;
         this.member = member;
         this.group = group;
+        this.applies = applies;
     }
 
     public void updateGroup(Group group) {
