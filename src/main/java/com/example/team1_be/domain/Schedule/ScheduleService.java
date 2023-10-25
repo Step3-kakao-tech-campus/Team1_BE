@@ -153,7 +153,7 @@ public class ScheduleService {
             RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
                     .user(user)
                     .build();
-            recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(weeklySchedule);
+            weeklySchedule = recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(weeklySchedule);
 
             List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
             for (Worktime worktime : weeklyWorktimes) {
