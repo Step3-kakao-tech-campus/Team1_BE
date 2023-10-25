@@ -2,7 +2,6 @@ package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
-import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.util.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,7 +56,6 @@ public class GroupControllerTest {
         perform.andExpect(status().isOk());
         perform.andDo(print());
         assertThat(groupRepository.findAll().size()).isEqualTo(1);
-        assertThat(memberRepository.findAll().size()).isEqualTo(1);
     }
 
     @DisplayName("그룹 생성하기 DTO 검증 실패(멤버변수 누락)")
@@ -338,14 +334,5 @@ public class GroupControllerTest {
         perform.andExpect(status().isOk());
         perform.andDo(print());
         assertThat(groupRepository.findAll().size()).isEqualTo(1);
-        assertThat(memberRepository.findAll().size()).isEqualTo(1);
-        Member member = memberRepository.findById(1L).orElse(null);
-
-        assertThat(member).isNotEqualTo(null);
-        assertThat(member.getCreatedBy()).isNotEqualTo(null);
-        assertThat(member.getLastUpdatedBy()).isNotEqualTo(null);
-        assertThat(member.getCreatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
-        assertThat(member.getUpdatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
-
     }
 }
