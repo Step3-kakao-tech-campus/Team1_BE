@@ -1,4 +1,6 @@
 package com.example.team1_be.domain.User;
+
+import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
@@ -66,4 +68,9 @@ public class UserService {
         return jwtProvider.createJwt(user.getId());
     }
 
+    @Transactional
+    public void updateGroup(User user, Group group) {
+        user.updateGroup(group);
+        userRepository.save(user);
+    }
 }
