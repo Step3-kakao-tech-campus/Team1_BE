@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(indexes = @Index(name = "groupInviteCode", columnList = "code",unique = true))
+@Table(indexes = @Index(name = "groupInviteCode", columnList = "code", unique = true))
 public class Invite extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Invite extends BaseEntity {
     private LocalDateTime renewedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @Builder

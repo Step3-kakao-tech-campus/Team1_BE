@@ -1,8 +1,9 @@
 package com.example.team1_be.domain.Group;
 
+import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Member.Member;
+import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.audit.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name="groups")
+@Table(name = "groups")
 public class Group extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +39,21 @@ public class Group extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     private List<Member> members;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    private List<User> users;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "group")
+    private Invite invite;
+
     @Builder
-    public Group(Long id, String name, String phoneNumber, String businessNumber, String address, List<Member> members) {
+    public Group(Long id, String name, String phoneNumber, String businessNumber, String address, List<Member> members, List<User> users, Invite invite) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
         this.address = address;
         this.members = members;
+        this.users = users;
+        this.invite = invite;
     }
 }
