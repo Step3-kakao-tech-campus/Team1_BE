@@ -43,7 +43,6 @@ public class ScheduleService {
     private final int NUM_DAYS_OF_WEEK = 7;
 
     private final UserService userService;
-    private final MemberService memberService;
     private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
     private final WeekService weekService;

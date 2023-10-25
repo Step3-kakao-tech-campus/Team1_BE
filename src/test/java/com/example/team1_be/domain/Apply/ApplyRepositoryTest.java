@@ -99,7 +99,7 @@ class ApplyRepositoryTest extends BaseTest {
                 Apply apply = applyRepository.findById(applyTable[i][0]).orElse(null);
                 Apply updateApply = Apply.builder()
                         .id(apply.getId())
-                        .member(apply.getMember())
+                        .user(apply.getUser())
                         .worktime(apply.getWorktime())
                         .status(ApplyStatus.FIX)
                         .build();

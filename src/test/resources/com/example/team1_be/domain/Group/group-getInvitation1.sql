@@ -3,7 +3,6 @@ truncate table apply;
 truncate table days;
 truncate table groups;
 truncate table invite;
-truncate table member;
 truncate table notification;
 truncate table schedule;
 truncate table substitute;
@@ -14,7 +13,6 @@ ALTER TABLE apply AUTO_INCREMENT=1;
 ALTER TABLE days AUTO_INCREMENT=1;
 ALTER TABLE groups AUTO_INCREMENT=1;
 ALTER TABLE invite AUTO_INCREMENT=1;
-ALTER TABLE member AUTO_INCREMENT=1;
 ALTER TABLE notification AUTO_INCREMENT=1;
 ALTER TABLE schedule AUTO_INCREMENT=1;
 ALTER TABLE substitute AUTO_INCREMENT=1;
@@ -37,7 +35,3 @@ values (1, 1, '이재훈', '010-0000-0001', true, 1),
 
 insert into invite (`id`, `code`, `group_id`)
 values (1, 'testcode1', 1);
-
--- admin
-insert into member (`id`,`group_id`,`user_id`)
-values (1, 1, 1);

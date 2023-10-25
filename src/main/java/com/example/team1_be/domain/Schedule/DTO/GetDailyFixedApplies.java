@@ -37,12 +37,12 @@ public class GetDailyFixedApplies {
 
             @Getter
             private class Worker {
-                private Long memberId;
+                private Long userId;
                 private String name;
 
                 public Worker(Apply apply) {
-                    this.memberId = apply.getMember().getId();
-                    this.name = apply.getMember().getUser().getName();
+                    this.userId = apply.getUser().getId();
+                    this.name = apply.getUser().getName();
                 }
             }
         }

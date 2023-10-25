@@ -42,14 +42,6 @@ values (1, 1, '이재훈', '010-0000-0001', true, 1),
 insert into invite (`id`, `code`, `group_id`)
 values (1, 'testcode1', 1);
 
--- normal
-insert into member (`id`,`group_id`,`user_id`)
-values (2, 1, 2),
-       (3, 1, 3),
-       (4, 1, 4),
-       (5, 1, 5),
-       (6, 1, 6);
-
 INSERT INTO notification (`id`, `content`, `type`, `is_read`, `user_id`, `created_by`, `created_at`, `last_updated_by`, `updated_at`)
 VALUES (1, 'ㅁㅁㅁ 님! 새로운 모임을 만들어보세요~', 'START', false, 3, 1, '2022-11-22 12:34:56', 1, '2022-11-22 12:34:56'),
        (2, 'ㅇㅇㅇ 님! 새로운 알림입니다.', 'START', true, 4, 1, '2023-10-13 10:00:00', 1, '2023-10-13 10:00:00'),
