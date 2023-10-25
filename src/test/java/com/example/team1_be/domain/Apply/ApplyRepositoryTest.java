@@ -3,7 +3,6 @@ package com.example.team1_be.domain.Apply;
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.GroupRepository;
-import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
@@ -15,16 +14,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApplyRepositoryTest extends BaseTest {
 
-    public ApplyRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
-        super(userRepository, groupRepository, memberRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
+    public ApplyRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
+        super(userRepository, groupRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
     }
 
     @DisplayName("근무 시간별 신청인원 부족한 사람 조회")
@@ -38,6 +39,7 @@ class ApplyRepositoryTest extends BaseTest {
                 .collect(Collectors.toList());
         collect.forEach(System.out::println);
     }
+
     @DisplayName("근무 시간 할당 최적화")
     @Test
     void test2() {
@@ -60,41 +62,41 @@ class ApplyRepositoryTest extends BaseTest {
         int applySize = applyList.size();
         int i;
 
-        Map<Long,Integer> requestMap = new HashMap<>();
-        for(i=0; i< worktimeSize; i++) {
+        Map<Long, Integer> requestMap = new HashMap<>();
+        for (i = 0; i < worktimeSize; i++) {
             Worktime worktime = worktimes.get(i);
-            requestMap.put(worktime.getId(),worktime.getAmount());
+            requestMap.put(worktime.getId(), worktime.getAmount());
         }
 
-        Long [][] priorityTable = new Long[worktimeSize][2];
-        for(i = 0; i< worktimeSize; i++) {
+        Long[][] priorityTable = new Long[worktimeSize][2];
+        for (i = 0; i < worktimeSize; i++) {
             Worktime worktime = worktimes.get(i);
             priorityTable[i][0] = worktime.getId();
             priorityTable[i][1] = (long) (worktime.getAmount() - applyRepository.findAppliesByWorktimeId(worktime.getId()).size());
         }
-        Arrays.sort(priorityTable, (a,b)->Long.compare(b[1],a[1])); // 여유 인원이 적은 곳 부터 할당하기 위해서 정렬
+        Arrays.sort(priorityTable, (a, b) -> Long.compare(b[1], a[1])); // 여유 인원이 적은 곳 부터 할당하기 위해서 정렬
 
-        Long [][] applyTable = new Long[applySize][3];
-        for(i=0;i<applySize;i++) {
+        Long[][] applyTable = new Long[applySize][3];
+        for (i = 0; i < applySize; i++) {
             Apply apply = applyList.get(i);
             applyTable[i][0] = apply.getId();
             applyTable[i][1] = apply.getWorktime().getId();
             applyTable[i][2] = Arrays.stream(priorityTable)
-                    .filter(x->x[0]==apply.getWorktime().getId())
+                    .filter(x -> x[0] == apply.getWorktime().getId())
                     .findFirst().get()[1];
         }
-        Arrays.sort(applyTable, (a,b)->Long.compare(b[2],a[2]));
+        Arrays.sort(applyTable, (a, b) -> Long.compare(b[2], a[2]));
 
         /**
          * applyTable에서 하나씩 추출해서 할당
          * 할당할때 이미 완료된 업무의 경우 패스
          */
-        for(i=0;i<applySize;i++){
+        for (i = 0; i < applySize; i++) {
             Long worktimeId = applyTable[i][1];
             Integer remain = requestMap.get(worktimeId);
             if (remain > 0) {
-                requestMap.put(worktimeId, remain -1);
-                Apply apply =  applyRepository.findById(applyTable[i][0]).orElse(null);
+                requestMap.put(worktimeId, remain - 1);
+                Apply apply = applyRepository.findById(applyTable[i][0]).orElse(null);
                 Apply updateApply = Apply.builder()
                         .id(apply.getId())
                         .member(apply.getMember())
@@ -106,15 +108,15 @@ class ApplyRepositoryTest extends BaseTest {
         }
 
         System.out.println("테스트");
-        for(int j=0;j<priorityTable.length;j++) {
-            for(int k=0;k<priorityTable[j].length;k++){
+        for (int j = 0; j < priorityTable.length; j++) {
+            for (int k = 0; k < priorityTable[j].length; k++) {
                 System.out.print(priorityTable[j][k] + " ");
             }
             System.out.println();
         }
         System.out.println("신청 현황");
-        for(int j=0;j<applyTable.length;j++) {
-            for(int k=0;k<applyTable[j].length;k++){
+        for (int j = 0; j < applyTable.length; j++) {
+            for (int k = 0; k < applyTable[j].length; k++) {
                 System.out.print(applyTable[j][k] + " ");
             }
             System.out.println();

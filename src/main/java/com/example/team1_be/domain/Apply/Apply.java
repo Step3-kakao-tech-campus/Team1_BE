@@ -1,6 +1,5 @@
 package com.example.team1_be.domain.Apply;
 
-import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
@@ -32,9 +31,6 @@ public class Apply extends BaseEntity {
     private Worktime worktime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -42,11 +38,10 @@ public class Apply extends BaseEntity {
     private List<RecommendedWorktimeApply> recommendedWorktimeApplies;
 
     @Builder
-    public Apply(Long id, ApplyStatus status, Worktime worktime, Member member, User user, List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
+    public Apply(Long id, ApplyStatus status, Worktime worktime, User user, List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
         this.id = id;
         this.status = status;
         this.worktime = worktime;
-        this.member = member;
         this.user = user;
         this.recommendedWorktimeApplies = recommendedWorktimeApplies;
     }
@@ -56,7 +51,6 @@ public class Apply extends BaseEntity {
                 .id(this.id)
                 .status(status)
                 .worktime(this.worktime)
-                .member(this.member)
                 .build();
     }
 }

@@ -2,7 +2,6 @@ package com.example.team1_be.domain.Group;
 
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
-import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.util.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +29,6 @@ public class GroupControllerTest {
     private ObjectMapper om;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private MemberRepository memberRepository;
 
     @DisplayName("그룹 생성하기 성공")
     @WithMockCustomUser(username = "eunjin", isAdmin = "true")

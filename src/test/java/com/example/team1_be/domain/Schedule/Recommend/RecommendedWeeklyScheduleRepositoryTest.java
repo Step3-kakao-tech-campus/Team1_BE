@@ -7,7 +7,6 @@ import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.DayRepository;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
-import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleRepository;
@@ -40,8 +39,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
 
-    public RecommendedWeeklyScheduleRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, MemberRepository memberRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em) {
-        super(userRepository, groupRepository, memberRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
+    public RecommendedWeeklyScheduleRepositoryTest(UserRepository userRepository, GroupRepository groupRepository, NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository, SubstituteRepository substituteRepository, EntityManager em, RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository, RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository, EntityManager em1) {
+        super(userRepository, groupRepository, notificationRepository, dayRepository, applyRepository, weekRepository, worktimeRepository, scheduleRepository, substituteRepository, em);
+        this.recommendedWeeklyScheduleRepository = recommendedWeeklyScheduleRepository;
+        this.recommendedWorktimeApplyRepository = recommendedWorktimeApplyRepository;
+        this.em = em1;
     }
 
     @Autowired

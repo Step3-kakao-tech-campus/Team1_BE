@@ -7,7 +7,6 @@ import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayService;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupService;
-import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.Schedule.DTO.*;
 import com.example.team1_be.domain.Schedule.Recommend.SchduleGenerator;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;

@@ -2,7 +2,6 @@ package com.example.team1_be.domain.User;
 
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,9 +34,6 @@ public class User extends BaseEntity {
     @NotNull
     private Boolean isAdmin;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Group group;
@@ -46,13 +42,12 @@ public class User extends BaseEntity {
     private List<Apply> applies;
 
     @Builder
-    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Member member, Group group, List<Apply> applies) {
+    public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Group group, List<Apply> applies) {
         this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.isAdmin = isAdmin;
-        this.member = member;
         this.group = group;
         this.applies = applies;
     }
