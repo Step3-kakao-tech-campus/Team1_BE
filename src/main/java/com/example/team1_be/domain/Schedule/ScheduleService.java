@@ -205,7 +205,6 @@ public class ScheduleService {
         for (Worktime worktime : worktimes) {
             List<Apply> applies = applyService.findFixedAppliesByWorktime(worktime);
             if (applies.size() != worktime.getAmount()) {
-                System.out.println(applies.size() + ", " + worktime.getAmount());
                 throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
             }
             dailyApplies.add(applies);
