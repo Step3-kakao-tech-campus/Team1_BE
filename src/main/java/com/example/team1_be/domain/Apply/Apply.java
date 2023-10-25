@@ -27,7 +27,6 @@ public class Apply extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "worktime_id")
-    @NotNull
     private Worktime worktime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +49,7 @@ public class Apply extends BaseEntity {
         return Apply.builder()
                 .id(this.id)
                 .status(status)
+                .user(this.user)
                 .worktime(this.worktime)
                 .build();
     }
