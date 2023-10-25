@@ -2,6 +2,7 @@ package com.example.team1_be.domain.Apply;
 
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,10 @@ public class ApplyService {
     }
 
     public List<Apply> findFixedAppliesByWorktime(Worktime worktime) {
-        return applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
+        List<Apply> fixedApplies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
+        if (fixedApplies.isEmpty()) {
+            throw new NotFoundException("고정된 신청을 찾을 수 없습니다.");
+        }
+        return fixedApplies;
     }
 }
