@@ -9,6 +9,10 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Member.MemberRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
+import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
+import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleRepository;
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyRepository;
 import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
@@ -26,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +72,13 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
 
         List<Apply> applyList = applyRepository.findAppliesByWorktimeIds(worktimeIds);
 
-        Map<Long,Integer> requestMap = weeklyWorktimes.stream()
+        Map<Long, Integer> requestMap = weeklyWorktimes.stream()
                 .collect(Collectors.toMap(Worktime::getId, Worktime::getAmount));
 
         SchduleGenerator generator = new SchduleGenerator(applyList, requestMap);
         List<List<Apply>> generatedSchedules = generator.generateSchedule();
 
-        for (List<Apply> generatedSchedule:generatedSchedules) {
+        for (List<Apply> generatedSchedule : generatedSchedules) {
             RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
                     .user(user)
                     .build();
@@ -87,10 +90,10 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
                         .filter(x -> x.getWorktime().getId().equals(worktime.getId()))
                         .collect(Collectors.toList());
 
-                for(Apply apply: applies) {
+                for (Apply apply : applies) {
                     recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
-                                    .recommendedWeeklySchedule(weeklySchedule)
-                                    .apply(apply)
+                            .recommendedWeeklySchedule(weeklySchedule)
+                            .apply(apply)
                             .build());
                 }
             }
@@ -115,13 +118,13 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
         applyRepository.saveAll(selectedApplies);
 
 
-        recommendedSchedule.forEach(x->recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
+        recommendedSchedule.forEach(x -> recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
         recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
 
         em.flush();
         em.clear();
 
-        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue()-1);
+        LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
         int dayOfWeek = selectedDate.getDayOfWeek().getValue();
         List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek, schedule.getId());
         if (worktimes.isEmpty()) {
@@ -129,7 +132,7 @@ class RecommendedWeeklyScheduleRepositoryTest extends BaseTest {
         }
 
         List<List<Apply>> dailyApplies = new ArrayList<>();
-        for(Worktime worktime: worktimes) {
+        for (Worktime worktime : worktimes) {
             List<Apply> applies = applyRepository.findFixedAppliesByWorktimeId(worktime.getId());
             if (applies.size() != worktime.getAmount()) {
                 throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
