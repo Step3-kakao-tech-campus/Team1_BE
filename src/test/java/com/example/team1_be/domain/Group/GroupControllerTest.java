@@ -37,7 +37,7 @@ public class GroupControllerTest {
     private MemberRepository memberRepository;
 
     @DisplayName("그룹 생성하기 성공")
-    @WithMockCustomUser(username = "eunjin", isAdmin="true")
+    @WithMockCustomUser(username = "eunjin", isAdmin = "true")
     @Sql("group-create1.sql")
     @Test
     void postCreate1() throws Exception {
@@ -316,7 +316,7 @@ public class GroupControllerTest {
     }
 
     @DisplayName("그룹 생성시 Auditing 확인")
-    @WithMockCustomUser(isAdmin="true")
+    @WithMockCustomUser(isAdmin = "true")
     @Sql("group-create1.sql")
     @Test
     void userAuditing1() throws Exception {

@@ -61,7 +61,7 @@ public class UserService {
     }
 
     @Transactional
-    public String getJWT(Long kakaoId){
+    public String getJWT(Long kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId).orElse(null);
         return jwtProvider.createJwt(user.getId());
     }
