@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule;
 
 import com.example.team1_be.domain.User.User;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,11 @@ public class RecommendedWeeklyScheduleService {
     }
 
     public List<RecommendedWeeklySchedule> findByUser(User user) {
-        return recommendedWeeklyScheduleRepository.findByUser(user.getId());
+        List<RecommendedWeeklySchedule> recommendedWeeklySchedules = recommendedWeeklyScheduleRepository.findByUser(user.getId());
+        if (recommendedWeeklySchedules.isEmpty()) {
+            throw new NotFoundException("등록된 추천 스케줄이 존재하지 않습니다.");
+        }
+        return recommendedWeeklySchedules;
     }
 
     @Transactional
