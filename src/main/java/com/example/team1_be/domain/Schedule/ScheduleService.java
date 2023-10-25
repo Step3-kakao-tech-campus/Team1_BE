@@ -7,7 +7,6 @@ import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayService;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.GroupService;
-import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.Schedule.DTO.*;
 import com.example.team1_be.domain.Schedule.Recommend.SchduleGenerator;
@@ -221,7 +220,7 @@ public class ScheduleService {
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
         List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule, WeekRecruitmentStatus.ENDED);
-        List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndMember(date, toDate, member, ApplyStatus.FIX);
+        List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndUser(date, toDate, user, ApplyStatus.FIX);
         Double monthly = memberWorktimes.stream()
                 .mapToDouble(worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
                 .reduce(0D, Double::sum);
