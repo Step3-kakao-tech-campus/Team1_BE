@@ -5,9 +5,8 @@ import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.InviteService;
-import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.User.UserService;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GroupService {
+    private final UserService userService;
     private final InviteService inviteService;
-    private final MemberService memberService;
 
     private final GroupRepository groupRepository;
 
@@ -31,14 +30,12 @@ public class GroupService {
             throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
         }
 
-        memberService.findByUser(user);
-
         Group group = Group.builder()
                 .name(request.getMarketName())
                 .address(request.getMainAddress() + request.getDetailAddress())
                 .businessNumber(request.getMarketNumber())
                 .build();
-        groupRepository.save(group);
+        group = creatGroup(group);
 
         Invite invite = Invite.builder()
                 .code(inviteService.generateInviteCode())
@@ -46,11 +43,7 @@ public class GroupService {
                 .build();
         inviteService.createInvite(invite);
 
-        Member member = Member.builder()
-                .user(user)
-                .group(group)
-                .build();
-        memberService.createMember(member);
+        userService.updateGroup(user, group);
     }
 
     @Transactional
@@ -63,24 +56,23 @@ public class GroupService {
         inviteService.checkValidation(invite);
 
         Group group = invite.getGroup();
-        Member member = Member.builder()
-                .group(group)
-                .user(user)
-                .build();
-        memberService.createMember(member);
+        userService.updateGroup(user, group);
     }
 
     public GetMembers.Response getMembers(User user) {
-        Member member = memberService.findByUser(user);
+        Group group = findByUser(user);
+        List<User> users = group.getUsers();
 
-        Group group = member.getGroup();
-        List<Member> members = memberService.findAllByGroup(group);
-
-        return new GetMembers.Response(group, user, members);
+        return new GetMembers.Response(group, user, users);
     }
 
     public Group findByUser(User user) {
         return groupRepository.findByUser(user.getId())
                 .orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
+    }
+
+    @Transactional
+    public Group creatGroup(Group group) {
+        return groupRepository.save(group);
     }
 }
