@@ -14,7 +14,7 @@ import com.example.team1_be.domain.Schedule.Recommend.SchduleGenerator;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleService;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
-import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyRepository;
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
@@ -50,7 +50,7 @@ public class ScheduleService {
     private final DayService dayService;
     private final WorktimeService worktimeService;
     private final ApplyService applyService;
-    private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
+    private final RecommendedWorktimeApplyService recommendedWorktimeApplyService;
     private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
     @Transactional
@@ -168,7 +168,7 @@ public class ScheduleService {
                 }
             }
 
-            recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
+            recommendedWorktimeApplyService.createRecommendedWorktimeApplies(recommendedWorktimeApplies);
         }
         return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
     }
@@ -188,7 +188,7 @@ public class ScheduleService {
                         selectedApplies.add(recommendedWorktimeApply.getApply().updateStatus(ApplyStatus.FIX)));
         applyService.createApplies(selectedApplies);
 
-        recommendedSchedule.forEach(x -> recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
+        recommendedSchedule.forEach(x -> recommendedWorktimeApplyService.deleteAll(x.getRecommendedWorktimeApplies()));
         recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
     }
 
