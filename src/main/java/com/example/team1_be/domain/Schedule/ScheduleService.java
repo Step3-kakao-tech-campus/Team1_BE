@@ -10,7 +10,11 @@ import com.example.team1_be.domain.Group.GroupService;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.Schedule.DTO.*;
-import com.example.team1_be.domain.Schedule.Recommend.*;
+import com.example.team1_be.domain.Schedule.Recommend.SchduleGenerator;
+import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
+import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleService;
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
+import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyRepository;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
@@ -47,7 +51,7 @@ public class ScheduleService {
     private final WorktimeService worktimeService;
     private final ApplyService applyService;
     private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
-    private final RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
+    private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
     @Transactional
     public void recruitSchedule(User user, RecruitSchedule.Request request) {
@@ -148,7 +152,7 @@ public class ScheduleService {
             RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
                     .user(user)
                     .build();
-            recommendedWeeklyScheduleRepository.save(weeklySchedule);
+            recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(weeklySchedule);
 
             List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
             for (Worktime worktime : weeklyWorktimes) {
@@ -171,7 +175,7 @@ public class ScheduleService {
 
     @Transactional
     public void fixSchedule(User user, FixSchedule.Request request) {
-        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleRepository.findByUser(user.getId());
+        List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByUser(user);
         RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
 
         Week week = recommendedWeeklySchedule.getRecommendedWorktimeApplies().get(0).getApply().getWorktime().getDay().getWeek();
@@ -185,7 +189,7 @@ public class ScheduleService {
         applyService.createApplies(selectedApplies);
 
         recommendedSchedule.forEach(x -> recommendedWorktimeApplyRepository.deleteAll(x.getRecommendedWorktimeApplies()));
-        recommendedWeeklyScheduleRepository.deleteAll(recommendedSchedule);
+        recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
     }
 
     public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
