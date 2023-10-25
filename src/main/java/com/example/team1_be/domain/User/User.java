@@ -50,5 +50,8 @@ public class User extends BaseEntity {
         this.member = member;
         this.group = group;
     }
+
+    public void updateGroup(Group group) {
+        this.group = group;
     }
 }
