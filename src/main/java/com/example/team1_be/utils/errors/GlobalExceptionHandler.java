@@ -17,28 +17,28 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public final class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<?> badRequest(BadRequestException e){
+    public ResponseEntity<?> badRequest(BadRequestException e) {
         return new ResponseEntity<>(e.body(), e.status());
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<?> unauthorized(UnauthorizedException e){
+    public ResponseEntity<?> unauthorized(UnauthorizedException e) {
         return new ResponseEntity<>(e.body(), e.status());
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<?> forbidden(ForbiddenException e){
+    public ResponseEntity<?> forbidden(ForbiddenException e) {
         return new ResponseEntity<>(e.body(), e.status());
     }
 
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> notFound(NotFoundException e){
+    public ResponseEntity<?> notFound(NotFoundException e) {
         return new ResponseEntity<>(e.body(), e.status());
     }
 
     @ExceptionHandler(ServerErrorException.class)
-    public ResponseEntity<?> serverError(ServerErrorException e){
+    public ResponseEntity<?> serverError(ServerErrorException e) {
         return new ResponseEntity<>(e.body(), e.status());
     }
 
@@ -67,7 +67,7 @@ public final class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?>handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

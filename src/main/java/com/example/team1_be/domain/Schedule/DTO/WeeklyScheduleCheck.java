@@ -7,14 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 public class WeeklyScheduleCheck {
     @Getter
@@ -35,7 +33,7 @@ public class WeeklyScheduleCheck {
                     (weeklyIdx) -> {
                         List<Worktime> dailyWorktime = weeklyWorktime.get(weeklyIdx);
                         List<List<Apply>> dailyApply = applyList.get(weeklyIdx);
-                        List<ApplyStatus> dailyApplyStatusList= new ArrayList<>();
+                        List<ApplyStatus> dailyApplyStatusList = new ArrayList<>();
                         IntStream.range(0, dailyWorktime.size()).forEach(
                                 (dailyIndex) -> {
                                     dailyApplyStatusList.add(new ApplyStatus(dailyWorktime.get(dailyIndex), dailyApply.get(dailyIndex)));
