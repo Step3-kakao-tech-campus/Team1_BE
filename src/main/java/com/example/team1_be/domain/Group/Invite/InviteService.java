@@ -2,10 +2,9 @@ package com.example.team1_be.domain.Group.Invite;
 
 import com.example.team1_be.domain.Group.DTO.GetInvitation;
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
 import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -21,47 +20,58 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class InviteService {
     private final InviteRepository inviteRepository;
-    private final GroupRepository groupRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    private final int invitationExpiredHours = 24;
+    private final int INVITATION_EXPIRED_HOURS = 24;
 
     public String generateInviteCode() {
         Invite invite;
         String code;
         do {
             code = UUID.randomUUID().toString();
-            invite = inviteRepository.findByCode(code).orElse(null);
+            invite = findByCode(code);
         } while (invite != null);
         return code;
     }
 
-    public void checkValidation(Invite invite){
+    public void checkValidation(Invite invite) {
         if (invite.getRenewedAt() == null) {
             throw new CustomException("유효하지 않은 요청입니다.", HttpStatus.FORBIDDEN);
         }
-        if (invite.getRenewedAt().plusHours(invitationExpiredHours).isBefore(LocalDateTime.now())){
+        if (invite.getRenewedAt().plusHours(INVITATION_EXPIRED_HOURS).isBefore(LocalDateTime.now())) {
             throw new CustomException("만료된 코드입니다. 재발급 받으세요", HttpStatus.BAD_REQUEST);
         }
     }
 
     public InvitationCheck.Response invitationCheck(String invitationKey) {
-        Invite invite = inviteRepository.findByCode(invitationKey)
-                .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
+        Invite invite = findByCode(invitationKey);
         checkValidation(invite);
         return new InvitationCheck.Response(invite.getGroup());
     }
 
     public GetInvitation.Response getInvitation(User user) {
-        Member member = memberRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException("등록되지 않은 멤버입니다.", HttpStatus.BAD_REQUEST));
-        if (user.getIsAdmin() == false) {
+        Member member = memberService.findByUser(user);
+        if (!user.getIsAdmin()) {
             throw new CustomException("매니저 계정만 초대장을 발급할 수 있습니다.", HttpStatus.FORBIDDEN);
         }
         Group group = member.getGroup();
-        Invite invite = inviteRepository.findByGroup(group)
-                .orElseThrow(() -> new RuntimeException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));
+        Invite invite = findByGroup(group);
         inviteRepository.save(invite.renew());
         return new GetInvitation.Response(invite.getCode());
+    }
+
+    @Transactional
+    public Invite createInvite(Invite invite) {
+        return inviteRepository.save(invite);
+    }
+
+    public Invite findByCode(String invitationKey) {
+        return inviteRepository.findByCode(invitationKey)
+                .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
+    }
+
+    public Invite findByGroup(Group group) {
+        return inviteRepository.findByGroup(group)
+                .orElseThrow(() -> new RuntimeException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));
     }
 }

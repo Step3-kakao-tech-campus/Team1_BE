@@ -4,7 +4,6 @@ import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Invite.Invite;
-import com.example.team1_be.domain.Group.Invite.InviteRepository;
 import com.example.team1_be.domain.Group.Invite.InviteService;
 import com.example.team1_be.domain.Member.Member;
 import com.example.team1_be.domain.Member.MemberRepository;
@@ -24,7 +23,6 @@ public class GroupService {
     private final InviteService inviteService;
 
     private final GroupRepository groupRepository;
-    private final InviteRepository inviteRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -39,7 +37,7 @@ public class GroupService {
 
         Group group = Group.builder()
                 .name(request.getMarketName())
-                .address(request.getMainAddress()+request.getDetailAddress())
+                .address(request.getMainAddress() + request.getDetailAddress())
                 .businessNumber(request.getMarketNumber())
                 .build();
         groupRepository.save(group);
@@ -48,7 +46,7 @@ public class GroupService {
                 .code(inviteService.generateInviteCode())
                 .group(group)
                 .build();
-        inviteRepository.save(invite);
+        inviteService.createInvite(invite);
 
         Member member = Member.builder()
                 .user(user)
@@ -63,8 +61,7 @@ public class GroupService {
             throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
         }
 
-        Invite invite = inviteRepository.findByCode(request.getInvitationKey())
-                .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다", HttpStatus.NOT_FOUND));
+        Invite invite = inviteService.findByCode(request.getInvitationKey());
         inviteService.checkValidation(invite);
 
         Group group = invite.getGroup();
