@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     private Boolean isAdmin;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
