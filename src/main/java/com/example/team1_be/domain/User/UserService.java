@@ -77,7 +77,7 @@ public class UserService {
     }
 
     public Group findGroupByUser(User user) {
-        return userRepository.findByUser(user.getId())
+        return userRepository.findGroupByUser(user.getId())
                 .orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
     }
 }

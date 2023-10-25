@@ -215,8 +215,8 @@ public class ScheduleService {
     }
 
     public GetFixedWeeklySchedule.Response getUsersFixedWeeklySchedule(User user, YearMonth requestMonth) {
-        Member member = memberService.findByUser(user);
-        Schedule schedule = findByGroup(member.getGroup());
+        Group group = userService.findGroupByUser(user);
+        Schedule schedule = findByGroup(group);
 
         LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
         LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);

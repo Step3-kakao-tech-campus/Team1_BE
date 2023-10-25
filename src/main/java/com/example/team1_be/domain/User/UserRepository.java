@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.group " +
             "from User u " +
             "where u.id = :userId")
-    Optional<Group> findByUser(@Param("userId") Long userId);
+    Optional<Group> findGroupByUser(@Param("userId") Long userId);
 }

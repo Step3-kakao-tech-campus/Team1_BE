@@ -70,7 +70,7 @@ class WorktimeRepositoryTest extends BaseTest {
         User user = userRepository.findById(1L).orElse(null);
         assertThat(user).isNotEqualTo(null);
 
-        Group group = userRepository.findByUser(user.getId()).orElse(null);
+        Group group = userRepository.findGroupByUser(user.getId()).orElse(null);
         assertThat(group).isNotEqualTo(null);
 
         Schedule schedule = scheduleRepository.findByGroup(group).orElse(null);
