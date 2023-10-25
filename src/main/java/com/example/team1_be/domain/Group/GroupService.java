@@ -60,15 +60,10 @@ public class GroupService {
     }
 
     public GetMembers.Response getMembers(User user) {
-        Group group = findByUser(user);
+        Group group = userService.getGroup(user);
         List<User> users = group.getUsers();
 
         return new GetMembers.Response(group, user, users);
-    }
-
-    public Group findByUser(User user) {
-        return groupRepository.findByUser(user.getId())
-                .orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
     }
 
     @Transactional
