@@ -3,7 +3,6 @@ package com.example.team1_be.domain.Group.Invite;
 import com.example.team1_be.domain.Group.DTO.GetInvitation;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
-import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
 import com.example.team1_be.utils.errors.exception.CustomException;
@@ -21,12 +20,10 @@ import java.util.UUID;
 public class InviteService {
     private final UserService userService;
     private final InviteRepository inviteRepository;
-    private final MemberService memberService;
 
     private final int INVITATION_EXPIRED_HOURS = 24;
 
     public String generateInviteCode() {
-        Invite invite;
         String code;
         do {
             code = UUID.randomUUID().toString();
