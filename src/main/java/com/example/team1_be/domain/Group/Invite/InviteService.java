@@ -29,8 +29,7 @@ public class InviteService {
         String code;
         do {
             code = UUID.randomUUID().toString();
-            invite = findByCode(code);
-        } while (invite != null);
+        } while (isDuplicateCode(code));
         return code;
     }
 
@@ -68,6 +67,15 @@ public class InviteService {
     public Invite findByCode(String invitationKey) {
         return inviteRepository.findByCode(invitationKey)
                 .orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
+    }
+
+    public boolean isDuplicateCode(String uuid) {
+        try {
+            findByCode(uuid);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Invite findByGroup(Group group) {
