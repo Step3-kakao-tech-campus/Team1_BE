@@ -6,7 +6,7 @@ import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.InviteService;
 import com.example.team1_be.domain.Member.Member;
-import com.example.team1_be.domain.Member.MemberRepository;
+import com.example.team1_be.domain.Member.MemberService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +21,17 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class GroupService {
     private final InviteService inviteService;
+    private final MemberService memberService;
 
     private final GroupRepository groupRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public void create(User user, Create.Request request) {
-        if (user.getIsAdmin() == false) {
+        if (!user.getIsAdmin()) {
             throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
         }
 
-        if (memberRepository.findByUser(user).orElse(null) != null) {
-            throw new CustomException("이미 그룹에 가입되어 있습니다.", HttpStatus.FORBIDDEN);
-        }
+        memberService.findByUser(user);
 
         Group group = Group.builder()
                 .name(request.getMarketName())
@@ -52,12 +50,12 @@ public class GroupService {
                 .user(user)
                 .group(group)
                 .build();
-        memberRepository.save(member);
+        memberService.createMember(member);
     }
 
     @Transactional
     public void invitationAccept(User user, InvitationAccept.Request request) {
-        if (user.getIsAdmin() == true) {
+        if (user.getIsAdmin()) {
             throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
         }
 
@@ -69,15 +67,14 @@ public class GroupService {
                 .group(group)
                 .user(user)
                 .build();
-        memberRepository.save(member);
+        memberService.createMember(member);
     }
 
     public GetMembers.Response getMembers(User user) {
-        Member member = memberRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
+        Member member = memberService.findByUser(user);
 
         Group group = member.getGroup();
-        List<Member> members = memberRepository.findAllByGroup(group);
+        List<Member> members = memberService.findAllByGroup(group);
 
         return new GetMembers.Response(group, user, members);
     }
