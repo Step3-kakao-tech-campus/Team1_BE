@@ -16,7 +16,6 @@ import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.Recommended
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyService;
 import com.example.team1_be.domain.User.User;
-import com.example.team1_be.domain.User.UserService;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Week.WeekService;
@@ -44,7 +43,6 @@ import java.util.stream.IntStream;
 public class ScheduleService {
     private final int NUM_DAYS_OF_WEEK = 7;
 
-    private final UserService userService;
     private final MemberService memberService;
     private final GroupService groupService;
     private final ScheduleRepository scheduleRepository;
@@ -62,7 +60,7 @@ public class ScheduleService {
         }
 
         // group 찾기
-        Group group = userService.getGroup(user);
+        Group group = groupService.findByUser(user);
 
         // 스케줄 생성
         Schedule schedule = Schedule.builder()
@@ -99,7 +97,7 @@ public class ScheduleService {
     }
 
     public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
-        Group group = userService.getGroup(user);
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = findByGroup(group);
 
@@ -136,7 +134,7 @@ public class ScheduleService {
 
     @Transactional
     public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
-        Group group = userService.getGroup(user);
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = findByGroup(group);
 
@@ -195,7 +193,7 @@ public class ScheduleService {
     }
 
     public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
-        Group group = userService.getGroup(user);
+        Group group = groupService.findByUser(user);
         Schedule schedule = findByGroup(group);
 
         LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
@@ -230,7 +228,7 @@ public class ScheduleService {
     }
 
     public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
-        Group group = userService.getGroup(user);
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = findByGroup(group);
 
@@ -245,7 +243,7 @@ public class ScheduleService {
     }
 
     public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
-        Group group = userService.getGroup(user);
+        Group group = groupService.findByUser(user);
 
         Schedule schedule = findByGroup(group);
         Week week = weekService.findByScheduleAndStartDate(schedule, startWeekDate);
