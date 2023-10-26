@@ -35,9 +35,9 @@ import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedW
 import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
+import com.example.team1_be.domain.Week.Service.WeekService;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
-import com.example.team1_be.domain.Week.WeekService;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeService;
 import com.example.team1_be.utils.errors.exception.CustomException;

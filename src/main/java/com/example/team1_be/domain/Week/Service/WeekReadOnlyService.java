@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Week;
+package com.example.team1_be.domain.Week.Service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Week.Week;
+import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
+import com.example.team1_be.domain.Week.WeekRepository;
 import com.example.team1_be.utils.errors.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
@@ -16,24 +19,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class WeekService {
-	private final int LATEST_WEEK_LIMIT = 1;
+public class WeekReadOnlyService {
 	private final WeekRepository weekRepository;
-
-	@Transactional
-	public Week createWeek(Schedule schedule, LocalDate weekStartDate) {
-		Week week = Week.builder()
-			.schedule(schedule)
-			.status(WeekRecruitmentStatus.STARTED)
-			.startDate(weekStartDate)
-			.build();
-		return weekRepository.save(week);
-	}
-
-	@Transactional
-	public void updateWeekStatus(Week week, WeekRecruitmentStatus weekRecruitmentStatus) {
-		weekRepository.save(week.updateStatus(weekRecruitmentStatus));
-	}
+	private final int LATEST_WEEK_LIMIT = 1;
 
 	public Week findByScheduleAndStartDate(Schedule schedule, LocalDate startDate) {
 		return weekRepository.findByScheduleIdAndStartDate(schedule.getId(), startDate)
