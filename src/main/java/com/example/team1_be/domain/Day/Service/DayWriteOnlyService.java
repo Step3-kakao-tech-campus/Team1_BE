@@ -6,22 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Week.Week;
+import com.example.team1_be.domain.Day.DayRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class DayService {
-	private final DayReadOnlyService dayReadOnlyService;
-	private final DayWriteOnlyService dayWriteOnlyService;
+@Transactional
+public class DayWriteOnlyService {
+	private final DayRepository dayRepository;
 
 	public void createDays(List<Day> days) {
-		dayWriteOnlyService.createDays(days);
-	}
-
-	public List<Day> findByWeek(Week week) {
-		return dayReadOnlyService.findByWeek(week);
+		dayRepository.saveAll(days);
 	}
 }
