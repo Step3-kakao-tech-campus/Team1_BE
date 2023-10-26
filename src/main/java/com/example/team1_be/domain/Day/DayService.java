@@ -1,7 +1,6 @@
 package com.example.team1_be.domain.Day;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,9 +18,8 @@ public class DayService {
 	private final DayRepository dayRepository;
 
 	@Transactional
-	public List<Day> createDays(List<Day> days) {
-		days = dayRepository.saveAll(days);
-		return dayRepository.findAllById(days.stream().map(Day::getId).collect(Collectors.toList()));
+	public void createDays(List<Day> days) {
+		dayRepository.saveAll(days);
 	}
 
 	public List<Day> findByWeek(Week week) {
