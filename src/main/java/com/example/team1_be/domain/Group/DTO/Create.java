@@ -2,6 +2,8 @@ package com.example.team1_be.domain.Group.DTO;
 
 import javax.validation.constraints.NotBlank;
 
+import com.example.team1_be.domain.Group.Group;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,5 +23,13 @@ public class Create {
 		private String mainAddress;
 		@NotBlank(message = "건물번호가 누락되었습니다.")
 		private String detailAddress;
+
+		public Group toGroup() {
+			return Group.builder()
+				.name(this.marketName)
+				.address(this.mainAddress + this.detailAddress)
+				.businessNumber(this.marketName)
+				.build();
+		}
 	}
 }
