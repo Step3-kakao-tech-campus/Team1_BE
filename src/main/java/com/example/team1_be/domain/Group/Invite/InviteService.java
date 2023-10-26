@@ -60,8 +60,8 @@ public class InviteService {
 	}
 
 	@Transactional
-	public Invite createInvite(Invite invite) {
-		return inviteRepository.save(invite);
+	public void createInvite(Invite invite) {
+		inviteRepository.save(invite);
 	}
 
 	@Transactional
