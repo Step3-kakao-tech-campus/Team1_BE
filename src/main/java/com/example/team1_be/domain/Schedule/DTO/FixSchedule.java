@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class FixSchedule {
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Request {
-        private Long selection;
-    }
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class Request {
+		private int selection;
+	}
 }

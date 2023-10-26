@@ -1,0 +1,19 @@
+[2023-10-26 16:54:59] [background-preinit] [INFO ] [org.hibernate.validator.internal.util.Version.<clinit>:21] - HV000001: Hibernate Validator 6.2.5.Final
+[2023-10-26 16:54:59] [Test worker] [INFO ] [org.springframework.boot.StartupInfoLogger.logStarting:55] - Starting UserRepositoryTest using Java 11.0.2 on DESKTOP-OMQP4PK with PID 23812 (started by cgoya in C:\Users\cgoya\Desktop\step3ver2\Team1_BE)
+[2023-10-26 16:54:59] [Test worker] [INFO ] [org.springframework.boot.SpringApplication.logStartupProfileInfo:631] - No active profile set, falling back to 1 default profile: "default"
+[2023-10-26 16:55:02] [Test worker] [INFO ] [org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn:132] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-10-26 16:55:02] [Test worker] [INFO ] [org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn:201] - Finished Spring Data repository scanning in 440 ms. Found 13 JPA repository interfaces.
+[2023-10-26 16:55:04] [Test worker] [INFO ] [org.hibernate.jpa.internal.util.LogHelper.logPersistenceUnitInformation:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-10-26 16:55:04] [Test worker] [INFO ] [org.hibernate.Version.logVersion:44] - HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-10-26 16:55:05] [Test worker] [INFO ] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager.<clinit>:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-10-26 16:55:05] [Test worker] [INFO ] [com.zaxxer.hikari.HikariDataSource.getConnection:110] - HikariPool-1 - Starting...
+[2023-10-26 16:55:06] [Test worker] [INFO ] [com.zaxxer.hikari.HikariDataSource.getConnection:123] - HikariPool-1 - Start completed.
+[2023-10-26 16:55:06] [Test worker] [INFO ] [org.hibernate.dialect.Dialect.<init>:175] - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[2023-10-26 16:55:09] [Test worker] [INFO ] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator.initiateService:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-10-26 16:55:09] [Test worker] [INFO ] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-10-26 16:55:12] [Test worker] [INFO ] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.destroy:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-10-26 16:55:12] [Test worker] [INFO ] [com.zaxxer.hikari.HikariDataSource.close:350] - HikariPool-1 - Shutdown initiated...
+[2023-10-26 16:55:12] [Test worker] [INFO ] [com.zaxxer.hikari.HikariDataSource.close:352] - HikariPool-1 - Shutdown completed.
+[2023-10-26 16:55:12] [Test worker] [INFO ] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener.logMessage:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
