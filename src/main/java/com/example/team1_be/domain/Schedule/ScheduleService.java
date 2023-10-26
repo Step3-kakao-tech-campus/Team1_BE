@@ -19,7 +19,7 @@ import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Day.DayService;
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Group.GroupService;
+import com.example.team1_be.domain.Group.Service.GroupService;
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;

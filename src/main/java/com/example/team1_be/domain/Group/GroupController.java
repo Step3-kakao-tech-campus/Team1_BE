@@ -17,6 +17,7 @@ import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Invite.DTO.InvitationCheck;
 import com.example.team1_be.domain.Group.Invite.Service.InviteService;
+import com.example.team1_be.domain.Group.Service.GroupService;
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 

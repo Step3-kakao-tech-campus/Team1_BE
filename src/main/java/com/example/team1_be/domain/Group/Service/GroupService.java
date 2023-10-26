@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Group;
+package com.example.team1_be.domain.Group.Service;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
+import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.Service.InviteService;
 import com.example.team1_be.domain.User.User;
