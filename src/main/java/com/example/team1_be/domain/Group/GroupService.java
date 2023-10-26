@@ -69,7 +69,7 @@ public class GroupService {
 	}
 
 	@Transactional
-	public Group creatGroup(Group group) {
-		return groupRepository.save(group);
+	public void creatGroup(Group group) {
+		groupRepository.save(group);
 	}
 }
