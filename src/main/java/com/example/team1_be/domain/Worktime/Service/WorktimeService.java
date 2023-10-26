@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Worktime;
+package com.example.team1_be.domain.Worktime.Service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Day.Day;
 import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Worktime.Worktime;
+import com.example.team1_be.domain.Worktime.WorktimeRepository;
 import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
 
