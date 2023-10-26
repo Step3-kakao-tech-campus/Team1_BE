@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Schedule;
+package com.example.team1_be.domain.Schedule.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -33,6 +33,8 @@ import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.Recommended
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleService;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyService;
+import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
 import com.example.team1_be.domain.Week.Week;
