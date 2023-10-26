@@ -66,7 +66,9 @@ public class InviteService {
 
 	@Transactional
 	public void renewInvitation(Invite invite) {
-		createInvite(invite.renew());
+		invite.renew();
+		createInvite(invite);
+	}
 	}
 
 	public Invite findByCode(String invitationKey) {
