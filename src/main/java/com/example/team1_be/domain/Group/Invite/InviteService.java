@@ -69,6 +69,14 @@ public class InviteService {
 		invite.renew();
 		createInvite(invite);
 	}
+
+	@Transactional
+	public void createInviteWithGroup(Group group) {
+		String invitationCode = generateInviteCode();
+		createInvite(Invite.builder()
+			.code(invitationCode)
+			.group(group)
+			.build());
 	}
 
 	public Invite findByCode(String invitationKey) {

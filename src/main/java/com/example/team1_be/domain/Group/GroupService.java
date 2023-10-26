@@ -32,18 +32,10 @@ public class GroupService {
 			throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
 		}
 
-		Group group = Group.builder()
-			.name(request.getMarketName())
-			.address(request.getMainAddress() + request.getDetailAddress())
-			.businessNumber(request.getMarketNumber())
-			.build();
-		group = creatGroup(group);
+		Group group = request.toGroup();
+		creatGroup(group);
 
-		Invite invite = Invite.builder()
-			.code(inviteService.generateInviteCode())
-			.group(group)
-			.build();
-		inviteService.createInvite(invite);
+		inviteService.createInviteWithGroup(group);
 
 		userService.updateGroup(user, group);
 	}
