@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Group;
+package com.example.team1_be.domain.Group.Service;
 
 import java.util.List;
 
@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
+import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Group.Invite.Invite;
-import com.example.team1_be.domain.Group.Invite.InviteService;
+import com.example.team1_be.domain.Group.Invite.Service.InviteService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
 import com.example.team1_be.utils.errors.exception.CustomException;
@@ -23,39 +24,28 @@ import lombok.RequiredArgsConstructor;
 public class GroupService {
 	private final UserService userService;
 	private final InviteService inviteService;
+	private final GroupReadOnlyRepositoryService groupReadOnlyRepositoryService;
+	private final GroupWriteOnlyRepositoryService groupWriteOnlyRepositoryService;
 
-	private final GroupRepository groupRepository;
-
-	@Transactional
 	public void create(User user, Create.Request request) {
 		if (!user.getIsAdmin()) {
 			throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
 		}
 
-		Group group = Group.builder()
-			.name(request.getMarketName())
-			.address(request.getMainAddress() + request.getDetailAddress())
-			.businessNumber(request.getMarketNumber())
-			.build();
-		group = creatGroup(group);
+		Group group = request.toGroup();
+		groupWriteOnlyRepositoryService.creatGroup(group);
 
-		Invite invite = Invite.builder()
-			.code(inviteService.generateInviteCode())
-			.group(group)
-			.build();
-		inviteService.createInvite(invite);
+		inviteService.createInviteWithGroup(group);
 
 		userService.updateGroup(user, group);
 	}
 
-	@Transactional
 	public void invitationAccept(User user, InvitationAccept.Request request) {
 		if (user.getIsAdmin()) {
 			throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
 		}
 
-		Invite invite = inviteService.findByCode(request.getInvitationKey());
-		inviteService.checkValidation(invite);
+		Invite invite = inviteService.findInvitation(request.getInvitationKey());
 
 		Group group = invite.getGroup();
 		userService.updateGroup(user, group);
@@ -66,10 +56,5 @@ public class GroupService {
 		List<User> users = group.getUsers();
 
 		return new GetMembers.Response(group, user, users);
-	}
-
-	@Transactional
-	public Group creatGroup(Group group) {
-		return groupRepository.save(group);
 	}
 }

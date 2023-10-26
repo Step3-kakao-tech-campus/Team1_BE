@@ -23,6 +23,7 @@ import com.example.team1_be.domain.Schedule.DTO.LoadLatestSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
+import com.example.team1_be.domain.Schedule.Service.ScheduleService;
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 

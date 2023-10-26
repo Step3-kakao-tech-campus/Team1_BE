@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Schedule;
+package com.example.team1_be.domain.Schedule.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -17,9 +17,8 @@ import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Apply.ApplyService;
 import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Day.DayService;
+import com.example.team1_be.domain.Day.Service.DayService;
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Group.GroupService;
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
@@ -33,13 +32,14 @@ import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.Recommended
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleService;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyService;
+import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
+import com.example.team1_be.domain.Week.Service.WeekService;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
-import com.example.team1_be.domain.Week.WeekService;
+import com.example.team1_be.domain.Worktime.Service.WorktimeService;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.domain.Worktime.WorktimeService;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 
@@ -52,14 +52,15 @@ public class ScheduleService {
 	private final int NUM_DAYS_OF_WEEK = 7;
 
 	private final UserService userService;
-	private final GroupService groupService;
-	private final ScheduleRepository scheduleRepository;
 	private final WeekService weekService;
 	private final DayService dayService;
 	private final WorktimeService worktimeService;
 	private final ApplyService applyService;
 	private final RecommendedWorktimeApplyService recommendedWorktimeApplyService;
 	private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
+
+	private final ScheduleReadOnlyService scheduleReadOnlyService;
+	private final ScheduleWriteService scheduleWriteService;
 
 	@Transactional
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
@@ -72,7 +73,7 @@ public class ScheduleService {
 		Schedule schedule = Schedule.builder()
 			.group(group)
 			.build();
-		scheduleRepository.save(schedule);
+		scheduleWriteService.createSchedule(schedule);
 
 		Week week = weekService.createWeek(schedule, request.getWeekStartDate());
 
@@ -103,7 +104,7 @@ public class ScheduleService {
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = findByGroup(group);
+		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
 		Week week = user.getIsAdmin() ?
 			weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.STARTED) :
@@ -123,7 +124,7 @@ public class ScheduleService {
 
 	public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
 		User member = userService.findById(memberId);
-		Schedule schedule = findByGroup(member.getGroup());
+		Schedule schedule = scheduleReadOnlyService.findByGroup(member.getGroup());
 
 		LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
 		LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
@@ -143,7 +144,7 @@ public class ScheduleService {
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = findByGroup(group);
+		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
 		List<Worktime> weeklyWorktimes = worktimeService.findByStartDateAndSchedule(date, schedule);
 
@@ -206,7 +207,7 @@ public class ScheduleService {
 
 	public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
 		Group group = userService.findGroupByUser(user);
-		Schedule schedule = findByGroup(group);
+		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
 		LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
 		int dayOfWeek = selectedDate.getDayOfWeek().getValue();
@@ -225,7 +226,7 @@ public class ScheduleService {
 
 	public GetFixedWeeklySchedule.Response getUsersFixedWeeklySchedule(User user, YearMonth requestMonth) {
 		Group group = userService.findGroupByUser(user);
-		Schedule schedule = findByGroup(group);
+		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
 		LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
 		LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
@@ -244,7 +245,7 @@ public class ScheduleService {
 	public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = findByGroup(group);
+		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
 		List<Week> latestWeeks = weekService.findLatestByScheduleAndStatus(schedule, WeekRecruitmentStatus.ENDED);
 		if (latestWeeks.isEmpty()) {
@@ -259,7 +260,7 @@ public class ScheduleService {
 	public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = findByGroup(group);
+		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 		Week week = weekService.findByScheduleAndStartDate(schedule, startWeekDate);
 
 		if (week == null) {
@@ -267,10 +268,5 @@ public class ScheduleService {
 		} else {
 			return new GetWeekStatus.Response(week.getStatus());
 		}
-	}
-
-	public Schedule findByGroup(Group group) {
-		return scheduleRepository.findByGroup(group)
-			.orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
 	}
 }

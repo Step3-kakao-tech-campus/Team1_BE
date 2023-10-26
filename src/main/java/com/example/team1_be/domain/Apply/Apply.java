@@ -59,11 +59,7 @@ public class Apply extends BaseEntity {
 	}
 
 	public Apply updateStatus(ApplyStatus status) {
-		return Apply.builder()
-			.id(this.id)
-			.status(status)
-			.user(this.user)
-			.worktime(this.worktime)
-			.build();
+		this.status = status;
+		return this;
 	}
 }
