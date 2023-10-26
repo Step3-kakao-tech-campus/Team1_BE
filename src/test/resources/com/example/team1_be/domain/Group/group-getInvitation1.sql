@@ -1,4 +1,5 @@
-SET REFERENTIAL_INTEGRITY FALSE;
+SET
+REFERENTIAL_INTEGRITY FALSE;
 truncate table apply;
 truncate table days;
 truncate table groups;
@@ -19,12 +20,13 @@ ALTER TABLE substitute AUTO_INCREMENT=1;
 ALTER TABLE users AUTO_INCREMENT=1;
 ALTER TABLE week AUTO_INCREMENT=1;
 ALTER TABLE worktime AUTO_INCREMENT=1;
-SET REFERENTIAL_INTEGRITY TRUE;
+SET
+REFERENTIAL_INTEGRITY TRUE;
 
 insert into groups (`id`, `name`, `phone_number`, `business_number`, `address`)
 values (1, '백소정 부산대점', '011-0000-0001', 1, '부산광역시');
 
-insert into users (`id`,`kakao_id`,`name`,`phone_number`, `is_admin`, `group_id`)
+insert into users (`id`, `kakao_id`, `name`, `phone_number`, `is_admin`, `group_id`)
 values (1, 1, '이재훈', '010-0000-0001', true, 1),
        (2, 2, '안한주', '010-0000-0002', false, 1),
        (3, 3, '차지원', '010-0000-0003', false, 1),

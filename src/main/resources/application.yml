@@ -24,3 +24,11 @@ spring:
 
 jwt:
   secretKey:"aalbbaim.letsgo.1.jo"
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
