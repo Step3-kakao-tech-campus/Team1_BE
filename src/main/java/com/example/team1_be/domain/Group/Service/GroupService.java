@@ -10,7 +10,6 @@ import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.GetMembers;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.Service.InviteService;
 import com.example.team1_be.domain.User.User;
@@ -25,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class GroupService {
 	private final UserService userService;
 	private final InviteService inviteService;
-
-	private final GroupRepository groupRepository;
+	private final GroupReadOnlyRepositoryService groupReadOnlyRepositoryService;
+	private final GroupWriteOnlyRepositoryService groupWriteOnlyRepositoryService;
 
 	public void create(User user, Create.Request request) {
 		if (!user.getIsAdmin()) {
@@ -34,7 +33,7 @@ public class GroupService {
 		}
 
 		Group group = request.toGroup();
-		creatGroup(group);
+		groupWriteOnlyRepositoryService.creatGroup(group);
 
 		inviteService.createInviteWithGroup(group);
 
@@ -57,9 +56,5 @@ public class GroupService {
 		List<User> users = group.getUsers();
 
 		return new GetMembers.Response(group, user, users);
-	}
-
-	public void creatGroup(Group group) {
-		groupRepository.save(group);
 	}
 }
