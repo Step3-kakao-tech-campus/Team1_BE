@@ -18,28 +18,28 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 	private final UserRepository userRepository;
 	private final UnfinishedUserRepository unfinishedUserRepository;
 	private final JwtProvider jwtProvider;
 
+	@Transactional(noRollbackFor = NotFoundException.class)
 	public Login.Response login(String code, Long kakaoId) {
 		User user = userRepository.findByKakaoId(kakaoId).orElse(null);
-		if (user == null) {
-			UnfinishedUser unfinishedUser = UnfinishedUser.builder()
-					.code(code)
-					.kakaoId(kakaoId)
-					.build();
-			unfinishedUserRepository.save(unfinishedUser);
+			if (user == null) {
+				UnfinishedUser unfinishedUser = UnfinishedUser.builder()
+						.code(code)
+						.kakaoId(kakaoId)
+						.build();
+				unfinishedUserRepository.save(unfinishedUser);
 
-			throw new NotFoundException("회원이 아닙니다.");
-		}
-
+				throw new NotFoundException("회원이 아닙니다.");
+			}
 		return new Login.Response(user.getIsAdmin());
 	}
 
 	// login 시도했던 code를 통해, join 시 kakaoId와 매칭
-	@Transactional
 	public Long matchKakaoId(String code) {
 		UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
 				() -> new BadRequestException("유효하지 않은 code입니다.")
@@ -65,7 +65,6 @@ public class UserService {
 		return new Join.Response(request.getIsAdmin());
 	}
 
-	@Transactional
 	public String getJWT(Long kakaoId) {
 		User user = userRepository.findByKakaoId(kakaoId).orElse(null);
 		return jwtProvider.createJwt(user.getId());
