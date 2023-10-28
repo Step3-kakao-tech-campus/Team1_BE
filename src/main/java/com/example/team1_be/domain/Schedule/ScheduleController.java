@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
+import com.example.team1_be.domain.Schedule.DTO.GetApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetWeekStatus;
@@ -111,6 +112,14 @@ public class ScheduleController {
 		@PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
 		GetWeekStatus.Response responseDTO = scheduleService.getWeekStatus(userDetails.getUser(), startWeekDate);
 		ApiUtils.ApiResult<GetWeekStatus.Response> response = ApiUtils.success(responseDTO);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/application/{startWeekDate}")
+	public ResponseEntity<?> getApplies(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
+		GetApplies.Response responseDTO = scheduleService.getApplies(userDetails.getUser(), startWeekDate);
+		ApiUtils.ApiResult<GetApplies.Response> response = ApiUtils.success(responseDTO);
 		return ResponseEntity.ok(response);
 	}
 }

@@ -20,6 +20,7 @@ import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.DetailWorktime.Service.DetailWorktimeService;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
+import com.example.team1_be.domain.Schedule.DTO.GetApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetWeekStatus;
@@ -185,5 +186,16 @@ public class ScheduleService {
 		WeekRecruitmentStatus status = weekService.getWeekStatus(group, startDate);
 
 		return new GetWeekStatus.Response(status);
+	}
+
+	public GetApplies.Response getApplies(User user, LocalDate startWeekDate) {
+		Group group = userService.findGroupByUser(user);
+
+		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, startWeekDate);
+
+		List<SortedMap<Worktime, Apply>> weeklyApplies = applyService.findByUserAndWorktimeAndDay(user,
+			weeklyWorktimes);
+
+		return new GetApplies.Response(weeklyWorktimes, weeklyApplies);
 	}
 }
