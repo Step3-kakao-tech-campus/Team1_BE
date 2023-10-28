@@ -2,7 +2,6 @@ package com.example.team1_be.domain.Schedule.DTO;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,21 +27,21 @@ public class WeeklyScheduleCheck {
 	@NoArgsConstructor
 	public static class Response {
 		private List<Template> template;
-		private Map<String, List<WorkerStatus>> applyStatus;
+		private List<List<WorkerStatus>> applyStatus;
 
 		public Response(List<Worktime> worktimes, Map<String, List<Map<Worktime, List<Apply>>>> applyStatus) {
 			this.template = new ArrayList<>();
 			worktimes.forEach(worktime -> template.add(new Template(worktime)));
 
-			this.applyStatus = new HashMap<>();
+			this.applyStatus = new ArrayList<>();
 			for (String date : applyStatus.keySet()) {
 				List<WorkerStatus> dailyWorkerStatuses = new ArrayList<>();
-				for (Map<Worktime, List<Apply>> worktimeUsers : applyStatus.get(date)) { //
+				for (Map<Worktime, List<Apply>> worktimeUsers : applyStatus.get(date)) {
 					for (Worktime worktime : worktimeUsers.keySet()) {
 						dailyWorkerStatuses.add(new WorkerStatus(worktime, worktimeUsers.get(worktime)));
 					}
 				}
-				this.applyStatus.put(date, dailyWorkerStatuses);
+				this.applyStatus.add(dailyWorkerStatuses);
 			}
 		}
 
