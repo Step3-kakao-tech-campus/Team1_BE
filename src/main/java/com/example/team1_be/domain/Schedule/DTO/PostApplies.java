@@ -32,18 +32,6 @@ public class PostApplies {
 			}
 		}
 
-		@Getter
-		@NoArgsConstructor
-		public static class SelectedStatus {
-			private Long workTimeId;
-			private Boolean isChecked;
-
-			public SelectedStatus(Long workTimeId, Boolean isChecked) {
-				this.workTimeId = workTimeId;
-				this.isChecked = isChecked;
-			}
-		}
-
 		public SortedMap<DayOfWeek, List<Worktime>> toWeeklyApplies() {
 			SortedMap<DayOfWeek, List<Worktime>> weeklyApplies = new TreeMap<>(
 				(s1, s2) -> s1.compareTo(s2));
@@ -59,6 +47,18 @@ public class PostApplies {
 				weeklyApplies.put(day, dailyApples);
 			}
 			return weeklyApplies;
+		}
+
+		@Getter
+		@NoArgsConstructor
+		public static class SelectedStatus {
+			private Long workTimeId;
+			private Boolean isChecked;
+
+			public SelectedStatus(Long workTimeId, Boolean isChecked) {
+				this.workTimeId = workTimeId;
+				this.isChecked = isChecked;
+			}
 		}
 	}
 }
