@@ -24,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class GroupService {
 	private final UserService userService;
 	private final InviteService inviteService;
-	private final GroupReadOnlyRepositoryService groupReadOnlyRepositoryService;
-	private final GroupWriteOnlyRepositoryService groupWriteOnlyRepositoryService;
+	private final GroupReadOnlyRepositoryService readOnlyRepositoryService;
+	private final GroupWriteOnlyRepositoryService writeOnlyRepositoryService;
 
 	public void create(User user, Create.Request request) {
 		if (!user.getIsAdmin()) {
@@ -33,7 +33,7 @@ public class GroupService {
 		}
 
 		Group group = request.toGroup();
-		groupWriteOnlyRepositoryService.creatGroup(group);
+		writeOnlyRepositoryService.creatGroup(group);
 
 		inviteService.createInviteWithGroup(group);
 

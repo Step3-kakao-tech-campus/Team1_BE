@@ -18,12 +18,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 public class InviteReadOnlyRepositoryService {
-	private final InviteRepository inviteRepository;
+	private final InviteRepository repository;
 
 	private final int INVITATION_EXPIRED_HOURS = 24;
 
 	public Invite findByCode(String invitationKey) {
-		return inviteRepository.findByCode(invitationKey)
+		return repository.findByCode(invitationKey)
 			.orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
 	}
 
@@ -54,7 +54,7 @@ public class InviteReadOnlyRepositoryService {
 	}
 
 	public Invite findByGroup(Group group) {
-		return inviteRepository.findByGroup(group)
+		return repository.findByGroup(group)
 			.orElseThrow(() -> new RuntimeException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));
 	}
 }

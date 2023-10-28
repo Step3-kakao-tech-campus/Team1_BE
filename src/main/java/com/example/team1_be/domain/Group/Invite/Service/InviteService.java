@@ -19,12 +19,12 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class InviteService {
 	private final UserService userService;
-	private final InviteReadOnlyRepositoryService inviteReadOnlyRepositoryService;
-	private final InviteWriteRepositoryService inviteWriteRepositoryService;
+	private final InviteReadOnlyRepositoryService readOnlyRepositoryService;
+	private final InviteWriteRepositoryService writeRepositoryService;
 
 	public InvitationCheck.Response invitationCheck(String invitationKey) {
-		Invite invite = inviteReadOnlyRepositoryService.findByCode(invitationKey);
-		inviteReadOnlyRepositoryService.checkValidation(invite);
+		Invite invite = readOnlyRepositoryService.findByCode(invitationKey);
+		readOnlyRepositoryService.checkValidation(invite);
 		return new InvitationCheck.Response(invite.getGroup());
 	}
 
@@ -33,22 +33,22 @@ public class InviteService {
 			throw new CustomException("매니저 계정만 초대장을 발급할 수 있습니다.", HttpStatus.FORBIDDEN);
 		}
 		Group group = userService.findGroupByUser(user);
-		Invite invite = inviteReadOnlyRepositoryService.findByGroup(group);
-		inviteWriteRepositoryService.renewInvitation(invite);
+		Invite invite = readOnlyRepositoryService.findByGroup(group);
+		writeRepositoryService.renewInvitation(invite);
 		return new GetInvitation.Response(invite.getCode());
 	}
 
 	public void createInviteWithGroup(Group group) {
-		String invitationCode = inviteReadOnlyRepositoryService.generateInviteCode();
-		inviteWriteRepositoryService.createInvite(Invite.builder()
+		String invitationCode = readOnlyRepositoryService.generateInviteCode();
+		writeRepositoryService.createInvite(Invite.builder()
 			.code(invitationCode)
 			.group(group)
 			.build());
 	}
 
 	public Invite findInvitation(String invitationKey) {
-		Invite invite = inviteReadOnlyRepositoryService.findByCode(invitationKey);
-		inviteReadOnlyRepositoryService.checkValidation(invite);
+		Invite invite = readOnlyRepositoryService.findByCode(invitationKey);
+		readOnlyRepositoryService.checkValidation(invite);
 		return invite;
 	}
 }

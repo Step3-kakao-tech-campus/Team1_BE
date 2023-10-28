@@ -14,8 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Day.Day;
+import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -32,34 +32,33 @@ public class Worktime extends BaseEntity {
 	private Long id;
 
 	@NotNull
+	private String title;
+
+	@NotNull
 	private LocalTime startTime;
 
 	@NotNull
 	private LocalTime endTime;
 
-	@NotNull
-	private String title;
-
-	@NotNull
-	private int amount;
-
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "day_id")
-	@NotNull
-	private Day day;
+	@JoinColumn(name = "week_id")
+	private Week week;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "worktime")
-	private List<Apply> applyList;
+	private List<DetailWorktime> days;
 
 	@Builder
-	public Worktime(Long id, LocalTime startTime, LocalTime endTime, String title, int amount, Day day,
-		List<Apply> applyList) {
+	public Worktime(Long id, String title, LocalTime startTime, LocalTime endTime, Week week,
+		List<DetailWorktime> days) {
 		this.id = id;
+		this.title = title;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.title = title;
-		this.amount = amount;
-		this.day = day;
-		this.applyList = applyList;
+		this.week = week;
+		this.days = days;
+	}
+
+	public void updateWeek(Week week) {
+		this.week = week;
 	}
 }

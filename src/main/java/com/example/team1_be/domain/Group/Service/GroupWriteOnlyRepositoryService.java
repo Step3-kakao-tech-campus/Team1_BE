@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class GroupWriteOnlyRepositoryService {
-	private final GroupRepository groupRepository;
+	private final GroupRepository repository;
 
 	public void creatGroup(Group group) {
-		groupRepository.save(group);
+		repository.save(group);
 	}
 }

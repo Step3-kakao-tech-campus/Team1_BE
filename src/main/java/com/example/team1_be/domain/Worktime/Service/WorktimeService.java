@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Worktime.Worktime;
 
 import lombok.RequiredArgsConstructor;
@@ -16,22 +16,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class WorktimeService {
-	private final WorktimeReadOnlyService worktimeReadOnlyService;
-	private final WokrtimeWriteOnlyService wokrtimeWriteOnlyService;
+	private final WorktimeReadOnlyService readOnlyService;
+	private final WokrtimeWriteOnlyService writeOnlyService;
 
 	public List<Worktime> createWorktimes(List<Worktime> worktimes) {
-		return wokrtimeWriteOnlyService.createWorktimes(worktimes);
+		return writeOnlyService.createWorktimes(worktimes);
 	}
 
-	public List<List<Worktime>> findWorktimesByDays(List<Day> days) {
-		return worktimeReadOnlyService.findWorktimesByDays(days);
+	public List<Worktime> createWorktimes(Week week, List<Worktime> weeklyWorktimes) {
+		weeklyWorktimes.forEach(worktime -> worktime.updateWeek(week));
+		return createWorktimes(weeklyWorktimes);
 	}
 
-	public List<Worktime> findByStartDateAndSchedule(LocalDate date, Schedule schedule) {
-		return worktimeReadOnlyService.findByStartDateAndSchedule(date, schedule);
+	public List<Worktime> findByGroupAndDate(Group group, LocalDate date) {
+		return readOnlyService.findByGroupAndDate(group, date);
 	}
 
-	public List<Worktime> findBySpecificDateAndSchedule(LocalDate date, int dayOfWeek, Schedule schedule) {
-		return worktimeReadOnlyService.findBySpecificDateAndSchedule(date, dayOfWeek, schedule);
+	public List<Worktime> findByWeekAndDate(Week week) {
+		return readOnlyService.findByWeek(week);
 	}
 }

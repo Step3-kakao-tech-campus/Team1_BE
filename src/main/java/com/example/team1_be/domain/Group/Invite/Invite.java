@@ -36,6 +36,7 @@ public class Invite extends BaseEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
+	@NotNull
 	private Group group;
 
 	@Builder

@@ -2,18 +2,15 @@ package com.example.team1_be.domain.Worktime.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
-import com.example.team1_be.utils.errors.exception.BadRequestException;
-import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,25 +18,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class WorktimeReadOnlyService {
-	private final WorktimeRepository worktimeRepository;
+	private final WorktimeRepository repository;
 
-	public List<List<Worktime>> findWorktimesByDays(List<Day> days) {
-		return days.stream().map(day -> worktimeRepository.findByDayId(day.getId())).collect(Collectors.toList());
-	}
-
-	public List<Worktime> findByStartDateAndSchedule(LocalDate date, Schedule schedule) {
-		List<Worktime> worktimes = worktimeRepository.findByStartDateAndScheduleId(date, schedule.getId());
+	public List<Worktime> findByGroupAndDate(Group group, LocalDate date) {
+		List<Worktime> worktimes = repository.findByDate(group.getId(), date);
 		if (worktimes.isEmpty()) {
-			throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
+			throw new NotFoundException("해당 날짜에 등록된 스케줄이 없습니다.");
 		}
 		return worktimes;
 	}
 
-	public List<Worktime> findBySpecificDateAndSchedule(LocalDate date, int dayOfWeek, Schedule schedule) {
-		List<Worktime> worktimes = worktimeRepository.findBySpecificDateAndScheduleId(date, dayOfWeek,
-			schedule.getId());
+	public List<Worktime> findByWeek(Week week) {
+		List<Worktime> worktimes = repository.findByWeek(week);
 		if (worktimes.isEmpty()) {
-			throw new BadRequestException("확정된 스케줄이 아닙니다.");
+			throw new NotFoundException("해당 날짜에 등록된 스케줄이 없습니다.");
 		}
 		return worktimes;
 	}

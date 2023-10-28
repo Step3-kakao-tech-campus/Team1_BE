@@ -7,37 +7,31 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.team1_be.domain.Worktime.Worktime;
+import com.example.team1_be.domain.User.User;
 
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
-	@Query("select a " +
-		"from Apply a " +
-		"where a.worktime.id = :worktimeId " +
-		"and a.status = 'FIX'")
-	List<Apply> findFixedAppliesByWorktimeId(@Param("worktimeId") Long worktimeId);
-
 	@Query("select a " +
 		"from Apply a " +
 		"where a.status = :status")
 	List<Apply> findAppliesByStatus(@Param("status") ApplyStatus status);
 
-	@Query("SELECT a.worktime " +
-		"FROM Apply a " +
-		"WHERE a.worktime.day.week.startDate between :requestMonth and :toMonth " +
-		"AND a.user.id = :userId " +
-		"AND a.status = :status")
-	List<Worktime> findByYearMonthAndStatusAndMemberId(@Param("requestMonth") LocalDate requestMonth,
-		@Param("toMonth") LocalDate toMonth,
-		@Param("userId") Long id,
+	@Query("select a " +
+		"from Apply a " +
+		"where a.detailWorktime.worktime.id in (:detailWorktimeIds)")
+	List<Apply> findAppliesByWorktimeIds(@Param("detailWorktimeIds") List<Long> detailWorktimeIds);
+
+	@Query("select a "
+		+ "from Apply a "
+		+ "where a.user.id = :userId "
+		+ "and a.detailWorktime.date = :date "
+		+ "and a.status = :status")
+	List<Apply> findByUserAndDateAndStatus(@Param("userId") Long userId, @Param("date") LocalDate date,
 		@Param("status") ApplyStatus status);
 
-	@Query("select a " +
-		"from Apply a " +
-		"where a.worktime.id = :worktimeId")
-	List<Apply> findAppliesByWorktimeId(@Param("worktimeId") Long id);
-
-	@Query("select a " +
-		"from Apply a " +
-		"where a.worktime.id in (:worktimeIds)")
-	List<Apply> findAppliesByWorktimeIds(@Param("worktimeIds") List<Long> worktimeIds);
+	@Query("select a.user "
+		+ "from Apply a "
+		+ "where a.detailWorktime.id = :detailWorktimeId "
+		+ "and a.status = :status ")
+	List<User> findUsersByWorktimeAndApplyStatus(@Param("detailWorktimeId") Long id,
+		@Param("status") ApplyStatus status);
 }
