@@ -3,6 +3,7 @@ package com.example.team1_be.domain.Apply.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -96,5 +97,27 @@ public class ApplyService {
 			weeklyApplies.add(dailyApplies);
 		}
 		return weeklyApplies;
+	}
+
+	public void updateApplies(User user, List<DetailWorktime> previousDetailWorktimes,
+		List<DetailWorktime> appliedDetailWorktimes) {
+		HashSet<DetailWorktime> previousDetailWorktimeSet = new HashSet(previousDetailWorktimes);
+		HashSet<DetailWorktime> appliedDetailWorktimeSet = new HashSet(appliedDetailWorktimes);
+
+		HashSet<DetailWorktime> intersection = new HashSet(previousDetailWorktimes);
+		intersection.retainAll(appliedDetailWorktimeSet);
+
+		previousDetailWorktimeSet.removeAll(intersection);
+		appliedDetailWorktimeSet.removeAll(intersection);
+
+		List<DetailWorktime> detailWorktimesToDelete = new ArrayList<>(previousDetailWorktimes);
+		List<Long> detailWorktimeIds = detailWorktimesToDelete.stream()
+			.map(DetailWorktime::getId)
+			.collect(Collectors.toList());
+		List<Apply> appliesToDelete = readOnlyService.findByUserAndDetailWorktimeIds(user, detailWorktimeIds);
+		writeOnlyService.deleteAll(appliesToDelete);
+
+		List<DetailWorktime> appliesToCreate = new ArrayList<>(appliedDetailWorktimeSet);
+		writeOnlyService.createApplies(user, appliesToCreate);
 	}
 }

@@ -37,4 +37,8 @@ public class ApplyReadOnlyService {
 	public Apply findByUserAndWorktimeAndDay(User user, Worktime worktime, DayOfWeek day) {
 		return repository.findByUserAndWorktimeAndDay(user.getId(), worktime.getId(), day).orElse(null);
 	}
+
+	public List<Apply> findByUserAndDetailWorktimeIds(User user, List<Long> detailWorktimeIds) {
+		return repository.findByUserAndDetailWorktimeIds(user.getId(), detailWorktimeIds);
+	}
 }
