@@ -203,13 +203,10 @@ public class ScheduleService {
 	public void postApplies(User user, PostApplies.Request requestDTO) {
 		Group group = userService.findGroupByUser(user);
 
-		// 기존 유저 찾기 detail worktimes
 		List<DetailWorktime> previousDetailWorktimes = detailWorktimeService.findByStartDateAndGroup(
 			requestDTO.getWeekStartDate(), group);
-		// req 에서 detail 찾기
 		List<DetailWorktime> appliedDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(
 			requestDTO.toWeeklyApplies());
-		// 교집합제거
 		applyService.updateApplies(user, previousDetailWorktimes, appliedDetailWorktimes);
 	}
 }
