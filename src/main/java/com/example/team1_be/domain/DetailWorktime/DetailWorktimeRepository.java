@@ -45,4 +45,11 @@ public interface DetailWorktimeRepository extends JpaRepository<DetailWorktime, 
 		+ "where dw.worktime.week.startDate = :date "
 		+ "and dw.worktime.id in (:ids)")
 	List<DetailWorktime> findByStartDateAndWorktimes(@Param("date") LocalDate date, @Param("ids") List<Long> ids);
+
+	@Query("select dw "
+		+ "from DetailWorktime dw "
+		+ "where dw.dayOfWeek = :dayOfWeek "
+		+ "and dw.worktime.id in (:worktimeIds)")
+	List<DetailWorktime> findDayAndWorktimeIds(@Param("dayOfWeek") DayOfWeek day,
+		@Param("worktimeIds") List<Long> worktimeIds);
 }
