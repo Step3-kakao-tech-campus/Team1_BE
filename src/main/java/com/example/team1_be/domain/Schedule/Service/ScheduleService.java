@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Apply.ApplyService;
 import com.example.team1_be.domain.Apply.ApplyStatus;
+import com.example.team1_be.domain.Apply.Service.ApplyService;
 import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.DetailWorktime.Service.DetailWorktimeService;
 import com.example.team1_be.domain.Group.Group;
@@ -25,6 +25,7 @@ import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetWeekStatus;
 import com.example.team1_be.domain.Schedule.DTO.LoadLatestSchedule;
+import com.example.team1_be.domain.Schedule.DTO.PostApplies;
 import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
@@ -46,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ScheduleService {
 	private final UserService userService;
 	private final WeekService weekService;
@@ -56,7 +57,6 @@ public class ScheduleService {
 	private final RecommendedWorktimeApplyService recommendedWorktimeApplyService;
 	private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
-	@Transactional
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
 		Group group = userService.findGroupByUser(user);
 		Week week = weekService.createWeek(group, request.getWeekStartDate());
@@ -103,7 +103,6 @@ public class ScheduleService {
 		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
 	}
 
-	@Transactional
 	public void fixSchedule(User user, FixSchedule.Request request) {
 		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByUser(user);
 		RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
@@ -121,7 +120,6 @@ public class ScheduleService {
 		recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
 	}
 
-	@Transactional
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
 		Group group = userService.findGroupByUser(user);
 
@@ -197,5 +195,15 @@ public class ScheduleService {
 			weeklyWorktimes);
 
 		return new GetApplies.Response(weeklyWorktimes, weeklyApplies);
+	}
+
+	public void postApplies(User user, PostApplies.Request requestDTO) {
+		Group group = userService.findGroupByUser(user);
+
+		List<DetailWorktime> previousDetailWorktimes = detailWorktimeService.findByStartDateAndGroup(
+			requestDTO.getWeekStartDate(), group);
+		List<DetailWorktime> appliedDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(
+			requestDTO.toWeeklyApplies());
+		applyService.updateApplies(user, previousDetailWorktimes, appliedDetailWorktimes);
 	}
 }

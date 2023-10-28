@@ -21,6 +21,7 @@ import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetWeekStatus;
 import com.example.team1_be.domain.Schedule.DTO.LoadLatestSchedule;
+import com.example.team1_be.domain.Schedule.DTO.PostApplies;
 import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
@@ -120,6 +121,14 @@ public class ScheduleController {
 		@PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
 		GetApplies.Response responseDTO = scheduleService.getApplies(userDetails.getUser(), startWeekDate);
 		ApiUtils.ApiResult<GetApplies.Response> response = ApiUtils.success(responseDTO);
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/application")
+	public ResponseEntity<?> postApplies(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@RequestBody PostApplies.Request requestDTO) {
+		scheduleService.postApplies(userDetails.getUser(), requestDTO);
+		ApiUtils.ApiResult<Object> response = ApiUtils.success(null);
 		return ResponseEntity.ok(response);
 	}
 }

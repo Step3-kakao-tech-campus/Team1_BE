@@ -15,8 +15,8 @@ public class GetApplies {
 
 	@Getter
 	public static class Response {
-		private List<Template> template;
-		private List<List<SelectedStatus>> selected;
+		private final List<Template> template;
+		private final List<List<SelectedStatus>> selected;
 
 		public Response(List<Worktime> weeklyWorktimes, List<SortedMap<Worktime, Apply>> weeklyApplies) {
 			this.template = weeklyWorktimes.stream().map(Template::new).collect(Collectors.toList());
@@ -47,12 +47,12 @@ public class GetApplies {
 
 		@Getter
 		private class SelectedStatus {
-			private Long workTimeId;
-			private Boolean isChecked;
+			private final Long workTimeId;
+			private final Boolean isChecked;
 
 			public SelectedStatus(Worktime worktime, Apply apply) {
 				this.workTimeId = worktime.getId();
-				this.isChecked = apply == null ? false : true;
+				this.isChecked = apply != null;
 			}
 		}
 	}

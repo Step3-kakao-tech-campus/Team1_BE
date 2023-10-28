@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class DetailWorktimeService {
 	private final DetailWorktimeReadOnlyService readOnlyService;
 	private final DetailWorktimeWriteOnlyService writeOnlyService;
@@ -90,5 +90,16 @@ public class DetailWorktimeService {
 		List<Long> ids = worktimes.stream().map(Worktime::getId).collect(
 			Collectors.toList());
 		return readOnlyService.findByStartDateAndWorktimes(date, ids);
+	}
+
+	public List<DetailWorktime> findByStartDateAndWorktimes(SortedMap<DayOfWeek, List<Worktime>> weeklyApplies) {
+		List<DetailWorktime> appliedDetailWorktimes = new ArrayList<>();
+		for (DayOfWeek day : DayOfWeek.values()) {
+			List<Long> worktimeIds = weeklyApplies.get(day).stream().map(Worktime::getId).collect(Collectors.toList());
+			if (!worktimeIds.isEmpty()) {
+				appliedDetailWorktimes.addAll(readOnlyService.findByDayAndWorktimeIds(day, worktimeIds));
+			}
+		}
+		return appliedDetailWorktimes;
 	}
 }

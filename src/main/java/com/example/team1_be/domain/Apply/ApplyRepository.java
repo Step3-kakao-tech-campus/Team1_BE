@@ -40,4 +40,11 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 	Optional<Apply> findByUserAndWorktimeAndDay(@Param("userId") Long userId,
 		@Param("worktimeId") Long worktimeId,
 		@Param("dayOfWeek") DayOfWeek day);
+
+	@Query("select a "
+		+ "from Apply a "
+		+ "where a.user.id = :userId "
+		+ "and a.detailWorktime.id in (:detailWorktimeIds)")
+	List<Apply> findByUserAndDetailWorktimeIds(@Param("userId") Long userId,
+		@Param("detailWorktimeIds") List<Long> worktimeids);
 }

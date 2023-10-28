@@ -41,7 +41,6 @@ public class DetailWorktimeReadOnlyService {
 		if (detailWorktimes.isEmpty()) {
 			throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
 		}
-		System.out.println("size : " + detailWorktimes.size());
 		return detailWorktimes;
 	}
 
@@ -55,6 +54,14 @@ public class DetailWorktimeReadOnlyService {
 
 	public List<DetailWorktime> findByStartDateAndWorktimes(LocalDate date, List<Long> ids) {
 		List<DetailWorktime> detailWorktimes = repository.findByStartDateAndWorktimes(date, ids);
+		return detailWorktimes;
+	}
+
+	public List<DetailWorktime> findByDayAndWorktimeIds(DayOfWeek day, List<Long> worktimeIds) {
+		List<DetailWorktime> detailWorktimes = repository.findDayAndWorktimeIds(day, worktimeIds);
+		if (detailWorktimes.isEmpty()) {
+			throw new NotFoundException("Worktime은 생성되었지만 DetailWorktime이 생성되지 않은 논리적 오류입니다.");
+		}
 		return detailWorktimes;
 	}
 }
