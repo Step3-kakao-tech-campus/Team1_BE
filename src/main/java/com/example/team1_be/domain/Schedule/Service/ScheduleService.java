@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Apply.Apply;
-import com.example.team1_be.domain.Apply.ApplyService;
 import com.example.team1_be.domain.Apply.ApplyStatus;
+import com.example.team1_be.domain.Apply.Service.ApplyService;
 import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.DetailWorktime.Service.DetailWorktimeService;
 import com.example.team1_be.domain.Group.Group;
@@ -25,6 +25,7 @@ import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetWeekStatus;
 import com.example.team1_be.domain.Schedule.DTO.LoadLatestSchedule;
+import com.example.team1_be.domain.Schedule.DTO.PostApplies;
 import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
@@ -197,5 +198,18 @@ public class ScheduleService {
 			weeklyWorktimes);
 
 		return new GetApplies.Response(weeklyWorktimes, weeklyApplies);
+	}
+
+	public void postApplies(User user, PostApplies.Request requestDTO) {
+		Group group = userService.findGroupByUser(user);
+
+		// 기존 유저 찾기 detail worktimes
+		List<DetailWorktime> previousDetailWorktimes = detailWorktimeService.findByStartDateAndGroup(
+			requestDTO.getWeekStartDate(), group);
+		// req 에서 detail 찾기
+		List<DetailWorktime> appliedDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(
+			requestDTO.toWeeklyApplies());
+		// 교집합제거
+		applyService.updateApplies(user, previousDetailWorktimes, appliedDetailWorktimes);
 	}
 }
