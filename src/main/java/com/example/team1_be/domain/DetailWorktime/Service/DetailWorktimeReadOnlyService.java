@@ -41,7 +41,6 @@ public class DetailWorktimeReadOnlyService {
 		if (detailWorktimes.isEmpty()) {
 			throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
 		}
-		System.out.println("size : " + detailWorktimes.size());
 		return detailWorktimes;
 	}
 
