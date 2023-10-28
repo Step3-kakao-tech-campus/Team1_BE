@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.example.team1_be.domain.Worktime.Worktime;
 
@@ -43,6 +44,21 @@ public class PostApplies {
 			}
 		}
 
-		public SortedMap<DayOfWeek, SortedMap<>>
+		public SortedMap<DayOfWeek, List<Worktime>> toWeeklyApplies() {
+			SortedMap<DayOfWeek, List<Worktime>> weeklyApplies = new TreeMap<>(
+				(s1, s2) -> s1.compareTo(s2));
+			for (DayOfWeek day : DayOfWeek.values()) {
+				List<SelectedStatus> dailyStatus = this.apply.get(day.ordinal());
+
+				List<Worktime> dailyApples = new ArrayList<>();
+				for (SelectedStatus select : dailyStatus) {
+					if (select.isChecked) {
+						dailyApples.add(Worktime.builder().id(select.getWorkTimeId()).build());
+					}
+				}
+				weeklyApplies.put(day, dailyApples);
+			}
+			return weeklyApplies;
+		}
 	}
 }
