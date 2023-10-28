@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 
 import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -46,19 +47,23 @@ public class Group extends BaseEntity {
 	private String address;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+	private List<Week> weeks;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
 	private List<User> users;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "group")
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "group")
 	private Invite invite;
 
 	@Builder
-	public Group(Long id, String name, String phoneNumber, String businessNumber, String address, List<User> users,
-		Invite invite) {
+	public Group(Long id, String name, String phoneNumber, String businessNumber, String address, List<Week> weeks,
+		List<User> users, Invite invite) {
 		this.id = id;
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 		this.businessNumber = businessNumber;
 		this.address = address;
+		this.weeks = weeks;
 		this.users = users;
 		this.invite = invite;
 	}

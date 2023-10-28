@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 public class InviteWriteRepositoryService {
-	private final InviteRepository inviteRepository;
+	private final InviteRepository repository;
 
 	@Transactional
 	public void createInvite(Invite invite) {
-		inviteRepository.save(invite);
+		repository.save(invite);
 	}
 
 	@Transactional

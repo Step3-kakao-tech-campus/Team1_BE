@@ -11,5 +11,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GroupReadOnlyRepositoryService {
-	private final GroupRepository groupRepository;
+	private final GroupRepository repository;
 }

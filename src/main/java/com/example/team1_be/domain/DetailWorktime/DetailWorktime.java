@@ -1,5 +1,7 @@
-package com.example.team1_be.domain.Day;
+package com.example.team1_be.domain.DetailWorktime;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,11 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.example.team1_be.domain.Week.Week;
+import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.audit.BaseEntity;
 
@@ -26,30 +26,36 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @RequiredArgsConstructor
 @Getter
-@Table(name = "days")
-public class Day extends BaseEntity {
+@Table
+public class DetailWorktime extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NotNull
-	@Min(1)
-	@Max(7)
-	private int dayOfWeek;
+	private LocalDate date;
+
+	@NotNull
+	private DayOfWeek dayOfWeek;
+
+	@NotNull
+	private Long amount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "week_id")
-	@NotNull
-	private Week week;
+	@JoinColumn(name = "worktime_id")
+	private Worktime worktime;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "day")
-	private List<Worktime> worktimes;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "detailWorktime")
+	private List<Apply> applies;
 
 	@Builder
-	public Day(Long id, int dayOfWeek, Week week, List<Worktime> worktimes) {
+	public DetailWorktime(Long id, LocalDate date, DayOfWeek dayOfWeek, Long amount, Worktime worktime,
+		List<Apply> applies) {
 		this.id = id;
+		this.date = date;
 		this.dayOfWeek = dayOfWeek;
-		this.week = week;
-		this.worktimes = worktimes;
+		this.amount = amount;
+		this.worktime = worktime;
+		this.applies = applies;
 	}
 }

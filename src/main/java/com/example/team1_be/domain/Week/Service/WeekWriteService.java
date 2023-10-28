@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Week.WeekRepository;
@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 public class WeekWriteService {
 	private final WeekRepository weekRepository;
 
-	public Week createWeek(Schedule schedule, LocalDate weekStartDate) {
+	public Week createWeek(Group group, LocalDate weekStartDate) {
 		Week week = Week.builder()
-			.schedule(schedule)
+			.group(group)
 			.status(WeekRecruitmentStatus.STARTED)
 			.startDate(weekStartDate)
 			.build();

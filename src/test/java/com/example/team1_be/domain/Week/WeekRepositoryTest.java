@@ -12,10 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import com.example.team1_be.BaseTest;
 import com.example.team1_be.domain.Apply.ApplyRepository;
-import com.example.team1_be.domain.Day.DayRepository;
+import com.example.team1_be.domain.DetailWorktime.DetailWorktimeRepository;
 import com.example.team1_be.domain.Group.GroupRepository;
 import com.example.team1_be.domain.Notification.NotificationRepository;
-import com.example.team1_be.domain.Schedule.ScheduleRepository;
 import com.example.team1_be.domain.Substitute.SubstituteRepository;
 import com.example.team1_be.domain.User.UserRepository;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
@@ -23,11 +22,12 @@ import com.example.team1_be.domain.Worktime.WorktimeRepository;
 class WeekRepositoryTest extends BaseTest {
 
 	public WeekRepositoryTest(UserRepository userRepository, GroupRepository groupRepository,
-		NotificationRepository notificationRepository, DayRepository dayRepository, ApplyRepository applyRepository,
-		WeekRepository weekRepository, WorktimeRepository worktimeRepository, ScheduleRepository scheduleRepository,
-		SubstituteRepository substituteRepository, EntityManager em) {
+		NotificationRepository notificationRepository, DetailWorktimeRepository dayRepository,
+		ApplyRepository applyRepository, WeekRepository weekRepository, WorktimeRepository worktimeRepository,
+		DetailWorktimeRepository detailWorktimeRepository, SubstituteRepository substituteRepository,
+		EntityManager em) {
 		super(userRepository, groupRepository, notificationRepository, dayRepository, applyRepository, weekRepository,
-			worktimeRepository, scheduleRepository, substituteRepository, em);
+			worktimeRepository, detailWorktimeRepository, substituteRepository, em);
 	}
 
 	@DisplayName("주간 일정 조회")

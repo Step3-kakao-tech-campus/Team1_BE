@@ -11,15 +11,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RecommendedWorktimeApplyService {
-	private final RecommendedWorktimeApplyRepository recommendedWorktimeApplyRepository;
+	private final RecommendedWorktimeApplyRepository repository;
 
 	@Transactional
 	public void createRecommendedWorktimeApplies(List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
-		recommendedWorktimeApplyRepository.saveAll(recommendedWorktimeApplies);
+		repository.saveAll(recommendedWorktimeApplies);
 	}
 
 	@Transactional
 	public void deleteAll(List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
-		recommendedWorktimeApplyRepository.deleteAll(recommendedWorktimeApplies);
+		repository.deleteAll(recommendedWorktimeApplies);
 	}
 }

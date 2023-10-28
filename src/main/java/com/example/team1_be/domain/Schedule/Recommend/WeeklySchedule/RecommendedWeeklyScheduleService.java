@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,22 @@ public class RecommendedWeeklyScheduleService {
 	@Transactional
 	public void deleteAll(List<RecommendedWeeklySchedule> recommendedWeeklySchedules) {
 		recommendedWeeklyScheduleRepository.deleteAll(recommendedWeeklySchedules);
+	}
+
+	@Transactional
+	public RecommendedWeeklySchedule creatRecommendedWeeklySchedule(User user) {
+		RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
+			.user(user)
+			.build();
+		return creatRecommendedWeeklySchedule(weeklySchedule);
+	}
+
+	public Week getWeek(RecommendedWeeklySchedule recommendedWeeklySchedule) {
+		return recommendedWeeklySchedule.getRecommendedWorktimeApplies()
+			.get(0)
+			.getApply()
+			.getDetailWorktime()
+			.getWorktime()
+			.getWeek();
 	}
 }

@@ -1,23 +1,23 @@
 package com.example.team1_be.domain.Schedule.Service;
 
-import java.time.Duration;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Apply.ApplyService;
 import com.example.team1_be.domain.Apply.ApplyStatus;
-import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Day.Service.DayService;
+import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
+import com.example.team1_be.domain.DetailWorktime.Service.DetailWorktimeService;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
@@ -32,7 +32,6 @@ import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.Recommended
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleService;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyService;
-import com.example.team1_be.domain.Schedule.Schedule;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
 import com.example.team1_be.domain.Week.Service.WeekService;
@@ -40,7 +39,6 @@ import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Service.WorktimeService;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -49,136 +47,59 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ScheduleService {
-	private final int NUM_DAYS_OF_WEEK = 7;
-
 	private final UserService userService;
 	private final WeekService weekService;
-	private final DayService dayService;
 	private final WorktimeService worktimeService;
+	private final DetailWorktimeService detailWorktimeService;
 	private final ApplyService applyService;
 	private final RecommendedWorktimeApplyService recommendedWorktimeApplyService;
 	private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
-	private final ScheduleReadOnlyService scheduleReadOnlyService;
-	private final ScheduleWriteService scheduleWriteService;
-
 	@Transactional
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
-		if (request.getWeeklyAmount().size() != NUM_DAYS_OF_WEEK) {
-			throw new CustomException("모든 요일에 대한 정보가 없습니다.", HttpStatus.BAD_REQUEST);
-		}
-
 		Group group = userService.findGroupByUser(user);
-
-		Schedule schedule = Schedule.builder()
-			.group(group)
-			.build();
-		scheduleWriteService.createSchedule(schedule);
-
-		Week week = weekService.createWeek(schedule, request.getWeekStartDate());
-
-		List<RecruitSchedule.Request.DailySchedule> weeklyAmount = request.getWeeklyAmount();
-		List<Day> days = IntStream.range(1, weeklyAmount.size() + 1)
-			.mapToObj(dayOfWeek -> Day.builder()
-				.week(week)
-				.dayOfWeek(dayOfWeek)
-				.build()
-			).collect(Collectors.toList());
-		dayService.createDays(days);
-
-		List<Worktime> worktimeList = new ArrayList<>();
-		IntStream.range(0, days.size())
-			.forEach(dayIdx -> weeklyAmount.get(dayIdx)
-				.getDailySchedules()
-				.forEach(worktime -> worktimeList.add(Worktime.builder()
-					.title(worktime.getTitle())
-					.startTime(worktime.getStartTime())
-					.endTime(worktime.getEndTime())
-					.amount(worktime.getAmount())
-					.day(days.get(dayIdx))
-					.build())));
-
-		worktimeService.createWorktimes(worktimeList);
+		Week week = weekService.createWeek(group, request.getWeekStartDate());
+		List<Worktime> weeklyWorktimes = worktimeService.createWorktimes(week, request.getWorktimes());
+		detailWorktimeService.createDays(week.getStartDate(), weeklyWorktimes, request.getAmount());
 	}
 
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
+		Week week = weekService.findByGroupAndStartDate(group, request);
+		weekService.checkAppliable(user, week);
 
-		Week week = user.getIsAdmin() ?
-			weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.STARTED) :
-			weekService.findByScheduleIdStartDateAndStatus(schedule, request, WeekRecruitmentStatus.ENDED);
-
-		List<Day> days = dayService.findByWeek(week);
-
-		List<List<Worktime>> weeklyWorktime = worktimeService.findWorktimesByDays(days);
-
-		List<List<List<Apply>>> applyList = weeklyWorktime.stream()
-			.map(worktimes -> worktimes.stream()
-				.map(applyService::findAppliesByWorktime)
-				.collect(Collectors.toList())).collect(Collectors.toList());
-
-		return new WeeklyScheduleCheck.Response(weeklyWorktime, applyList);
+		List<Worktime> weeklyWorktimes = weekService.findWorktimes(week);
+		ApplyStatus applyStatus = user.getIsAdmin() ? ApplyStatus.REMAIN : ApplyStatus.FIX;
+		Map<String, List<Map<Worktime, List<Apply>>>> weeklyApplies = detailWorktimeService.findAppliesByWorktimeAndDayAndStatus(
+			weeklyWorktimes,
+			applyStatus);
+		return new WeeklyScheduleCheck.Response(weeklyWorktimes, weeklyApplies);
 	}
 
-	public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long memberId) {
-		User member = userService.findById(memberId);
-		Schedule schedule = scheduleReadOnlyService.findByGroup(member.getGroup());
-
-		LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
-		LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
-		List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule,
-			WeekRecruitmentStatus.ENDED);
-		List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndUser(date, toDate, member,
-			ApplyStatus.FIX);
-		Double monthly = memberWorktimes.stream()
-			.mapToDouble(
-				worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
-			.reduce(0D, Double::sum);
-
-		return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly / weeks.size());
-	}
-
-	@Transactional
-	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
+	public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long userId) {
 		Group group = userService.findGroupByUser(user);
+		User member = userService.findById(userId);
 
-		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
+		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
+			group,
+			requestMonth);
+		System.out.println("monthly size : " + monthlyDetailWorktimes.size());
+		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedApplies(
+			monthlyDetailWorktimes, member);
 
-		List<Worktime> weeklyWorktimes = worktimeService.findByStartDateAndSchedule(date, schedule);
+		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
+	}
 
-		List<Apply> weeklyApplies = applyService.findAppliesByWorktimes(weeklyWorktimes);
+	public GetFixedWeeklySchedule.Response getPersonalWeeklyFixedSchedule(User user, YearMonth requestMonth) {
+		Group group = userService.findGroupByUser(user);
+		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
+			group,
+			requestMonth);
+		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedPersonalApplies(
+			monthlyDetailWorktimes, user);
 
-		Map<Long, Integer> requestMap = weeklyWorktimes.stream()
-			.collect(Collectors.toMap(Worktime::getId, Worktime::getAmount));
-
-		SchduleGenerator generator = new SchduleGenerator(weeklyApplies, requestMap);
-		List<List<Apply>> generatedSchedules = generator.generateSchedule();
-
-		for (List<Apply> generatedSchedule : generatedSchedules) {
-			RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
-				.user(user)
-				.build();
-			weeklySchedule = recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(weeklySchedule);
-
-			List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
-			for (Worktime worktime : weeklyWorktimes) {
-				List<Apply> applies = generatedSchedule.stream()
-					.filter(x -> x.getWorktime().getId().equals(worktime.getId()))
-					.collect(Collectors.toList());
-
-				for (Apply apply : applies) {
-					recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
-						.recommendedWeeklySchedule(weeklySchedule)
-						.apply(apply)
-						.build());
-				}
-			}
-
-			recommendedWorktimeApplyService.createRecommendedWorktimeApplies(recommendedWorktimeApplies);
-		}
-		return new RecommendSchedule.Response(weeklyWorktimes, generatedSchedules);
+		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
 	}
 
 	@Transactional
@@ -186,13 +107,7 @@ public class ScheduleService {
 		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByUser(user);
 		RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
 
-		Week week = recommendedWeeklySchedule.getRecommendedWorktimeApplies()
-			.get(0)
-			.getApply()
-			.getWorktime()
-			.getDay()
-			.getWeek();
-
+		Week week = recommendedWeeklyScheduleService.getWeek(recommendedWeeklySchedule);
 		weekService.updateWeekStatus(week, WeekRecruitmentStatus.ENDED);
 
 		List<Apply> selectedApplies = new ArrayList<>();
@@ -205,68 +120,70 @@ public class ScheduleService {
 		recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
 	}
 
-	public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
+	@Transactional
+	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
 		Group group = userService.findGroupByUser(user);
-		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
-		LocalDate date = selectedDate.minusDays(selectedDate.getDayOfWeek().getValue() - 1);
-		int dayOfWeek = selectedDate.getDayOfWeek().getValue();
-		List<Worktime> worktimes = worktimeService.findBySpecificDateAndSchedule(date, dayOfWeek, schedule);
+		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, date);
+		List<DetailWorktime> weeklyDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(date,
+			weeklyWorktimes);
+		List<Apply> weeklyApplies = applyService.findAppliesByWorktimes(weeklyWorktimes);
 
-		List<List<Apply>> dailyApplies = new ArrayList<>();
-		for (Worktime worktime : worktimes) {
-			List<Apply> applies = applyService.findFixedAppliesByWorktime(worktime);
-			if (applies.size() != worktime.getAmount()) {
-				throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
+		Map<Long, Long> requestMap = weeklyDetailWorktimes.stream()
+			.collect(Collectors.toMap(DetailWorktime::getId, DetailWorktime::getAmount));
+
+		SchduleGenerator generator = new SchduleGenerator(weeklyWorktimes, weeklyApplies, requestMap);
+		List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> generatedSchedules = generator.generateSchedule();
+
+		for (Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> generatedSchedule : generatedSchedules) {
+			RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(
+				user);
+
+			List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
+			for (DayOfWeek day : generatedSchedule.keySet()) {
+				for (List<Apply> applies : generatedSchedule.get(day).values()) {
+					for (Apply apply : applies) {
+						recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
+							.recommendedWeeklySchedule(recommendedWeeklySchedule)
+							.apply(apply)
+							.build());
+					}
+				}
 			}
-			dailyApplies.add(applies);
+			recommendedWorktimeApplyService.createRecommendedWorktimeApplies(recommendedWorktimeApplies);
 		}
-		return new GetDailyFixedApplies.Response(worktimes, dailyApplies);
+		return new RecommendSchedule.Response(generatedSchedules);
 	}
 
-	public GetFixedWeeklySchedule.Response getUsersFixedWeeklySchedule(User user, YearMonth requestMonth) {
+	public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
 		Group group = userService.findGroupByUser(user);
-		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
 
-		LocalDate date = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1);
-		LocalDate toDate = LocalDate.of(requestMonth.getYear(), requestMonth.getMonth(), 1).plusMonths(1);
-		List<Week> weeks = weekService.findByScheduleAndYearMonthAndStatus(date, toDate, schedule,
-			WeekRecruitmentStatus.ENDED);
-		List<Worktime> memberWorktimes = applyService.findWorktimesByYearMonthAndStatusAndUser(date, toDate, user,
-			ApplyStatus.FIX);
-		Double monthly = memberWorktimes.stream()
-			.mapToDouble(
-				worktime -> Duration.between(worktime.getStartTime(), worktime.getEndTime()).getSeconds() / 3600)
-			.reduce(0D, Double::sum);
+		Map<Worktime, List<User>> dailyApplyMap = new HashMap<>();
+		List<DetailWorktime> detailWorktimes = detailWorktimeService.findByGroupAndDate(group, selectedDate);
+		for (DetailWorktime detailWorktime : detailWorktimes) {
+			List<User> appliers = applyService.findUsersByWorktimeAndFixedApplies(detailWorktime);
+			if (appliers.size() != detailWorktime.getAmount()) {
+				throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
+			}
+			dailyApplyMap.put(detailWorktime.getWorktime(), appliers);
+		}
 
-		return new GetFixedWeeklySchedule.Response(memberWorktimes, monthly, monthly / weeks.size());
+		return new GetDailyFixedApplies.Response(dailyApplyMap);
 	}
 
 	public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
+		Week latestWeek = weekService.findLatestByGroup(group);
 
-		List<Week> latestWeeks = weekService.findLatestByScheduleAndStatus(schedule, WeekRecruitmentStatus.ENDED);
-		if (latestWeeks.isEmpty()) {
-			throw new NotFoundException("최근 스케줄을 찾을 수 없습니다.");
-		}
-
-		List<Worktime> latestWorktimes = latestWeeks.get(0).getDay().get(0).getWorktimes();
-
-		return new LoadLatestSchedule.Response(latestWorktimes);
+		return new LoadLatestSchedule.Response(latestWeek.getWorktimes());
 	}
 
-	public GetWeekStatus.Response getWeekStatus(User user, LocalDate startWeekDate) {
+	public GetWeekStatus.Response getWeekStatus(User user, LocalDate startDate) {
 		Group group = userService.findGroupByUser(user);
 
-		Schedule schedule = scheduleReadOnlyService.findByGroup(group);
-		Week week = weekService.findByScheduleAndStartDate(schedule, startWeekDate);
+		WeekRecruitmentStatus status = weekService.getWeekStatus(group, startDate);
 
-		if (week == null) {
-			return new GetWeekStatus.Response(null);
-		} else {
-			return new GetWeekStatus.Response(week.getStatus());
-		}
+		return new GetWeekStatus.Response(status);
 	}
 }
