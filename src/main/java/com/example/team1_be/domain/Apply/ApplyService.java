@@ -1,6 +1,8 @@
 package com.example.team1_be.domain.Apply;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -79,5 +81,18 @@ public class ApplyService {
 			throw new NotFoundException("확정된 스케줄이 존재하지 않습니다.");
 		}
 		return monthlyApplies;
+	}
+
+	public List<SortedMap<Worktime, Apply>> findByUserAndWorktimeAndDay(User user, List<Worktime> weeklyWorktimes) {
+		List<SortedMap<Worktime, Apply>> weeklyApplies = new ArrayList<>();
+		for (DayOfWeek day : DayOfWeek.values()) {
+			SortedMap<Worktime, Apply> dailyApplies = new TreeMap<>((s1, s2) -> s1.getId().compareTo(s2.getId()));
+			for (Worktime worktime : weeklyWorktimes) {
+				dailyApplies.put(worktime,
+					repository.findByUserAndWorktimeAndDay(user.getId(), worktime.getId(), day).orElse(null));
+			}
+			weeklyApplies.add(dailyApplies);
+		}
+		return weeklyApplies;
 	}
 }
