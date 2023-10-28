@@ -1,4 +1,4 @@
-package com.example.team1_be.domain.Apply;
+package com.example.team1_be.domain.Apply.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.team1_be.domain.Apply.Apply;
+import com.example.team1_be.domain.Apply.ApplyRepository;
+import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
