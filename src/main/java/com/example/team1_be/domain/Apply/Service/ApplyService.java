@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ApplyService {
 	private final ApplyReadOnlyService readOnlyService;
 	private final ApplyWriteOnlyService writeOnlyService;

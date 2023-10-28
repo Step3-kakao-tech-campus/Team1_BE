@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class DetailWorktimeService {
 	private final DetailWorktimeReadOnlyService readOnlyService;
 	private final DetailWorktimeWriteOnlyService writeOnlyService;

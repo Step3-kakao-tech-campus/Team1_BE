@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class WeekService {
 	private final WeekReadOnlyService readOnlyService;
 	private final WeekWriteService writeService;

@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ScheduleService {
 	private final UserService userService;
 	private final WeekService weekService;
@@ -57,7 +57,6 @@ public class ScheduleService {
 	private final RecommendedWorktimeApplyService recommendedWorktimeApplyService;
 	private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
-	@Transactional
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
 		Group group = userService.findGroupByUser(user);
 		Week week = weekService.createWeek(group, request.getWeekStartDate());
@@ -104,7 +103,6 @@ public class ScheduleService {
 		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
 	}
 
-	@Transactional
 	public void fixSchedule(User user, FixSchedule.Request request) {
 		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByUser(user);
 		RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
@@ -122,7 +120,6 @@ public class ScheduleService {
 		recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
 	}
 
-	@Transactional
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
 		Group group = userService.findGroupByUser(user);
 
