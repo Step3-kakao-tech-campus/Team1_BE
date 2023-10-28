@@ -91,4 +91,15 @@ public class DetailWorktimeService {
 			Collectors.toList());
 		return readOnlyService.findByStartDateAndWorktimes(date, ids);
 	}
+
+	public List<DetailWorktime> findByStartDateAndWorktimes(SortedMap<DayOfWeek, List<Worktime>> weeklyApplies) {
+		List<DetailWorktime> appliedDetailWorktimes = new ArrayList<>();
+		for (DayOfWeek day : DayOfWeek.values()) {
+			List<Long> worktimeIds = weeklyApplies.get(day).stream().map(Worktime::getId).collect(Collectors.toList());
+			if (!worktimeIds.isEmpty()) {
+				appliedDetailWorktimes.addAll(readOnlyService.findByDayAndWorktimeIds(day, worktimeIds));
+			}
+		}
+		return appliedDetailWorktimes;
+	}
 }
