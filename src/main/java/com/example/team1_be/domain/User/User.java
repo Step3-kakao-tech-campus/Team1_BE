@@ -1,6 +1,7 @@
 package com.example.team1_be.domain.User;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,7 +50,7 @@ public class User extends BaseEntity {
 	private Boolean isAdmin;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private List<Role> roles;
+	private Set<Role> roles;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
@@ -62,7 +63,7 @@ public class User extends BaseEntity {
 	private RecommendedWeeklySchedule recommendedWeeklySchedule;
 
 	@Builder
-	public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, List<Role> roles, Group group,
+	public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Set<Role> roles, Group group,
 		List<Apply> applies, RecommendedWeeklySchedule recommendedWeeklySchedule) {
 		this.id = id;
 		this.kakaoId = kakaoId;
