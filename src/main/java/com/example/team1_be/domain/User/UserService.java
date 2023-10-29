@@ -49,12 +49,11 @@ public class UserService {
 
 	@Transactional
 	public Join.Response join(Join.Request request, Long kakaoId) {
-		User user = userRepository.findByKakaoId(kakaoId).orElse(null);
-		if (user != null) {
+		userRepository.findByKakaoId(kakaoId).ifPresent(existingUser -> {
 			throw new BadRequestException("이미 가입되었습니다.");
-		}
+		});
 
-		user = User.builder()
+		User user = User.builder()
 				.kakaoId(kakaoId)
 				.name(request.getUserName())
 				.phoneNumber(null)
@@ -62,7 +61,7 @@ public class UserService {
 				.build();
 		userRepository.save(user);
 
-		return new Join.Response(request.getIsAdmin());
+		return new Join.Response(user.getIsAdmin());
 	}
 
 	public String getJWT(Long kakaoId) {
