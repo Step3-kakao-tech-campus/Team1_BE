@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
+import com.example.team1_be.domain.User.Role.Role;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -47,6 +48,9 @@ public class User extends BaseEntity {
 	@NotNull
 	private Boolean isAdmin;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private List<Role> roles;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
 	private Group group;
@@ -58,14 +62,14 @@ public class User extends BaseEntity {
 	private RecommendedWeeklySchedule recommendedWeeklySchedule;
 
 	@Builder
-	public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Group group,
-		List<Apply> applies,
-		RecommendedWeeklySchedule recommendedWeeklySchedule) {
+	public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, List<Role> roles, Group group,
+		List<Apply> applies, RecommendedWeeklySchedule recommendedWeeklySchedule) {
 		this.id = id;
 		this.kakaoId = kakaoId;
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 		this.isAdmin = isAdmin;
+		this.roles = roles;
 		this.group = group;
 		this.applies = applies;
 		this.recommendedWeeklySchedule = recommendedWeeklySchedule;
