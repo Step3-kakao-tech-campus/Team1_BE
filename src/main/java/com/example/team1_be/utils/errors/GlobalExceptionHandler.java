@@ -48,12 +48,12 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(e.body(), e.status());
 	}
 
-	// @ExceptionHandler(Exception.class)
-	// public ResponseEntity<?> unknownException(Exception exception) {
-	// 	System.out.println(exception);
-	// 	ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-	// 	return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-	// }
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> unknownException(Exception exception) {
+		System.out.println(exception);
+		ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) throws

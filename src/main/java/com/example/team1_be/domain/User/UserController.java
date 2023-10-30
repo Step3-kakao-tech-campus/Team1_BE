@@ -55,7 +55,6 @@ public class UserController {
 		Join.Response responseDTO = userService.join(request, kakaoId);
 		ApiUtils.ApiResult<Join.Response> response = ApiUtils.success(responseDTO);
 		String jwt = userService.getJWT(kakaoId);
-		System.out.println("jwt : " + jwt);
 		return ResponseEntity.ok().header("Authorization", "Bearer " + jwt).body(response);
 	}
 

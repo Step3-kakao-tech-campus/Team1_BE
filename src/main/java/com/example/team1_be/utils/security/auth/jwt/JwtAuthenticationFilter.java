@@ -24,7 +24,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		IOException,
 		ServletException {
 		String authorization = ((HttpServletRequest)request).getHeader("Authorization");
-		System.out.println("auth = " + authorization);
 		String token;
 		if (isAuthorizationValid(authorization)) {
 			token = authorization.substring(7);
