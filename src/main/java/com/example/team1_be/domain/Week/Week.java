@@ -10,13 +10,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.example.team1_be.domain.Day.Day;
-import com.example.team1_be.domain.Schedule.Schedule;
+import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -40,19 +41,20 @@ public class Week extends BaseEntity {
 	private LocalDate startDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id")
 	@NotNull
-	private Schedule schedule;
+	private Group group;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "week")
-	private List<Day> day;
+	private List<Worktime> worktimes;
 
 	@Builder
-	public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Schedule schedule, List<Day> day) {
+	public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Group group, List<Worktime> worktimes) {
 		this.id = id;
 		this.status = status;
 		this.startDate = startDate;
-		this.schedule = schedule;
-		this.day = day;
+		this.group = group;
+		this.worktimes = worktimes;
 	}
 
 	public Week updateStatus(WeekRecruitmentStatus status) {

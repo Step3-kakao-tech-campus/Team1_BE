@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
-	private final UserRepository userRepository;
+	private final UserRepository repository;
 	private final UnfinishedUserRepository unfinishedUserRepository;
 	private final JwtProvider jwtProvider;
 
@@ -65,14 +65,14 @@ public class UserService {
 	}
 
 	public String getJWT(Long kakaoId) {
-		User user = userRepository.findByKakaoId(kakaoId).orElse(null);
+		User user = repository.findByKakaoId(kakaoId).orElse(null);
 		return jwtProvider.createJwt(user.getId());
 	}
 
 	@Transactional
 	public void updateGroup(User user, Group group) {
 		user.updateGroup(group);
-		userRepository.save(user);
+		repository.save(user);
 	}
 
 	public Group findGroupByUser(User user) {
@@ -83,5 +83,9 @@ public class UserService {
 	public User findById(Long userId) {
 		return userRepository.findById(userId)
 				.orElseThrow(() -> new CustomException("존재하지 않는 유저입니다.", HttpStatus.NOT_FOUND));
+	}
+
+	public boolean isAdmin(User user) {
+		return user.getIsAdmin();
 	}
 }

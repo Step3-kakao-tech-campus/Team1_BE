@@ -1,11 +1,10 @@
 package com.example.team1_be.domain.Schedule.DTO;
 
-import static java.util.stream.Collectors.*;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
@@ -27,52 +26,61 @@ public class WeeklyScheduleCheck {
 	@Getter
 	@NoArgsConstructor
 	public static class Response {
-		private List<List<ApplyStatus>> applyStatus;
+		private List<Template> template;
+		private List<List<WorkerStatus>> applyStatus;
 
-		public Response(List<List<Worktime>> weeklyWorktime, List<List<List<Apply>>> applyList) {
+		public Response(List<Worktime> worktimes, Map<String, List<Map<Worktime, List<Apply>>>> applyStatus) {
+			this.template = new ArrayList<>();
+			worktimes.forEach(worktime -> template.add(new Template(worktime)));
+
 			this.applyStatus = new ArrayList<>();
-			IntStream.range(0, weeklyWorktime.size()).forEach(
-				(weeklyIdx) -> {
-					List<Worktime> dailyWorktime = weeklyWorktime.get(weeklyIdx);
-					List<List<Apply>> dailyApply = applyList.get(weeklyIdx);
-					List<ApplyStatus> dailyApplyStatusList = new ArrayList<>();
-					IntStream.range(0, dailyWorktime.size()).forEach(
-						(dailyIndex) -> {
-							dailyApplyStatusList.add(
-								new ApplyStatus(dailyWorktime.get(dailyIndex), dailyApply.get(dailyIndex)));
-						}
-					);
-					applyStatus.add(dailyApplyStatusList);
+			for (String date : applyStatus.keySet()) {
+				List<WorkerStatus> dailyWorkerStatuses = new ArrayList<>();
+				for (Map<Worktime, List<Apply>> worktimeUsers : applyStatus.get(date)) {
+					for (Worktime worktime : worktimeUsers.keySet()) {
+						dailyWorkerStatuses.add(new WorkerStatus(worktime, worktimeUsers.get(worktime)));
+					}
 				}
-			);
-		}
-
-		@Getter
-		public static class ApplyStatus {
-			private final String title;
-			private final LocalTime startTime;
-			private final LocalTime endTime;
-			private final List<Worker> workerList;
-
-			public ApplyStatus(Worktime worktimeList, List<Apply> applyList) {
-				this.title = worktimeList.getTitle();
-				this.startTime = worktimeList.getStartTime();
-				this.endTime = worktimeList.getEndTime();
-				this.workerList = applyList.stream()
-					.map(Apply::getUser)
-					.map(Worker::new)
-					.collect(toList());
+				this.applyStatus.add(dailyWorkerStatuses);
 			}
 		}
 
 		@Getter
-		public static class Worker {
-			private final Long userId;
-			private final String name;
+		private class Template {
+			private final Long worktimeId;
+			private final String title;
+			private final LocalTime startTime;
+			private final LocalTime endTime;
 
-			public Worker(User user) {
-				this.userId = user.getId();
-				this.name = user.getName();
+			public Template(Worktime worktime) {
+				this.worktimeId = worktime.getId();
+				this.title = worktime.getTitle();
+				this.startTime = worktime.getStartTime();
+				this.endTime = worktime.getEndTime();
+			}
+		}
+
+		@Getter
+		private class WorkerStatus {
+			private final Long worktimeId;
+			private final List<Worker> workerList;
+
+			public WorkerStatus(Worktime worktime, List<Apply> applies) {
+				this.worktimeId = worktime.getId();
+				this.workerList = applies.stream()
+					.map(apply -> new Worker(apply.getUser()))
+					.collect(Collectors.toList());
+			}
+
+			@Getter
+			private class Worker {
+				private final Long userId;
+				private final String name;
+
+				public Worker(User user) {
+					this.userId = user.getId();
+					this.name = user.getName();
+				}
 			}
 		}
 	}

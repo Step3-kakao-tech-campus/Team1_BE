@@ -6,10 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
-import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleRepository;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyRepository;
 import com.example.team1_be.util.WithMockCustomUser;
@@ -41,213 +37,8 @@ class ScheduleControllerTest {
 	@Autowired
 	private RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
 
-	@WithMockCustomUser
-	@DisplayName("스케줄 모집 성공")
-	@Test
-	void test1() throws Exception {
-		List<RecruitSchedule.Request.WorktimeSchedule> mondayWorks = new ArrayList<>();
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.title("오픈")
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.title("미들")
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.title("마감")
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-		RecruitSchedule.Request.DailySchedule monday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(mondayWorks)
-			.build();
-		RecruitSchedule.Request.DailySchedule tuesday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule wednesday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule thursday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule friday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule saturday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule sunday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-
-		RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-			.weekStartDate(LocalDate.parse("2022-10-16"))
-			.weeklyAmount(List.of(
-				new RecruitSchedule.Request.DailySchedule[] {monday, tuesday, wednesday, thursday, friday, saturday,
-					sunday}))
-			.build();
-		String request = om.writeValueAsString(requestDTO);
-		System.out.println(request);
-
-		ResultActions perform = mvc.perform(post("/schedule/worktime")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
-
-		perform.andExpect(status().isOk());
-	}
-
-	@WithMockCustomUser
-	@DisplayName("스케줄 모집 실패(startDate 미기입)")
-	@Test
-	void test2() throws Exception {
-		List<RecruitSchedule.Request.WorktimeSchedule> mondayWorks = new ArrayList<>();
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.title("오픈")
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.title("미들")
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.title("마감")
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-		RecruitSchedule.Request.DailySchedule monday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(mondayWorks)
-			.build();
-		RecruitSchedule.Request.DailySchedule tuesday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule wednesday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule thursday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule friday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule saturday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-		RecruitSchedule.Request.DailySchedule sunday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(new ArrayList<>())
-			.build();
-
-		RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-			.weeklyAmount(List.of(
-				new RecruitSchedule.Request.DailySchedule[] {monday, tuesday, wednesday, thursday, friday, saturday,
-					sunday}))
-			.build();
-		String request = om.writeValueAsString(requestDTO);
-		System.out.println(request);
-
-		ResultActions perform = mvc.perform(post("/schedule/worktime")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
-
-		perform.andExpect(status().isBadRequest());
-	}
-
-	@WithMockCustomUser
-	@DisplayName("스케줄 모집 실패(weeklyAmount 미기입)")
-	@Test
-	void test3() throws Exception {
-		RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-			.weekStartDate(LocalDate.parse("2022-10-06"))
-			.build();
-		String request = om.writeValueAsString(requestDTO);
-		System.out.println(request);
-
-		ResultActions perform = mvc.perform(post("/schedule/worktime")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
-
-		perform.andExpect(status().isBadRequest());
-	}
-
-	@WithMockCustomUser
-	@DisplayName("스케줄 모집 실패(weeklyAmount 빈 스케줄)")
-	@Test
-	void test4() throws Exception {
-		RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-			.weekStartDate(LocalDate.parse("2022-10-06"))
-			.weeklyAmount(new ArrayList<>())
-			.build();
-		String request = om.writeValueAsString(requestDTO);
-		System.out.println(request);
-
-		ResultActions perform = mvc.perform(post("/schedule/worktime")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
-
-		perform.andExpect(status().isBadRequest());
-	}
-
-	@WithMockCustomUser
-	@DisplayName("스케줄 모집 실패(중첩 빈배열)")
-	@Test
-	void test5() throws Exception {
-		ArrayList arrayList = new ArrayList();
-		arrayList.add(new ArrayList<>());
-
-		RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-			.weekStartDate(LocalDate.parse("2022-10-06"))
-			.weeklyAmount(arrayList)
-			.build();
-		String request = om.writeValueAsString(requestDTO);
-
-		ResultActions perform = mvc.perform(post("/schedule/worktime")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
-
-		perform.andExpect(status().isBadRequest());
-	}
-
-	@WithMockCustomUser
-	@DisplayName("스케줄 모집 실패(WorktimeSchedule 미기입")
-	@Test
-	void test6() throws Exception {
-		List<RecruitSchedule.Request.WorktimeSchedule> mondayWorks = new ArrayList<>();
-		mondayWorks.add(RecruitSchedule.Request.WorktimeSchedule.builder()
-			.startTime(LocalTime.parse("10:00:00"))
-			.endTime(LocalTime.parse("12:00:00"))
-			.amount(10)
-			.build());
-
-		RecruitSchedule.Request.DailySchedule monday = RecruitSchedule.Request.DailySchedule.builder()
-			.dailySchedules(mondayWorks)
-			.build();
-
-		RecruitSchedule.Request requestDTO = RecruitSchedule.Request.builder()
-			.weekStartDate(LocalDate.parse("2022-10-06"))
-			.weeklyAmount(List.of(new RecruitSchedule.Request.DailySchedule[] {monday}))
-			.build();
-		String request = om.writeValueAsString(requestDTO);
-		System.out.println(request);
-
-		ResultActions perform = mvc.perform(post("/schedule/worktime")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
-
-		perform.andExpect(status().isBadRequest());
-	}
-
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(매니저-모집중아님)")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomUser(isAdmin = "true")
 	@Test
 	void weeklyScheduleCheck1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -269,7 +60,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(매니저 시작한 주 신청아님)")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomUser(isAdmin = "true")
 	@Test
 	void weeklyScheduleCheck3() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -279,7 +70,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(알바생 마감한 주 신청아님)")
-	@WithMockCustomUser(userId = "2", kakaoId = "2")
+	@WithMockCustomUser(userId = "2")
 	@Test
 	void weeklyScheduleCheck4() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -289,7 +80,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 성공(매니저)")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomUser(isAdmin = "true")
 	@Test
 	void weeklyScheduleCheck5() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -300,7 +91,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 성공(알바생)")
-	@WithMockCustomUser(userId = "2", kakaoId = "2")
+	@WithMockCustomUser(userId = "2")
 	@Test
 	void weeklyScheduleCheck7() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -337,7 +128,7 @@ class ScheduleControllerTest {
 	@WithMockCustomUser
 	@Test
 	void recommendSchedule1() throws Exception {
-		LocalDate date = LocalDate.parse("2023-10-16");
+		LocalDate date = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(
 			get(String.format("/schedule/recommend/%s", date)));
 		perform.andExpect(status().isOk());

@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
+import com.example.team1_be.domain.Schedule.DTO.GetApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetDailyFixedApplies;
 import com.example.team1_be.domain.Schedule.DTO.GetFixedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.DTO.GetWeekStatus;
 import com.example.team1_be.domain.Schedule.DTO.LoadLatestSchedule;
+import com.example.team1_be.domain.Schedule.DTO.PostApplies;
 import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
+import com.example.team1_be.domain.Schedule.Service.ScheduleService;
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 
@@ -60,16 +63,6 @@ public class ScheduleController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/fix/month/{requestMonth}/{memberId}")
-	public ResponseEntity<?> getFixedWeeklySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
-		@PathVariable("requestMonth") @DateTimeFormat(pattern = "yyyy-MM") YearMonth requestMonth,
-		@PathVariable("memberId") Long memberId) {
-		GetFixedWeeklySchedule.Response responseDTO = scheduleService.getFixedWeeklySchedule(userDetails.getUser(),
-			requestMonth, memberId);
-		ApiUtils.ApiResult<?> response = ApiUtils.success(responseDTO);
-		return ResponseEntity.ok(response);
-	}
-
 	@GetMapping("/recommend/{weekStartDate}")
 	public ResponseEntity<?> recommendSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
 		@PathVariable("weekStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
@@ -86,6 +79,26 @@ public class ScheduleController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/fix/month/{requestMonth}")
+	public ResponseEntity<?> getUsersFixedWeeklySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@PathVariable("requestMonth") @DateTimeFormat(pattern = "yyyy-MM") YearMonth requestMonth) {
+		GetFixedWeeklySchedule.Response responseDTO = scheduleService.getPersonalWeeklyFixedSchedule(
+			userDetails.getUser(),
+			requestMonth);
+		ApiUtils.ApiResult<?> response = ApiUtils.success(responseDTO);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/fix/month/{requestMonth}/{memberId}")
+	public ResponseEntity<?> getFixedWeeklySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@PathVariable("requestMonth") @DateTimeFormat(pattern = "yyyy-MM") YearMonth requestMonth,
+		@PathVariable("memberId") Long memberId) {
+		GetFixedWeeklySchedule.Response responseDTO = scheduleService.getFixedWeeklySchedule(userDetails.getUser(),
+			requestMonth, memberId);
+		ApiUtils.ApiResult<?> response = ApiUtils.success(responseDTO);
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping("/fix/day/{selectedDate}")
 	public ResponseEntity<?> getDailyFixedApplies(@AuthenticationPrincipal CustomUserDetails userDetails,
 		@PathVariable("selectedDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate) {
@@ -95,20 +108,27 @@ public class ScheduleController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/fix/month/{requestMonth}")
-	public ResponseEntity<?> getUsersFixedWeeklySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
-		@PathVariable("requestMonth") @DateTimeFormat(pattern = "yyyy-MM") YearMonth requestMonth) {
-		GetFixedWeeklySchedule.Response responseDTO = scheduleService.getUsersFixedWeeklySchedule(userDetails.getUser(),
-			requestMonth);
-		ApiUtils.ApiResult<?> response = ApiUtils.success(responseDTO);
-		return ResponseEntity.ok(response);
-	}
-
 	@GetMapping("/status/{startWeekDate}")
 	public ResponseEntity<?> getWeekStatus(@AuthenticationPrincipal CustomUserDetails userDetails,
 		@PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
 		GetWeekStatus.Response responseDTO = scheduleService.getWeekStatus(userDetails.getUser(), startWeekDate);
 		ApiUtils.ApiResult<GetWeekStatus.Response> response = ApiUtils.success(responseDTO);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/application/{startWeekDate}")
+	public ResponseEntity<?> getApplies(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@PathVariable("startWeekDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startWeekDate) {
+		GetApplies.Response responseDTO = scheduleService.getApplies(userDetails.getUser(), startWeekDate);
+		ApiUtils.ApiResult<GetApplies.Response> response = ApiUtils.success(responseDTO);
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/application")
+	public ResponseEntity<?> postApplies(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@RequestBody PostApplies.Request requestDTO) {
+		scheduleService.postApplies(userDetails.getUser(), requestDTO);
+		ApiUtils.ApiResult<Object> response = ApiUtils.success(null);
 		return ResponseEntity.ok(response);
 	}
 }

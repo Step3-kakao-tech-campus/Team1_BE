@@ -15,9 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
 import com.example.team1_be.domain.User.User;
-import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -38,8 +38,8 @@ public class Apply extends BaseEntity {
 	private ApplyStatus status;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "worktime_id")
-	private Worktime worktime;
+	@JoinColumn(name = "detailWorktime_id")
+	private DetailWorktime detailWorktime;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -49,21 +49,17 @@ public class Apply extends BaseEntity {
 	private List<RecommendedWorktimeApply> recommendedWorktimeApplies;
 
 	@Builder
-	public Apply(Long id, ApplyStatus status, Worktime worktime, User user,
+	public Apply(Long id, ApplyStatus status, DetailWorktime detailWorktime, User user,
 		List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
 		this.id = id;
 		this.status = status;
-		this.worktime = worktime;
+		this.detailWorktime = detailWorktime;
 		this.user = user;
 		this.recommendedWorktimeApplies = recommendedWorktimeApplies;
 	}
 
 	public Apply updateStatus(ApplyStatus status) {
-		return Apply.builder()
-			.id(this.id)
-			.status(status)
-			.user(this.user)
-			.worktime(this.worktime)
-			.build();
+		this.status = status;
+		return this;
 	}
 }

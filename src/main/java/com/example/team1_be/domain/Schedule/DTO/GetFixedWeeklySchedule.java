@@ -1,11 +1,12 @@
 package com.example.team1_be.domain.Schedule.DTO;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.SortedMap;
 
+import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Worktime.Worktime;
 
 import lombok.Getter;
@@ -16,26 +17,23 @@ public class GetFixedWeeklySchedule {
 		private final List<DailySchedule> schedule;
 		private final WorkSummary work_summary;
 
-		public Response(List<Worktime> memberWorktimes, double monthly, double v) {
-			this.work_summary = new WorkSummary(v, monthly);
-
-			List<LocalDate> worktimeDates = new ArrayList<>(memberWorktimes.stream()
-				.map(worktime ->
-					worktime.getDay().getWeek().getStartDate()
-						.plusDays(worktime.getDay().getDayOfWeek()))
-				.collect(Collectors.toSet()));
-			Collections.sort(worktimeDates);
-
+		public Response(SortedMap<LocalDate, List<Apply>> memberWorktimes) {
 			this.schedule = new ArrayList<>();
-			for (LocalDate workDate : worktimeDates) {
-				DailySchedule dailySchedule = new DailySchedule(workDate, memberWorktimes.stream()
-					.filter(
-						x -> x.getDay().getWeek().getStartDate().plusDays(x.getDay().getDayOfWeek()).equals(workDate))
-					.map(y -> y.getTitle())
-					.collect(Collectors.toList()));
-				this.schedule.add(dailySchedule);
-			}
+			double totalWorktime = 0;
+			for (LocalDate date : memberWorktimes.keySet()) {
+				List<Apply> applies = memberWorktimes.get(date);
+				System.out.println("apply size : " + applies.size());
+				List<String> applyTitles = new ArrayList<>();
 
+				for (Apply apply : applies) {
+					Worktime worktime = apply.getDetailWorktime().getWorktime();
+					applyTitles.add(worktime.getTitle());
+
+					totalWorktime += Duration.between(worktime.getStartTime(), worktime.getEndTime()).toHours();
+				}
+				schedule.add(new DailySchedule(date, applyTitles));
+			}
+			this.work_summary = new WorkSummary(totalWorktime / memberWorktimes.size() * 7, totalWorktime);
 		}
 
 		@Getter
@@ -54,9 +52,9 @@ public class GetFixedWeeklySchedule {
 			private final LocalDate date;
 			private final List<String> workTime;
 
-			public DailySchedule(LocalDate date, List<String> workTime) {
+			public DailySchedule(LocalDate date, List<String> applies) {
 				this.date = date;
-				this.workTime = workTime;
+				this.workTime = applies;
 			}
 		}
 	}
