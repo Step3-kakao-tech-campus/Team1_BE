@@ -22,7 +22,6 @@ public class GetFixedWeeklySchedule {
 			double totalWorktime = 0;
 			for (LocalDate date : memberWorktimes.keySet()) {
 				List<Apply> applies = memberWorktimes.get(date);
-				System.out.println("apply size : " + applies.size());
 				List<String> applyTitles = new ArrayList<>();
 
 				for (Apply apply : applies) {

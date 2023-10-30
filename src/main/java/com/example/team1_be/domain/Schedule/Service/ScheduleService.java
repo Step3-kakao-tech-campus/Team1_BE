@@ -85,7 +85,6 @@ public class ScheduleService {
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
 			group,
 			requestMonth);
-		System.out.println("monthly size : " + monthlyDetailWorktimes.size());
 		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedApplies(
 			monthlyDetailWorktimes, member);
 
