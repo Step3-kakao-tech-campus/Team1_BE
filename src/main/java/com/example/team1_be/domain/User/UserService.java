@@ -18,11 +18,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 	private final UserRepository repository;
 	private final UnfinishedUserRepository unfinishedUserRepository;
 	private final JwtProvider jwtProvider;
 
+	@Transactional(noRollbackFor = NotFoundException.class)
 	public Login.Response login(String code, Long kakaoId) {
 		User user = repository.findByKakaoId(kakaoId).orElse(null);
 		if (user == null) {
@@ -34,26 +36,24 @@ public class UserService {
 
 			throw new NotFoundException("회원이 아닙니다.");
 		}
-
 		return new Login.Response(user.getIsAdmin());
 	}
 
 	// login 시도했던 code를 통해, join 시 kakaoId와 매칭
-	@Transactional
 	public Long matchKakaoId(String code) {
 		UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
-			() -> new BadRequestException("유효하지 않은 code입니다."));
+			() -> new BadRequestException("유효하지 않은 code입니다.")
+		);
 		return unfinishedUser.getKakaoId();
 	}
 
 	@Transactional
 	public Join.Response join(Join.Request request, Long kakaoId) {
-		User user = repository.findByKakaoId(kakaoId).orElse(null);
-		if (user != null) {
+		repository.findByKakaoId(kakaoId).ifPresent(existingUser -> {
 			throw new BadRequestException("이미 가입되었습니다.");
-		}
+		});
 
-		user = User.builder()
+		User user = User.builder()
 			.kakaoId(kakaoId)
 			.name(request.getUserName())
 			.phoneNumber(null)
@@ -61,10 +61,9 @@ public class UserService {
 			.build();
 		repository.save(user);
 
-		return new Join.Response(request.getIsAdmin());
+		return new Join.Response(user.getIsAdmin());
 	}
 
-	@Transactional
 	public String getJWT(Long kakaoId) {
 		User user = repository.findByKakaoId(kakaoId).orElse(null);
 		return jwtProvider.createJwt(user.getId());
@@ -77,9 +76,8 @@ public class UserService {
 	}
 
 	public Group findGroupByUser(User user) {
-		Group group = repository.findGroupByUser(user.getId())
-			.orElseThrow(() -> new NotFoundException("그룹에 가입되어있지 않습니다."));
-		return group;
+		return repository.findGroupByUser(user.getId())
+			.orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
 	}
 
 	public User findById(Long userId) {
