@@ -29,7 +29,7 @@ public class AuthenticationConfig {
 				corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
 				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 				corsConfiguration.setAllowedHeaders(List.of("*"));
-				corsConfiguration.setExposedHeaders(List.of("Authorization"));
+				corsConfiguration.addExposedHeader("Authorization");
 				return corsConfiguration;
 			})
 			.and()
