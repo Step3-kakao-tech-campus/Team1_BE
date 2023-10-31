@@ -31,4 +31,8 @@ SET
 REFERENTIAL_INTEGRITY TRUE;
 
 insert into unfinished_user (`id`, `code`, `kakao_id`)
-values (1, 'abcd', 1);
+values (1L, 'aaaa', 10000L),
+       (2L, 'bbbb', 20000L);
+
+insert into users (`id`, `kakao_id`, `name`, `phone_number`, `is_admin`, `group_id`)
+values (1L, 10000L, 'eunjin', null, true, null);

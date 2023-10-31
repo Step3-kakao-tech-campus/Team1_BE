@@ -63,7 +63,7 @@ public class JwtProvider {
             throw new RuntimeException("권한 정보 없음");
         }
         UserDetails principal = customUserDetailsService.loadUserByUsername(claimsId.toString());
-        return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 
     private Claims getUserId(String token) {

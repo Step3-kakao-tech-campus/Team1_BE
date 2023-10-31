@@ -41,7 +41,9 @@ class UserRepositoryTest extends BaseTest {
 
 		userRepository.save(user);
 
-		assertThat(userRepository.findById(1L).orElse(null))
+		String stringId = "1";
+
+		assertThat(userRepository.findById(Long.parseLong(stringId)).orElse(null))
 			.isNotEqualTo(null);
 	}
 
