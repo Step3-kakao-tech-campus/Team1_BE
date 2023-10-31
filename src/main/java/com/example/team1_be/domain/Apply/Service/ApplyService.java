@@ -44,7 +44,6 @@ public class ApplyService {
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes, User user) {
 		SortedMap<LocalDate, List<Apply>> monthlyApplies = new TreeMap<>((s1, s2) -> s1.compareTo(s2));
 		for (LocalDate date : monthlyDetailWorktimes.keySet()) {
-			System.out.println("date is : " + date);
 			List<Apply> applies = readOnlyService.findByUserAndDateAndStatus(user, date, ApplyStatus.FIX);
 			if (applies.isEmpty()) {
 				continue;

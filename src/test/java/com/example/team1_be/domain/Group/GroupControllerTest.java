@@ -265,7 +265,7 @@ public class GroupControllerTest {
 		ResultActions perform = mvc.perform(get("/group"));
 
 		// then
-		perform.andExpect(status().isNotFound());
+		perform.andExpect(status().isForbidden());
 		perform.andDo(print());
 	}
 

@@ -49,6 +49,5 @@ class DetailWorktimeRepositoryTest extends BaseTest {
 			worktimes.stream().map(Worktime::getId).collect(
 				Collectors.toList()));
 		assertThat(weeklyDetailWorktimes.size()).isNotEqualTo(0);
-		System.out.println(weeklyDetailWorktimes.size());
 	}
 }
