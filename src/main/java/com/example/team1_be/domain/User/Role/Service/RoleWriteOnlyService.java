@@ -18,14 +18,14 @@ public class RoleWriteOnlyService {
 
 	public void createAdmin(User user) {
 		repository.save(Role.builder()
-			.role(Roles.ADMIN)
+			.role(Roles.ROLE_ADMIN)
 			.user(user)
 			.build());
 	}
 
 	public void createMember(User user) {
 		repository.save(Role.builder()
-			.role(Roles.MEMBER)
+			.role(Roles.ROLE_MEMBER)
 			.user(user)
 			.build());
 	}

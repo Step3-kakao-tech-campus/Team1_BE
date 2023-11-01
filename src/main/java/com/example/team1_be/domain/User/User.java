@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 
 import com.example.team1_be.domain.Apply.Apply;
 import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.User.Role.Role;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -57,7 +58,7 @@ public class User extends BaseEntity {
 	private List<Apply> applies;
 
 	@Builder
-	public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Group group,
+	public User(Long id, Long kakaoId, String name, String phoneNumber, Boolean isAdmin, Set<Role> roles, Group group,
 		List<Apply> applies) {
 		this.id = id;
 		this.kakaoId = kakaoId;
