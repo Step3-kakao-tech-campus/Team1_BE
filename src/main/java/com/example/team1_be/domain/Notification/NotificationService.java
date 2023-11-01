@@ -3,6 +3,7 @@ package com.example.team1_be.domain.Notification;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.team1_be.domain.Group.DTO.ExistNonRead;
 import org.springframework.stereotype.Service;
 
 import com.example.team1_be.domain.Notification.DTO.NotificationInfo;
@@ -22,6 +23,9 @@ public class NotificationService {
 	public NotificationInfo.Response findAllNotification(User user) {
 		// 알림 조회
 		List<Notification> notifications = notificationRepository.findAllByUser(user);
+
+		// 알림 읽음 처리
+		notifications.stream().forEach(notification -> notification.setIsRead(true));
 
 		// notification to notice convert
 		List<NotificationInfo.Response.Notice> notices = notifications.stream().map(notification ->
