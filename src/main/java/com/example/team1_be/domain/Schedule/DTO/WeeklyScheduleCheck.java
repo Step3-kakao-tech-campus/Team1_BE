@@ -47,13 +47,13 @@ public class WeeklyScheduleCheck {
 
 		@Getter
 		private class Template {
-			private final Long worktimeId;
+			private final Long workTimeId;
 			private final String title;
 			private final LocalTime startTime;
 			private final LocalTime endTime;
 
 			public Template(Worktime worktime) {
-				this.worktimeId = worktime.getId();
+				this.workTimeId = worktime.getId();
 				this.title = worktime.getTitle();
 				this.startTime = worktime.getStartTime();
 				this.endTime = worktime.getEndTime();
@@ -62,11 +62,11 @@ public class WeeklyScheduleCheck {
 
 		@Getter
 		private class WorkerStatus {
-			private final Long worktimeId;
+			private final Long workTimeId;
 			private final List<Worker> workerList;
 
 			public WorkerStatus(Worktime worktime, List<Apply> applies) {
-				this.worktimeId = worktime.getId();
+				this.workTimeId = worktime.getId();
 				this.workerList = applies.stream()
 					.map(apply -> new Worker(apply.getUser()))
 					.collect(Collectors.toList());

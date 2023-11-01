@@ -8,12 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
-import com.example.team1_be.domain.User.User;
+import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.audit.BaseEntity;
 
 import lombok.Builder;
@@ -29,17 +29,17 @@ public class RecommendedWeeklySchedule extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "week_id")
+	private Week week;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "recommendedWeeklySchedule", orphanRemoval = true)
 	private List<RecommendedWorktimeApply> recommendedWorktimeApplies;
 
 	@Builder
-	public RecommendedWeeklySchedule(Long id, User user, List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
+	public RecommendedWeeklySchedule(Long id, Week week, List<RecommendedWorktimeApply> recommendedWorktimeApplies) {
 		this.id = id;
-		this.user = user;
+		this.week = week;
 		this.recommendedWorktimeApplies = recommendedWorktimeApplies;
 	}
 }

@@ -40,7 +40,7 @@ public class GetDailyFixedAppliesTest {
 			.andExpect(status().isOk())
 			.andDo(print());
 
-		FixSchedule.Request requestDTO = new FixSchedule.Request(1);
+		FixSchedule.Request requestDTO = new FixSchedule.Request(date, 1);
 		String request = om.writeValueAsString(requestDTO);
 		mvc.perform(
 				post("/schedule/fix")
