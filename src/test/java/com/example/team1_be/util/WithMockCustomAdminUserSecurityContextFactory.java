@@ -1,7 +1,7 @@
 package com.example.team1_be.util;
 
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,10 +19,13 @@ public class WithMockCustomAdminUserSecurityContextFactory
 	@Override
 	public SecurityContext createSecurityContext(WithMockCustomAdminUser annotation) {
 		final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-		final Role role = Role.builder()
+		final Role adminRole = Role.builder()
 			.role(Roles.ROLE_ADMIN)
 			.build();
-		final Set<Role> roleSet = new HashSet<>(Collections.singleton(role));
+		final Role userRole = Role.builder()
+			.role(Roles.ROLE_ADMIN)
+			.build();
+		final Set<Role> roleSet = new HashSet<>(List.of(new Role[] {userRole, adminRole}));
 		final User user = User.builder()
 			.id(Long.valueOf(annotation.userId()))
 			.name(annotation.username())
