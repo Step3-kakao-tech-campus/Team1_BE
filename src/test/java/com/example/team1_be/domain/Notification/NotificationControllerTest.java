@@ -45,5 +45,19 @@ class NotificationControllerTest {
         perform.andDo(print());
     }
 
+    @DisplayName("읽지 않은 알림 여부 조회")
+    @WithMockCustomUser
+    @Sql("/data.sql")
+    @Test
+    void existNonReadNotification() throws Exception {
+        // given
 
+        // when
+        ResultActions perform = mvc.perform(get("/notification/existNonRead")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        perform.andExpect(status().isOk());
+        perform.andDo(print());
+    }
 }
