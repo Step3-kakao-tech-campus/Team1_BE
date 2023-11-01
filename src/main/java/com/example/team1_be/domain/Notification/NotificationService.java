@@ -40,4 +40,12 @@ public class NotificationService {
 
 		return notificationInfo;
 	}
+
+	public ExistNonRead existNonReadNotification(User user) {
+		// 알림 조회
+		List<Notification> notifications = notificationRepository.findAllByUser(user);
+
+		// 읽지 않은 알림 여부에 따른 객체 반환
+		return new ExistNonRead(notifications.stream().anyMatch(notification -> !notification.getIsRead()));
+	}
 }
