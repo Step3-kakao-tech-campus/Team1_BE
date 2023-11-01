@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Notification;
 
+import com.example.team1_be.domain.Group.DTO.ExistNonRead;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,5 +24,11 @@ public class NotificationController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		NotificationInfo.Response notificationInfo = notificationService.findAllNotification(userDetails.getUser());
 		return ResponseEntity.ok(ApiUtils.success(notificationInfo));
+	}
+
+	@GetMapping("/existNonRead")
+	public ResponseEntity<ApiUtils.ApiResult> existNonReadNotification(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		ExistNonRead existNonRead = notificationService.existNonReadNotification(userDetails.getUser());
+		return ResponseEntity.ok(ApiUtils.success(existNonRead));
 	}
 }
