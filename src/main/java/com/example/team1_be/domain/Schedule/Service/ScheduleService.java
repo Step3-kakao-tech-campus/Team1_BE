@@ -103,12 +103,13 @@ public class ScheduleService {
 	}
 
 	public void fixSchedule(User user, FixSchedule.Request request) {
-		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByUser(user);
+		Group group = userService.findGroupByUser(user);
+		Week week = weekService.findByGroupAndStartDate(group, request.getWeekStartDate());
+		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByWeek(week);
 		RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
 
-		Week week = recommendedWeeklyScheduleService.getWeek(recommendedWeeklySchedule);
 		weekService.updateWeekStatus(week, WeekRecruitmentStatus.ENDED);
-
+		
 		List<Apply> selectedApplies = new ArrayList<>();
 		recommendedWeeklySchedule.getRecommendedWorktimeApplies()
 			.forEach(recommendedWorktimeApply ->
@@ -122,6 +123,7 @@ public class ScheduleService {
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
 		Group group = userService.findGroupByUser(user);
 
+		Week week = weekService.findByGroupAndStartDate(group, date);
 		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, date);
 		List<DetailWorktime> weeklyDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(date,
 			weeklyWorktimes);
@@ -134,8 +136,8 @@ public class ScheduleService {
 		List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> generatedSchedules = generator.generateSchedule();
 
 		for (Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> generatedSchedule : generatedSchedules) {
-			RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(
-				user);
+			RecommendedWeeklySchedule recommendedWeeklySchedule =
+				recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(week);
 
 			List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
 			for (DayOfWeek day : generatedSchedule.keySet()) {
