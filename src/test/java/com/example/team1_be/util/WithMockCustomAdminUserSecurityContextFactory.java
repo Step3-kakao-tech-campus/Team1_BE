@@ -23,7 +23,7 @@ public class WithMockCustomAdminUserSecurityContextFactory
 			.role(Roles.ROLE_ADMIN)
 			.build();
 		final Role userRole = Role.builder()
-			.role(Roles.ROLE_ADMIN)
+			.role(Roles.ROLE_USER)
 			.build();
 		final Set<Role> roleSet = new HashSet<>(List.of(new Role[] {userRole, adminRole}));
 		final User user = User.builder()
