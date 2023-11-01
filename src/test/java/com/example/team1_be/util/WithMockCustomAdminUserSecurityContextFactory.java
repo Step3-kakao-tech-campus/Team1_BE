@@ -14,9 +14,10 @@ import com.example.team1_be.domain.User.Role.Roles;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 
-public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
+public class WithMockCustomAdminUserSecurityContextFactory
+	implements WithSecurityContextFactory<WithMockCustomAdminUser> {
 	@Override
-	public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
+	public SecurityContext createSecurityContext(WithMockCustomAdminUser annotation) {
 		final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 		final Role role = Role.builder()
 			.role(Roles.ROLE_ADMIN)
