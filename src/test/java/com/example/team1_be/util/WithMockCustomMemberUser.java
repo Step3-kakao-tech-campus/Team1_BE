@@ -17,6 +17,4 @@ public @interface WithMockCustomMemberUser {
 	String phoneNumber() default "010-1111-1111";
 
 	String isAdmin() default "false";
-
-	String role() default "USER";
 }
