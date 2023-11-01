@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.team1_be.domain.Schedule.DTO.PostApplies;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -37,7 +37,7 @@ public class GetAppliesTest {
 	private ObjectMapper om;
 
 	@DisplayName("스케줄 신청/수정 조회 요청 성공")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void test1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -48,7 +48,7 @@ public class GetAppliesTest {
 	}
 
 	@DisplayName("스케줄 신청/수정 제출 DTO 확인")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void test2() throws Exception {
 		LocalDate weekStartDate = LocalDate.parse("2023-10-16");
@@ -73,7 +73,7 @@ public class GetAppliesTest {
 	}
 
 	@DisplayName("스케줄 신청/수정 제출 DTO 포함 요청")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void test3() throws Exception {
 		// given
