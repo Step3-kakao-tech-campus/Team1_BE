@@ -16,6 +16,8 @@ import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -76,8 +78,7 @@ public class UserService {
 	}
 
 	public Group findGroupByUser(User user) {
-		return repository.findGroupByUser(user.getId())
-			.orElseThrow(() -> new CustomException("그룹에 가입되어있지 않습니다.", HttpStatus.FORBIDDEN));
+		return repository.findGroupByUser(user.getId()).orElse(Group.builder().users(Collections.emptyList()).build());
 	}
 
 	public User findById(Long userId) {
