@@ -18,6 +18,7 @@ import com.example.team1_be.utils.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class Notification extends BaseEntity {
 	private NotificationType type;
 
 	@NotNull
+	@Setter
 	private Boolean isRead;
 
 	@ManyToOne(fetch = FetchType.LAZY)
