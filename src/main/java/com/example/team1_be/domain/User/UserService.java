@@ -1,5 +1,7 @@
 package com.example.team1_be.domain.User;
 
+import java.util.Collections;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
+import com.example.team1_be.domain.User.Role.Service.RoleService;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUserRepository;
 import com.example.team1_be.utils.errors.exception.BadRequestException;
@@ -16,8 +19,6 @@ import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,6 +26,8 @@ public class UserService {
 	private final UserRepository repository;
 	private final UnfinishedUserRepository unfinishedUserRepository;
 	private final JwtProvider jwtProvider;
+
+	private final RoleService roleService;
 
 	@Transactional(noRollbackFor = NotFoundException.class)
 	public Login.Response login(String code, Long kakaoId) {
@@ -61,7 +64,9 @@ public class UserService {
 			.phoneNumber(null)
 			.isAdmin(request.getIsAdmin())
 			.build();
+
 		repository.save(user);
+		roleService.createRole(user, request.getIsAdmin());
 
 		return new Join.Response(user.getIsAdmin());
 	}

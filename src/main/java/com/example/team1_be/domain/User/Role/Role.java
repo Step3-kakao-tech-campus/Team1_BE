@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.audit.BaseEntity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,7 @@ public class Role extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@Builder
 	public Role(Long id, Roles role, User user) {
 		this.id = id;
 		this.role = role;
