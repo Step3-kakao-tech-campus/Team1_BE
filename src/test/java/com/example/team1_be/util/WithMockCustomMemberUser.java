@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 @Retention(RetentionPolicy.RUNTIME)
-@WithSecurityContext(factory = WithMockCustomAdminUserSecurityContextFactory.class)
+@WithSecurityContext(factory = WithMockCustomMemberUserSecurityContextFactory.class)
 public @interface WithMockCustomMemberUser {
 	String username() default "dlwogns";
 

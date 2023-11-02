@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
 import com.example.team1_be.util.WithMockCustomAdminUser;
+import com.example.team1_be.util.WithMockCustomMemberUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -176,7 +177,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 성공")
-	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck1.sql")
 	@Test
 	void invitationCheck1() throws Exception {
