@@ -54,7 +54,16 @@ public class AuthenticationConfig {
 			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole("MEMBER");
 
 		http.authorizeHttpRequests()
-			.antMatchers("/schedule/**").permitAll();
+			.antMatchers(HttpMethod.GET, "/schedule/application/**").hasRole("MEMBER")
+			.antMatchers(HttpMethod.PUT, "/schedule/application").hasRole("MEMBER")
+			.antMatchers(HttpMethod.GET, "/schedule/fix/month/**").hasAnyRole("ADMIN", "MEMBER")
+			.antMatchers(HttpMethod.GET, "/schedule/fix/day/**").hasAnyRole("ADMIN", "MEMBER")
+			.antMatchers(HttpMethod.GET, "/schedule/remain/week/**").hasAnyRole("ADMIN", "MEMBER")
+			.antMatchers(HttpMethod.GET, "/schedule/recommend/**").hasRole("ADMIN")
+			.antMatchers(HttpMethod.POST, "/schedule/fix/**").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/schedule/status/**").hasAnyRole("ADMIN", "MEMBER")
+			.antMatchers(HttpMethod.POST, "/schedule/worktime").hasAnyRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/schedule/worktime/**").hasAnyRole("ADMIN");
 
 		http.authorizeHttpRequests()
 			.antMatchers("/error").permitAll();
