@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleRepository;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApplyRepository;
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -38,7 +38,7 @@ class ScheduleControllerTest {
 	private RecommendedWeeklyScheduleRepository recommendedWeeklyScheduleRepository;
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(매니저-모집중아님)")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Test
 	void weeklyScheduleCheck1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -49,7 +49,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(잘못된 날짜 양식)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void weeklyScheduleCheck2() throws Exception {
 		String wrongDate = "10-10";
@@ -60,7 +60,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(매니저 시작한 주 신청아님)")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Test
 	void weeklyScheduleCheck3() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -70,7 +70,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(알바생 마감한 주 신청아님)")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void weeklyScheduleCheck4() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -80,7 +80,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 성공(매니저)")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Test
 	void weeklyScheduleCheck5() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -91,7 +91,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 성공(알바생)")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void weeklyScheduleCheck7() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
@@ -102,7 +102,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("멤버별 확정 스케줄 조회 성공")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void getFixedWeeklySchedule1() throws Exception {
 		YearMonth month = YearMonth.parse("2023-10");
@@ -114,7 +114,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("멤버별 확정 스케줄 조회 실패(파라미터 에러)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void getFixedWeeklySchedule2() throws Exception {
 		Long memberId = 2L;
@@ -125,7 +125,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("추천 스케줄 후보 리스팅")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void recommendSchedule1() throws Exception {
 		LocalDate date = LocalDate.parse("2023-10-09");
@@ -136,7 +136,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("스케줄 확정하기 성공")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void fixSchedule1() throws Exception {
 		// given

@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -28,7 +28,7 @@ public class GetUsersFixedWeeklyScheduleTest {
 	private ObjectMapper om;
 
 	@DisplayName("개인 확정 스케줄 조회 성공")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void GetUsersFixedWeeklySchedule1() throws Exception {
 		YearMonth month = YearMonth.parse("2023-10");
@@ -39,7 +39,7 @@ public class GetUsersFixedWeeklyScheduleTest {
 	}
 
 	@DisplayName("개인 확정 스케줄 조회 실패(파라미터 에러)")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void GetUsersFixedWeeklySchedule2() throws Exception {
 		ResultActions perform = mvc.perform(
