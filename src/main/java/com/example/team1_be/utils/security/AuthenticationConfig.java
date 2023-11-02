@@ -3,6 +3,7 @@ package com.example.team1_be.utils.security;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,7 +23,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.httpBasic().disable()
+		http.httpBasic().disable()
 			.csrf().disable()
 			.cors().configurationSource(request -> {
 				CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -35,20 +36,34 @@ public class AuthenticationConfig {
 			.and()
 			.headers().frameOptions().disable()
 			.and()
-			.authorizeHttpRequests()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http.authorizeHttpRequests()
 			.antMatchers("/h2-console/**").permitAll()
-			.antMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+			.antMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll();
+
+		http.authorizeHttpRequests()
 			.antMatchers("/login/kakao").permitAll()
-			.antMatchers("/group/**").permitAll()
-			.antMatchers("/auth/**").permitAll()
-			.antMatchers("/schedule/**").permitAll()
-			.antMatchers("/error").permitAll()
-			.anyRequest().denyAll()
-			.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-				UsernamePasswordAuthenticationFilter.class)
-			.build();
+			.antMatchers("/auth/**").permitAll();
+
+		http.authorizeHttpRequests()
+			.antMatchers(HttpMethod.POST, "/group").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/group").hasAnyRole("ADMIN", "MEMBER")
+			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole("MEMBER")
+			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole("MEMBER");
+
+		http.authorizeHttpRequests()
+			.antMatchers("/schedule/**").permitAll();
+
+		http.authorizeHttpRequests()
+			.antMatchers("/error").permitAll();
+
+		http.authorizeHttpRequests()
+			.anyRequest().denyAll();
+
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+			UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 	}
 }
