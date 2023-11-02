@@ -1,45 +1,64 @@
 package com.example.team1_be.domain.Week;
 
-import com.example.team1_be.domain.Schedule.Schedule;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.audit.BaseEntity;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @Entity
 @RequiredArgsConstructor
 @Getter
 @Table
 public class Week extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private WeekRecruitmentStatus status;
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	private WeekRecruitmentStatus status;
 
-    @NotNull
-    private LocalDate startDate;
+	@NotNull
+	private LocalDate startDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull
-    private Schedule schedule;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id")
+	@NotNull
+	private Group group;
 
-    @Builder
-    public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Schedule schedule) {
-        this.id = id;
-        this.status = status;
-        this.startDate = startDate;
-        this.schedule = schedule;
-    }
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "week")
+	private List<Worktime> worktimes;
 
-    public Week updateStatus(WeekRecruitmentStatus status) {
-        this.status = status;
-        return this;
-    }
+	@Builder
+	public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Group group, List<Worktime> worktimes) {
+		this.id = id;
+		this.status = status;
+		this.startDate = startDate;
+		this.group = group;
+		this.worktimes = worktimes;
+	}
+
+	public Week updateStatus(WeekRecruitmentStatus status) {
+		this.status = status;
+		return this;
+	}
 }
