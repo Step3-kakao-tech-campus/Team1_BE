@@ -49,6 +49,7 @@ public class AuthenticationConfig {
 		http.authorizeHttpRequests()
 			.antMatchers(HttpMethod.POST, "/group").hasRole("ADMIN")
 			.antMatchers(HttpMethod.GET, "/group").hasAnyRole("ADMIN", "MEMBER")
+			.antMatchers(HttpMethod.GET, "/group/invitation").hasRole("ADMIN")
 			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole("MEMBER")
 			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole("MEMBER");
 
