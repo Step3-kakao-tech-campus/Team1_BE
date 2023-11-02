@@ -20,7 +20,7 @@ public class WithMockCustomMemberUserSecurityContextFactory
 	public SecurityContext createSecurityContext(WithMockCustomMemberUser annotation) {
 		final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 		final Role memberRole = Role.builder()
-			.role(Roles.ROLE_ADMIN)
+			.role(Roles.ROLE_MEMBER)
 			.build();
 		final Role userRole = Role.builder()
 			.role(Roles.ROLE_USER)
