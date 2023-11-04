@@ -46,6 +46,9 @@ public class AuthenticationConfig {
 		http.headers()
 			.xssProtection();
 
+		http.headers()
+			.contentSecurityPolicy("script-src 'self'");
+
 		http.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
