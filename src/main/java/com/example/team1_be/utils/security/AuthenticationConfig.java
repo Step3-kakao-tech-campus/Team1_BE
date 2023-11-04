@@ -23,20 +23,28 @@ public class AuthenticationConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.httpBasic().disable()
-			.csrf().disable()
-			.cors().configurationSource(request -> {
+		http.httpBasic()
+			.disable();
+
+		http.csrf()
+			.disable();
+
+		http.cors()
+			.configurationSource(request -> {
 				CorsConfiguration corsConfiguration = new CorsConfiguration();
 				corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
 				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 				corsConfiguration.setAllowedHeaders(List.of("*"));
 				corsConfiguration.addExposedHeader("Authorization");
 				return corsConfiguration;
-			})
-			.and()
-			.headers().frameOptions().disable()
-			.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			});
+
+		http.headers()
+			.frameOptions()
+			.disable();
+
+		http.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.authorizeHttpRequests()
 			.antMatchers("/h2-console/**").permitAll()
