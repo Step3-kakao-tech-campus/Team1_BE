@@ -43,7 +43,7 @@ public class XSSProtectFilter implements Filter {
 
 	}
 
-	private static void processNode(JsonNode node) {
+	private void processNode(JsonNode node) {
 		if (node.isObject()) {
 			processObject((ObjectNode)node);
 		} else if (node.isArray()) {
@@ -51,10 +51,10 @@ public class XSSProtectFilter implements Filter {
 		}
 	}
 
-	private static void processObject(ObjectNode node) {
+	private void processObject(ObjectNode node) {
 		node.fieldNames().forEachRemaining(fieldName -> {
 			JsonNode field = node.get(fieldName);
-			if (null == field) {
+			if (field.isNull()) {
 				node.put(fieldName, field);
 			} else if (field.isValueNode()) {
 				node.put(fieldName, applyEscape(field));
@@ -64,10 +64,10 @@ public class XSSProtectFilter implements Filter {
 		});
 	}
 
-	private static void processArray(ArrayNode node) {
+	private void processArray(ArrayNode node) {
 		for (int i = 0; i < node.size(); i++) {
 			JsonNode element = node.get(i);
-			if (null == element) {
+			if (element.isNull()) {
 				node.set(i, element);
 			} else if (element.isValueNode()) {
 				node.set(i, new TextNode(applyEscape(element)));
@@ -77,7 +77,7 @@ public class XSSProtectFilter implements Filter {
 		}
 	}
 
-	private static String applyEscape(JsonNode field) {
+	private String applyEscape(JsonNode field) {
 		return XSSUtils.charEscape(field.asText());
 	}
 }
