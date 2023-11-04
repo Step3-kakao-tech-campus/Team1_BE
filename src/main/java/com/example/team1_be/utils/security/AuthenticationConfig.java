@@ -8,11 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import com.example.team1_be.utils.security.XSS.XSSProtectFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtAuthenticationFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationConfig {
 	private final JwtProvider jwtProvider;
+	private final ObjectMapper om;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -87,6 +91,9 @@ public class AuthenticationConfig {
 
 		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
 			UsernamePasswordAuthenticationFilter.class);
+
+		http.addFilterBefore(new XSSProtectFilter(om),
+			ChannelProcessingFilter.class);
 
 		return http.build();
 	}
