@@ -43,6 +43,9 @@ public class AuthenticationConfig {
 			.frameOptions()
 			.disable();
 
+		http.headers()
+			.xssProtection();
+
 		http.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
