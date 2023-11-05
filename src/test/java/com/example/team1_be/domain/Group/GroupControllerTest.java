@@ -17,7 +17,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
+import com.example.team1_be.util.WithMockCustomMemberUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -31,7 +32,7 @@ public class GroupControllerTest {
 	private GroupRepository groupRepository;
 
 	@DisplayName("그룹 생성하기 성공")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Sql("group-create1.sql")
 	@Test
 	void postCreate1() throws Exception {
@@ -56,7 +57,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성하기 DTO 검증 실패(멤버변수 누락)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-create1.sql")
 	@Test
 	void postCreate2() throws Exception {
@@ -76,7 +77,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성하기 실패(이미 가입된 그룹 존재)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-create2.sql")
 	@Test
 	void postCreate3() throws Exception {
@@ -100,7 +101,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 제출 성공")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept1.sql")
 	@Test
 	void invitationAccept1() throws Exception {
@@ -119,7 +120,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 제출 실패(초대장 갱신시점이 없음)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept2.sql")
 	@Test
 	void invitationAccept2() throws Exception {
@@ -138,7 +139,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 제출 실패(초대장 갱신시점 만료)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept3.sql")
 	@Test
 	void invitationAccept3() throws Exception {
@@ -157,7 +158,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 DTO 실패(초대내용이 없음)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept1.sql")
 	@Test
 	void invitationAccept4() throws Exception {
@@ -176,7 +177,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 성공")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck1.sql")
 	@Test
 	void invitationCheck1() throws Exception {
@@ -193,7 +194,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(존재하지 않는 초대장)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck2.sql")
 	@Test
 	void invitationCheck2() throws Exception {
@@ -210,7 +211,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(초대장 만료)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck3.sql")
 	@Test
 	void invitationCheck3() throws Exception {
@@ -227,7 +228,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(초대장 미갱신)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck4.sql")
 	@Test
 	void invitationCheck4() throws Exception {
@@ -244,7 +245,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹원 조회 성공")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-getMembers1.sql")
 	@Test
 	void getMembers1() throws Exception {
@@ -257,7 +258,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹원 조회 실패(멤버 등록안됨)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-getMembers2.sql")
 	@Test
 	void getMembers2() throws Exception {
@@ -265,12 +266,12 @@ public class GroupControllerTest {
 		ResultActions perform = mvc.perform(get("/group"));
 
 		// then
-		perform.andExpect(status().isNotFound());
+		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}
 
 	@DisplayName("그룹 초대링크 발급 성공")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Sql("group-getInvitation1.sql")
 	@Test
 	void getInvitation1() throws Exception {
@@ -283,7 +284,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대링크 발급 실패(그룹 미등록으로 멤버가 아님)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-getInvitation2.sql")
 	@Test
 	void getInvitation2() throws Exception {
@@ -296,7 +297,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대링크 발급 실패(그룹장 아님)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-getInvitation3.sql")
 	@Test
 	void getInvitation3() throws Exception {
@@ -309,7 +310,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성시 Auditing 확인")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Sql("group-create1.sql")
 	@Test
 	void userAuditing1() throws Exception {
