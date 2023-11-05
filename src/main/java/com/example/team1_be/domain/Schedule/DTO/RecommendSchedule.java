@@ -25,11 +25,9 @@ public class RecommendSchedule {
 			for (Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> generatedSchedule : generatedSchedules) {
 				List<List<DailyWorkTimeList>> weeklyWorkTimeLists = new ArrayList<>();
 				for (DayOfWeek day : DayOfWeek.values()) {
-					System.out.println("여기 : " + day);
 					List<DailyWorkTimeList> dailyWorkTimeLists = new ArrayList<>();
 					SortedMap<Worktime, List<Apply>> appliesByWorktime = generatedSchedule.get(day);
 					for (Worktime worktime : appliesByWorktime.keySet()) {
-						System.out.println("apply size : " + appliesByWorktime.get(worktime).size());
 						dailyWorkTimeLists.add(new DailyWorkTimeList(worktime, appliesByWorktime.get(worktime)));
 					}
 					weeklyWorkTimeLists.add(dailyWorkTimeLists);

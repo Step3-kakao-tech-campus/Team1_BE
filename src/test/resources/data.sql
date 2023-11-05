@@ -36,6 +36,9 @@ ALTER TABLE week AUTO_INCREMENT=1;
 truncate table worktime;
 ALTER TABLE worktime AUTO_INCREMENT=1;
 
+truncate table roles;
+ALTER TABLE roles AUTO_INCREMENT=1;
+
 SET
 REFERENTIAL_INTEGRITY TRUE;
 
@@ -51,6 +54,16 @@ values (1, 1, '이재훈', '010-0000-0001', true, 1),
        (5, 5, '이현지', '010-0000-0005', false, 1),
        (6, 6, '민하린', '010-0000-0006', false, 1),
        (7, 7, '홍길동', '010-0000-0007', false, 1);
+
+insert into roles (`id`, `role`, `user_id`)
+values (1, 'ROLE_ADMIN', 1),
+       (2, 'ROLE_MEMBER', 2),
+       (3, 'ROLE_MEMBER', 3),
+       (4, 'ROLE_MEMBER', 4),
+       (5, 'ROLE_MEMBER', 5),
+       (6, 'ROLE_MEMBER', 6),
+       (7, 'ROLE_MEMBER', 7);
+
 
 insert into invite (`id`, `code`, `group_id`)
 values (1, 'testcode1', 1);

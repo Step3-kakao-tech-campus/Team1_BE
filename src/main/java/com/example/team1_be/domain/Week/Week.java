@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.example.team1_be.domain.Group.Group;
+import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.audit.BaseEntity;
 
@@ -48,13 +49,18 @@ public class Week extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "week")
 	private List<Worktime> worktimes;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "week")
+	private List<RecommendedWeeklySchedule> recommendedWeeklySchedule;
+
 	@Builder
-	public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Group group, List<Worktime> worktimes) {
+	public Week(Long id, WeekRecruitmentStatus status, LocalDate startDate, Group group, List<Worktime> worktimes,
+		List<RecommendedWeeklySchedule> recommendedWeeklySchedule) {
 		this.id = id;
 		this.status = status;
 		this.startDate = startDate;
 		this.group = group;
 		this.worktimes = worktimes;
+		this.recommendedWeeklySchedule = recommendedWeeklySchedule;
 	}
 
 	public Week updateStatus(WeekRecruitmentStatus status) {

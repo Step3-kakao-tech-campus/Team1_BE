@@ -1,54 +1,65 @@
 package com.example.team1_be.utils.security.auth.UserDetails;
 
-import com.example.team1_be.domain.User.User;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.example.team1_be.domain.User.Role.Role;
+import com.example.team1_be.domain.User.Role.Roles;
+import com.example.team1_be.domain.User.User;
 
-@RequiredArgsConstructor
+import lombok.Getter;
+
 @Getter
 public class CustomUserDetails implements UserDetails {
-    private final User user;
-    private final Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority[]{new SimpleGrantedAuthority("ROLE_USER")});
+	private final User user;
+	private final Collection<SimpleGrantedAuthority> authorities;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+	public CustomUserDetails(User user) {
+		this.user = user;
+		this.authorities = new ArrayList<SimpleGrantedAuthority>();
 
-    @Override
-    public String getPassword() {
-        return null;
-    }
+		for (Role roles : user.getRoles()) {
+			Roles role = roles.getRole();
+			this.authorities.add(new SimpleGrantedAuthority(role.toString()));
+		}
+	}
 
-    @Override
-    public String getUsername() {
-        return user.getName();
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
+	@Override
+	public String getPassword() {
+		return null;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
+	@Override
+	public String getUsername() {
+		return user.getName();
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
 }
