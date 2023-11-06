@@ -15,9 +15,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class KakaoOAuth {
-	@Value("${kakao.clientId}")
+	@Value("${kakao:clientId}")
 	private String REDIRECT_URI;
-	@Value("${kakao.redirectURI}")
+	@Value("${kakao:redirectURI}")
 	private String CLIENT_ID;
 
 	public KakaoOAuthToken getToken(String code) throws JsonProcessingException {
