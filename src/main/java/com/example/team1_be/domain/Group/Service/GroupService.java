@@ -43,7 +43,7 @@ public class GroupService {
 
 	public void invitationAccept(User user, InvitationAccept.Request request) {
 		if (user.getIsAdmin()) {
-			throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
+			throw new CustomException(ClientErrorCode.MEMBER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 알바생 계정만 그룹에 가입할 수 있습니다.
 		}
 
 		Invite invite = inviteService.findInvitation(request.getInvitationKey());

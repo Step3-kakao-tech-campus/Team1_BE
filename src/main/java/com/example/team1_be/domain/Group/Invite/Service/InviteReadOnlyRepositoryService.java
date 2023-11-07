@@ -3,6 +3,7 @@ package com.example.team1_be.domain.Group.Invite.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class InviteReadOnlyRepositoryService {
 
 	public Invite findByCode(String invitationKey) {
 		return repository.findByCode(invitationKey)
-			.orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
+			.orElseThrow(() -> new CustomException(ClientErrorCode.GROUP_NOT_FOUND, HttpStatus.BAD_REQUEST));	// 존재하지 않는 그룹입니다.
 	}
 
 	public boolean isDuplicateCode(String uuid) {
