@@ -36,6 +36,7 @@ class UserControllerTest {
 				post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-10004"));
 		perform.andDo(print());
 	}
 
@@ -48,6 +49,7 @@ class UserControllerTest {
 				post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isInternalServerError());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-10007"));
 		perform.andDo(print());
 	}
 
@@ -61,6 +63,7 @@ class UserControllerTest {
 				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-21008"));
 		perform.andDo(print());
 	}
 
@@ -68,12 +71,13 @@ class UserControllerTest {
 	@Sql("register.sql")
 	@Test
 	void register_badRequest_test() throws Exception {
-		Join.Request requestDTO = new Join.Request("cccc", "jiwon", null);
+		Join.Request requestDTO = new Join.Request("cccc", null, true);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
 				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-10004"));
 		perform.andDo(print());
 	}
 
@@ -87,6 +91,7 @@ class UserControllerTest {
 			post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-20000"));
 		perform.andDo(print());
 	}
 
