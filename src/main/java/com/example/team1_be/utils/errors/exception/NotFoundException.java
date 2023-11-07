@@ -11,9 +11,12 @@ import lombok.Getter;
 public class NotFoundException extends RuntimeException {
 	private ClientErrorCode errorCode;
 
-	public NotFoundException(ClientErrorCode errorCode) { this.errorCode = errorCode; }
+	public NotFoundException(String message) {
+		super(message);
+		this.errorCode = ClientErrorCode.UNKNOWN_ERROR;
+	}
 
-	public ApiUtils.ApiResult<?> body() { return ApiUtils.error(errorCode); }
+	public ApiUtils.ApiResult<?> body() { return ApiUtils.error(getMessage(), errorCode); }
 
 	public HttpStatus status() {
 		return HttpStatus.NOT_FOUND;

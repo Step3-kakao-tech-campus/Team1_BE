@@ -22,7 +22,7 @@ public final class GlobalExceptionHandler {
 	public ResponseEntity<?> unknownException(Exception exception) {
 		System.out.println(exception.getMessage());
 		exception.printStackTrace();
-		ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+		ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -30,25 +30,25 @@ public final class GlobalExceptionHandler {
 	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) throws
 		JsonProcessingException {
 		ApiUtils.ApiResult<?> error = ApiUtils.error(
-			exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+			exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<?> handleCustomException(CustomException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(e.getMessage(), e.status());
+		ApiUtils.ApiResult<?> error = ApiUtils.error(e.getMessage(), ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, e.getHttpStatus());
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error("요청주소의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
+		ApiUtils.ApiResult<?> error = ApiUtils.error("요청주소의 양식이 잘못되었습니다.", ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
+		ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 }

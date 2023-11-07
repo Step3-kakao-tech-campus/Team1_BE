@@ -11,8 +11,8 @@ public class ApiUtils {
 		return new ApiResult<>(true, response, null);
 	}
 
-	public static ApiResult<?> error(ClientErrorCode errorCode) {
-		return new ApiResult<>(false, null, new ApiError(errorCode.getMessage(), errorCode.getValue()));
+	public static ApiResult<?> error(String message, ClientErrorCode errorCode) {
+		return new ApiResult<>(false, null, new ApiError(message, errorCode.getValue()));
 	}
 
 	@Getter
