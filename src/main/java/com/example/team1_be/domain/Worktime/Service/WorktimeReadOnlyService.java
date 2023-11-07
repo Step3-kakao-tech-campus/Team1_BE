@@ -3,6 +3,9 @@ package com.example.team1_be.domain.Worktime.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +26,7 @@ public class WorktimeReadOnlyService {
 	public List<Worktime> findByGroupAndDate(Group group, LocalDate date) {
 		List<Worktime> worktimes = repository.findByDate(group.getId(), date);
 		if (worktimes.isEmpty()) {
-			throw new NotFoundException("해당 날짜에 등록된 스케줄이 없습니다.");
+			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);	// 해당 날짜에 등록된 스케줄이 없습니다.
 		}
 		return worktimes;
 	}
