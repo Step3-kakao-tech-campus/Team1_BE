@@ -1,5 +1,6 @@
 package com.example.team1_be.utils;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
@@ -10,8 +11,8 @@ public class ApiUtils {
 		return new ApiResult<>(true, response, null);
 	}
 
-	public static ApiResult<?> error(String message, HttpStatus status) {
-		return new ApiResult<>(false, null, new ApiError(message, status.value()));
+	public static ApiResult<?> error(ClientErrorCode errorCode) {
+		return new ApiResult<>(false, null, new ApiError(errorCode.getMessage(), errorCode.getValue()));
 	}
 
 	@Getter
@@ -26,6 +27,6 @@ public class ApiUtils {
 	@AllArgsConstructor
 	public static class ApiError {
 		private final String message;
-		private final int status;
+		private final int errorCode;
 	}
 }
