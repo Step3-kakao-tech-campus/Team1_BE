@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import com.example.team1_be.utils.errors.ClientErrorCode;
 import com.example.team1_be.utils.errors.exception.CustomException;
-import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
-import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;

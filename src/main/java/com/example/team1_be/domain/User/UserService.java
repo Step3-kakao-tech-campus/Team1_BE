@@ -10,7 +10,6 @@ import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUserRepository;
-import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;

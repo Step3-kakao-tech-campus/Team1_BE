@@ -9,12 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.example.team1_be.utils.ApiUtils;
-import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
-import com.example.team1_be.utils.errors.exception.ForbiddenException;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
-import com.example.team1_be.utils.errors.exception.ServerErrorException;
-import com.example.team1_be.utils.errors.exception.UnauthorizedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
@@ -22,31 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
-
-	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<?> badRequest(BadRequestException e) {
-		return new ResponseEntity<>(e.body(), e.status());
-	}
-
-	@ExceptionHandler(UnauthorizedException.class)
-	public ResponseEntity<?> unauthorized(UnauthorizedException e) {
-		return new ResponseEntity<>(e.body(), e.status());
-	}
-
-	@ExceptionHandler(ForbiddenException.class)
-	public ResponseEntity<?> forbidden(ForbiddenException e) {
-		return new ResponseEntity<>(e.body(), e.status());
-	}
-
-	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<?> notFound(NotFoundException e) {
-		return new ResponseEntity<>(e.body(), e.status());
-	}
-
-	@ExceptionHandler(ServerErrorException.class)
-	public ResponseEntity<?> serverError(ServerErrorException e) {
-		return new ResponseEntity<>(e.body(), e.status());
-	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> unknownException(Exception exception) {
