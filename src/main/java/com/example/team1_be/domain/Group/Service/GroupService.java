@@ -33,6 +33,10 @@ public class GroupService {
 			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
 		}
 
+		if (user.getGroup() != null) {
+			throw new CustomException(ClientErrorCode.DUPLICATE_GRUOP, HttpStatus.BAD_REQUEST);
+		}
+
 		Group group = request.toGroup();
 		writeOnlyRepositoryService.creatGroup(group);
 
