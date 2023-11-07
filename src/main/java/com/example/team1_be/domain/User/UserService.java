@@ -37,7 +37,7 @@ public class UserService {
 				.build();
 			unfinishedUserRepository.save(unfinishedUser);
 
-			throw new NotFoundException(ClientErrorCode.NOT_USER);
+			throw new CustomException(HttpStatus.NOT_FOUND, ClientErrorCode.NOT_USER);
 		}
 		return new Login.Response(user.getIsAdmin());
 	}
@@ -45,7 +45,7 @@ public class UserService {
 	// login 시도했던 code를 통해, join 시 kakaoId와 매칭
 	public Long matchKakaoId(String code) {
 		UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
-			() -> new BadRequestException(ClientErrorCode.UNFINISHED_USER_NOT_FOUND)
+			() -> new CustomException(HttpStatus.BAD_REQUEST, ClientErrorCode.UNFINISHED_USER_NOT_FOUND)
 		);
 		return unfinishedUser.getKakaoId();
 	}
@@ -53,7 +53,7 @@ public class UserService {
 	@Transactional
 	public Join.Response join(Join.Request request, Long kakaoId) {
 		repository.findByKakaoId(kakaoId).ifPresent(existingUser -> {
-			throw new BadRequestException(ClientErrorCode.DUPLICATE_KAKAO_ID);
+			throw new CustomException(HttpStatus.BAD_REQUEST, ClientErrorCode.DUPLICATE_KAKAO_ID);
 		});
 
 		User user = User.builder()

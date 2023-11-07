@@ -3,7 +3,9 @@ package com.example.team1_be.domain.User;
 import javax.validation.Valid;
 
 import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.ServerErrorException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +43,7 @@ public class UserController {
 			KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
 			kakaoId = kakaoOAuthProfile.getId();
 		} catch (Exception e) {
-			throw new ServerErrorException(ClientErrorCode.KAKAO_CONNECT_FAIL);
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, ClientErrorCode.KAKAO_CONNECT_FAIL);
 		}
 
 		Login.Response responseDTO = userService.login(code, kakaoId);
