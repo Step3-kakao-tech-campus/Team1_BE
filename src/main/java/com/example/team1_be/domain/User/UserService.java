@@ -84,7 +84,7 @@ public class UserService {
 
 	public User findById(Long userId) {
 		return repository.findById(userId)
-			.orElseThrow(() -> new CustomException("존재하지 않는 유저입니다.", HttpStatus.NOT_FOUND));
+			.orElseThrow(() -> new CustomException(ClientErrorCode.USER_ID_NOT_FOUND, HttpStatus.BAD_REQUEST));	// 존재하지 않는 유저입니다.
 	}
 
 	public boolean isAdmin(User user) {
