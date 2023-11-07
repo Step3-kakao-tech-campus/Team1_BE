@@ -43,7 +43,7 @@ public class UserController {
 			KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
 			kakaoId = kakaoOAuthProfile.getId();
 		} catch (Exception e) {
-			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, ClientErrorCode.KAKAO_CONNECT_FAIL);
+			throw new CustomException(ClientErrorCode.KAKAO_CONNECT_FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		Login.Response responseDTO = userService.login(code, kakaoId);

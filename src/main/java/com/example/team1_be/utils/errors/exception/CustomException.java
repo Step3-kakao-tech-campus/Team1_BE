@@ -9,12 +9,12 @@ import lombok.Getter;
 
 @Getter
 public class CustomException extends RuntimeException {
-	private HttpStatus httpStatus;
 	private ClientErrorCode errorCode;
+	private HttpStatus httpStatus;
 
-	public CustomException(HttpStatus httpStatus, ClientErrorCode errorCode) {
-		this.httpStatus = httpStatus;
+	public CustomException(ClientErrorCode errorCode, HttpStatus httpStatus) {
 		this.errorCode = errorCode;
+		this.httpStatus = httpStatus;
 	}
 
 	public ApiUtils.ApiResult<?> body() { return ApiUtils.error(errorCode); }
