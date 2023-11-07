@@ -48,7 +48,7 @@ public class DetailWorktimeReadOnlyService {
 	public List<DetailWorktime> findByGroupAndDate(Group group, LocalDate selectedDate) {
 		List<DetailWorktime> detailWorktimes = repository.findByGroupAndDate(group.getId(), selectedDate);
 		if (detailWorktimes.isEmpty()) {
-			throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
+			throw new CustomException(ClientErrorCode.NO_CONFIRMED_SCHEDULE, HttpStatus.BAD_REQUEST);	// 등록된 근무일정이 없습니다.
 		}
 		return detailWorktimes;
 	}

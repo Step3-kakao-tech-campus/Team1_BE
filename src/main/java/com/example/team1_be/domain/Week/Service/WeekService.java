@@ -3,6 +3,9 @@ package com.example.team1_be.domain.Week.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +36,7 @@ public class WeekService {
 	public Week findByGroupAndStartDate(Group group, LocalDate startDate) {
 		Week week = readOnlyService.findByGroupAndStartDate(group, startDate);
 		if (null == week) {
-			throw new NotFoundException("해당 주차를 찾을 수 없습니다.");
+			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);	// 해당 주차를 찾을 수 없습니다.
 		}
 		return week;
 	}
@@ -61,7 +64,7 @@ public class WeekService {
 
 	public void checkAppliable(User user, Week week) {
 		if (user.getIsAdmin() && week.getStatus().equals(WeekRecruitmentStatus.ENDED)) {
-			throw new NotFoundException("이미 마감된 스케줄입니다.");
+			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);	// 이미 마감된 스케줄입니다.
 		}
 		if (!user.getIsAdmin() && week.getStatus().equals(WeekRecruitmentStatus.STARTED)) {
 			throw new NotFoundException("확정된 스케줄이 아닙니다.");
