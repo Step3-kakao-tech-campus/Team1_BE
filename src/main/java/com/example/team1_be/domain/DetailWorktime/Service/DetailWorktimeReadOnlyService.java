@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,7 @@ public class DetailWorktimeReadOnlyService {
 	public List<DetailWorktime> findByStartDateAndGroup(LocalDate date, Group group) {
 		List<DetailWorktime> detailWorktimes = repository.findByStartDateAndGroup(date, group.getId());
 		if (detailWorktimes.isEmpty()) {
-			throw new CustomException("등록된 근무일정이 없습니다.", HttpStatus.NOT_FOUND);
+			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);	// 등록된 근무일정이 없습니다.
 		}
 		return detailWorktimes;
 	}
