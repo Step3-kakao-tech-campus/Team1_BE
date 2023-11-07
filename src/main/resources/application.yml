@@ -25,6 +25,10 @@ spring:
 jwt:
   secretKey:"aalbbaim.letsgo.1.jo"
 
+kakao:
+  clientId:"d573e4a7b2fcae0f0289d5807605d726"
+  redirectURI:"http://localhost:3000/login/kakao"
+
 logging:
   level:
     org:
