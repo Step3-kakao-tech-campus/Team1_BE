@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.team1_be.domain.Group.DTO.Create;
 import com.example.team1_be.domain.Group.DTO.InvitationAccept;
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -33,23 +33,23 @@ public class GroupControllerTest {
 	// POST /group
 
 	@DisplayName("그룹 생성하기 성공")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Sql("group-create1.sql")
 	@Test
 	void create_success() throws Exception {
 		// given
 		Create.Request requestDTO = Create.Request.builder()
-			.marketName("kakao")
-			.marketNumber("10-31223442")
-			.mainAddress("금강로 279번길 19")
-			.detailAddress("ㅁㅁ건물 2층 ㅇㅇ상가")
-			.build();
+				.marketName("kakao")
+				.marketNumber("10-31223442")
+				.mainAddress("금강로 279번길 19")
+				.detailAddress("ㅁㅁ건물 2층 ㅇㅇ상가")
+				.build();
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
 		ResultActions perform = mvc.perform(post("/group")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -81,19 +81,19 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성하기 DTO 검증 실패(멤버변수 누락)")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-create1.sql")
 	@Test
 	void create_fail_10004() throws Exception {
 		// given
 		Create.Request requestDTO = Create.Request.builder()
-			.build();
+				.build();
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
 		ResultActions perform = mvc.perform(post("/group")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -102,7 +102,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성하기 DTO 검증 실패(폼 입력값 형식 오류)")
-	@WithMockCustomUser(username = "eunjin", isAdmin = "true")
+	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Test
 	void create_fail_10005() throws Exception {
 		// given
@@ -126,7 +126,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성은 매니저만 가능")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-create1.sql")
 	@Test
 	void create_fail_21004() throws Exception {
@@ -151,7 +151,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 생성하기 실패(이미 가입된 그룹 존재)")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Sql("group-create3.sql")
 	@Test
 	void create_fail_20001() throws Exception {
@@ -182,7 +182,7 @@ public class GroupControllerTest {
 	// GET /group
 
 	@DisplayName("그룹원 조회 성공")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-getMembers1.sql")
 	@Test
 	void getMembers_success_inGroup() throws Exception {
@@ -195,7 +195,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹원 조회 성공 - 가입된 그룹이 없는 경우에도")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-getMembers2.sql")
 	@Test
 	void getMembers_success_notInGroup() throws Exception {
@@ -208,7 +208,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹원 조회 - 토큰 인증 실패")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Sql("group-getMembers2.sql")
 	@Test
 	void getMembers_fail_21000() throws Exception {
@@ -225,7 +225,7 @@ public class GroupControllerTest {
 	// GET /group/invitation
 
 	@DisplayName("그룹 초대링크 발급 성공")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Sql("group-getInvitation1.sql")
 	@Test
 	void getInvitation_success() throws Exception {
@@ -238,7 +238,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대링크 발급 실패(그룹장 아님)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-getInvitation3.sql")
 	@Test
 	void getInvitation_fail_21004() throws Exception {
@@ -252,7 +252,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대링크 발급 실패(그룹 미등록으로 멤버가 아님)")
-	@WithMockCustomUser(isAdmin = "true")
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Sql("group-getInvitation2.sql")
 	@Test
 	void getInvitation_fail_21001() throws Exception {
@@ -268,7 +268,7 @@ public class GroupControllerTest {
 	// POST /group/invitation
 
 	@DisplayName("그룹 초대장 제출 성공")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept1.sql")
 	@Test
 	void invitationAccept_success() throws Exception {
@@ -278,8 +278,8 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(post("/group/invitation")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -287,7 +287,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 DTO 실패(초대키가 없음)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept1.sql")
 	@Test
 	void invitationAccept_fail_10004() throws Exception {
@@ -307,7 +307,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 수락 실패(알바생 아님)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2", isAdmin = "true")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2", isAdmin = "true")
 	@Sql("group-invitationAccept1.sql")
 	@Test
 	void invitationAccept_fail_21005() throws Exception {
@@ -327,7 +327,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 수락 실패(이미 그룹에 가입됨)")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Sql("group-invitationAccept4.sql")
 	@Test
 	void invitationAccept_fail_20001() throws Exception {
@@ -347,7 +347,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 제출 실패(초대장 갱신시점이 없음)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept2.sql")
 	@Test
 	void invitationAccept_fail_another1() throws Exception {
@@ -357,8 +357,8 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(post("/group/invitation")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
 
 		// then
 		perform.andExpect(status().isForbidden());
@@ -366,7 +366,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 제출 실패(초대장 갱신시점 만료)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept3.sql")
 	@Test
 	void invitationAccept_fail_another2() throws Exception {
@@ -376,8 +376,8 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(post("/group/invitation")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(request));
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -387,7 +387,7 @@ public class GroupControllerTest {
 	// GET /group/invitation/information/<invitationKey>
 
 	@DisplayName("그룹 초대장 확인 성공")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck1.sql")
 	@Test
 	void invitationCheck_success() throws Exception {
@@ -396,7 +396,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-			get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -404,7 +404,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(존재하지 않는 초대장)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck2.sql")
 	@Test
 	void invitationCheck_fail_20004() throws Exception {
@@ -413,7 +413,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-			get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -422,7 +422,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(초대장 만료)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck3.sql")
 	@Test
 	void invitationCheck_fail_another1() throws Exception {
@@ -431,7 +431,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-			get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -439,7 +439,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(초대장 미갱신)")
-	@WithMockCustomUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck4.sql")
 	@Test
 	void invitationCheck_fail_another2() throws Exception {
@@ -448,12 +448,11 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-			get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isForbidden());
 		perform.andDo(print());
 	}
-
 
 }

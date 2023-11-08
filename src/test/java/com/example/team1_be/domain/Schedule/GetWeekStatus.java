@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -28,7 +28,7 @@ public class GetWeekStatus {
 	private ObjectMapper om;
 
 	@DisplayName("주별 상태 조회 closed")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void getWeekStatus1() throws Exception {
 		// given
@@ -44,7 +44,7 @@ public class GetWeekStatus {
 	}
 
 	@DisplayName("주별 상태 조회 inProgress")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void getWeekStatus2() throws Exception {
 		// given
@@ -60,7 +60,7 @@ public class GetWeekStatus {
 	}
 
 	@DisplayName("주별 상태 조회 allocatable")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	void getWeekStatus3() throws Exception {
 		// given

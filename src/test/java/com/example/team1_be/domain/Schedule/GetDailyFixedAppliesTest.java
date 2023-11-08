@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.team1_be.domain.Schedule.DTO.FixSchedule;
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -30,7 +30,7 @@ public class GetDailyFixedAppliesTest {
 	private ObjectMapper om;
 
 	@DisplayName("요청 성공")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	public void test1() throws Exception {
 		// given
@@ -57,7 +57,7 @@ public class GetDailyFixedAppliesTest {
 	}
 
 	@DisplayName("요청 실패(잘못된 양식의 주소 요청")
-	@WithMockCustomUser
+	@WithMockCustomAdminUser
 	@Test
 	public void test2() throws Exception {
 		String wrongDateFormat = "2023-22";

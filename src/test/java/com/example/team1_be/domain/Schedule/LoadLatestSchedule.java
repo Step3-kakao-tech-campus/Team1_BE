@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.example.team1_be.util.WithMockCustomUser;
+import com.example.team1_be.util.WithMockCustomAdminUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -28,7 +28,7 @@ public class LoadLatestSchedule {
 	private ObjectMapper om;
 
 	@DisplayName("개인 확정 스케줄 조회 성공")
-	@WithMockCustomUser(userId = "2")
+	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void test1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
