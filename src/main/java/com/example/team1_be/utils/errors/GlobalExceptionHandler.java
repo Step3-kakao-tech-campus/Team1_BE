@@ -14,31 +14,45 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.concurrent.TimeoutException;
+
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
 
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<?> handleCustomException(CustomException exception) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getMessage(), exception.getErrorCode());
+		return new ResponseEntity<>(error, exception.getHttpStatus());
+	}
+
+	// -10000
+	@ExceptionHandler(TimeoutException.class)
+	public ResponseEntity<?> timeoutException(TimeoutException exception) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.TIMEOUT.getMessage(), ClientErrorCode.TIMEOUT);
+		return new ResponseEntity<>(error, HttpStatus.REQUEST_TIMEOUT);
+	}
+
+	// -10002
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> unknownException(Exception exception) {
-		System.out.println(exception.getMessage());
-		exception.printStackTrace();
-		ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", ClientErrorCode.UNKNOWN_ERROR);
+		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.UNKNOWN_ERROR.getMessage(), ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	// -10004
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) throws
-		JsonProcessingException {
+	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) {
 		ApiUtils.ApiResult<?> error = ApiUtils.error(
-			exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), ClientErrorCode.UNKNOWN_ERROR);
+			exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(CustomException.class)
-	public ResponseEntity<?> handleCustomException(CustomException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(e.getMessage(), ClientErrorCode.UNKNOWN_ERROR);
-		return new ResponseEntity<>(error, e.getHttpStatus());
-	}
+	// -10005
+
+
+
+
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
@@ -51,4 +65,7 @@ public final class GlobalExceptionHandler {
 		ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
+
+
+	// -20001
 }
