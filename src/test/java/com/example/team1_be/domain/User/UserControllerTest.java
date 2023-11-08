@@ -47,11 +47,6 @@ class UserControllerTest {
 		perform.andDo(print());
 	}
 
-	@DisplayName("로그인 시, 해당 kakaoId가 회원이 아닐 때")
-	@Test
-	void login_fail_10006() throws Exception {
-	}
-
 	@DisplayName("로그인하는 code가 만료되었거나 유효하지 않은 경우 테스트")
 	@Test
 	void login_fail_10007() throws Exception {
@@ -63,6 +58,11 @@ class UserControllerTest {
 		perform.andExpect(status().isInternalServerError());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-10007"));
 		perform.andDo(print());
+	}
+
+	@DisplayName("로그인 시, 해당 kakaoId가 회원이 아닐 때")
+	@Test
+	void login_fail_10006() throws Exception {
 	}
 
 	// POST /auth/join
@@ -84,7 +84,7 @@ class UserControllerTest {
 	@Sql("register.sql")
 	@Test
 	void register_fail_10004() throws Exception {
-		Join.Request requestDTO = new Join.Request("cccc", null, true);
+		Join.Request requestDTO = new Join.Request("bbbb", null, true);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
 				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
@@ -98,6 +98,14 @@ class UserControllerTest {
 	@Sql("register.sql")
 	@Test
 	void register_fail_10005() throws Exception {
+		Join.Request requestDTO = new Join.Request("bbbb", "01234567890123456789", true);	// userName @Size(min = 2, max = 10)
+		String request = om.writeValueAsString(requestDTO);
+		ResultActions perform = mvc.perform(
+				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
+
+		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-10005"));
+		perform.andDo(print());
 	}
 
 	@DisplayName("회원가입 시, login을 거치지 않았으면 실패 테스트")

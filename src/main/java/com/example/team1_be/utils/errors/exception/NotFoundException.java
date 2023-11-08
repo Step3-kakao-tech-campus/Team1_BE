@@ -16,6 +16,11 @@ public class NotFoundException extends RuntimeException {
 		this.errorCode = ClientErrorCode.UNKNOWN_ERROR;
 	}
 
+	public NotFoundException(ClientErrorCode errorCode) {
+		super(errorCode.getMessage());
+		this.errorCode = errorCode;
+	}
+
 	public ApiUtils.ApiResult<?> body() { return ApiUtils.error(getMessage(), errorCode); }
 
 	public HttpStatus status() {

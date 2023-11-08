@@ -39,7 +39,7 @@ public class UserService {
 				.build();
 			unfinishedUserRepository.save(unfinishedUser);
 
-			throw new CustomException(ClientErrorCode.NOT_USER, HttpStatus.NOT_FOUND);
+			throw new NotFoundException(ClientErrorCode.NOT_USER);
 		}
 		return new Login.Response(user.getIsAdmin());
 	}

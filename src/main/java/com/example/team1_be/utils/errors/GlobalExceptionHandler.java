@@ -1,8 +1,10 @@
 package com.example.team1_be.utils.errors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,7 +12,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.errors.exception.CustomException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,26 +34,32 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.REQUEST_TIMEOUT);
 	}
 
-	// -10002
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<?> unknownException(Exception exception) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.UNKNOWN_ERROR.getMessage(), ClientErrorCode.UNKNOWN_ERROR);
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+//	@ExceptionHandler(AccessDeniedException.class)
+//	public ResponseEntity<?> accessDeniedException(AccessDeniedException exception) {
+//		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.MANAGER_API_REQUEST_ERROR.getMessage(), ClientErrorCode.MANAGER_API_REQUEST_ERROR);
+//		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+//	}
+
+	// -10005
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<?> handleRequestDTOIntegrityException(DataIntegrityViolationException exception) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_FORM_INPUT.getMessage(), ClientErrorCode.INVALID_FORM_INPUT);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	// -10004
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(
-			exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
+//		ObjectError objectError = exception.getBindingResult().getFieldError();
+//
+//		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_FORM_INPUT.getMessage(), ClientErrorCode.INVALID_FORM_INPUT);
+//		if (objectError.getCode().equals("NotBlank")) {
+//			error = ApiUtils.error(exception.getMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
+//		}
+
+		ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
-
-	// -10005
-
-
-
-
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
@@ -66,6 +73,10 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
-
-	// -20001
+	// -10002
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> unknownException(Exception exception) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.UNKNOWN_ERROR.getMessage(), ClientErrorCode.UNKNOWN_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
