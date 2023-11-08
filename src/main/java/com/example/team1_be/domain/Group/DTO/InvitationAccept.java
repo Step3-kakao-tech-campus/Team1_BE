@@ -11,7 +11,7 @@ public class InvitationAccept {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class Request {
-		@NotBlank
+		@NotBlank(message = "초대키가 누락되었습니다.")
 		private String invitationKey;
 	}
 }
