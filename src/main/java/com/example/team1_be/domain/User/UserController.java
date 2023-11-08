@@ -2,6 +2,7 @@ package com.example.team1_be.domain.User;
 
 import javax.validation.Valid;
 
+import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +40,7 @@ public class UserController {
 			KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
 			kakaoId = kakaoOAuthProfile.getId();
 		} catch (Exception e) {
-			throw new BadRequestException("code가 만료되었습니다.");
+			throw new ServerErrorException("code가 만료되었거나 유효하지 않습니다.");
 		}
 
 		Login.Response responseDTO = userService.login(code, kakaoId);

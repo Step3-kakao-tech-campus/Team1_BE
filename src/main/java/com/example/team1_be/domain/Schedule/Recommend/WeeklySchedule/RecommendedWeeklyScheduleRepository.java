@@ -10,6 +10,6 @@ public interface RecommendedWeeklyScheduleRepository extends JpaRepository<Recom
 	@Query("select r " +
 		"from RecommendedWeeklySchedule r " +
 		"join fetch r.recommendedWorktimeApplies " +
-		"where r.user.id = :userId")
-	List<RecommendedWeeklySchedule> findByUser(@Param("userId") Long userId);
+		"where r.week.id = :weekId")
+	List<RecommendedWeeklySchedule> findByWeek(@Param("weekId") Long weekId);
 }

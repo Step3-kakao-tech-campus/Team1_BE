@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 
@@ -23,9 +22,9 @@ public class RecommendedWeeklyScheduleService {
 		return recommendedWeeklyScheduleRepository.save(recommendedWeeklySchedule);
 	}
 
-	public List<RecommendedWeeklySchedule> findByUser(User user) {
-		List<RecommendedWeeklySchedule> recommendedWeeklySchedules = recommendedWeeklyScheduleRepository.findByUser(
-			user.getId());
+	public List<RecommendedWeeklySchedule> findByWeek(Week week) {
+		List<RecommendedWeeklySchedule> recommendedWeeklySchedules = recommendedWeeklyScheduleRepository.findByWeek(
+			week.getId());
 		if (recommendedWeeklySchedules.isEmpty()) {
 			throw new NotFoundException("등록된 추천 스케줄이 존재하지 않습니다.");
 		}
@@ -38,9 +37,9 @@ public class RecommendedWeeklyScheduleService {
 	}
 
 	@Transactional
-	public RecommendedWeeklySchedule creatRecommendedWeeklySchedule(User user) {
+	public RecommendedWeeklySchedule creatRecommendedWeeklySchedule(Week week) {
 		RecommendedWeeklySchedule weeklySchedule = RecommendedWeeklySchedule.builder()
-			.user(user)
+			.week(week)
 			.build();
 		return creatRecommendedWeeklySchedule(weeklySchedule);
 	}
