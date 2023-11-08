@@ -28,7 +28,7 @@ public enum ClientErrorCode {
 
     // 21xxx
     INVALID_TOKEN(-21000, Series.INACCESSIBLE, "토큰이 유효하지 않습니다."),
-    NO_GROUP(-21001, Series.INACCESSIBLE, "소속 그룹이 없습니다."),
+    NO_GROUP(-21001, Series.INACCESSIBLE, "생성한 그룹이 없습니다."),
     ONLY_MEMBER(-21002, Series.INACCESSIBLE, "그룹에 멤버가 본인 뿐입니다."),
     USER_ID_NOT_FOUND(-21003, Series.INACCESSIBLE, "해당 userId를 찾을 수 없습니다."),
     MANAGER_API_REQUEST_ERROR(-21004, Series.INACCESSIBLE, "매니저의 API를 알바생이 요청할 수 없습니다."),
