@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -21,7 +22,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 		AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		ApiUtils.ApiError apiError = new ApiUtils.ApiError("유효하지 않은 인증입니다.", -21000);
+		ApiUtils.ApiError apiError = new ApiUtils.ApiError(ClientErrorCode.INVALID_TOKEN.getMessage(), ClientErrorCode.INVALID_TOKEN.getValue());
 		ApiUtils.ApiResult apiResult = new ApiUtils.ApiResult(false, null, apiError);
 
 		response.setCharacterEncoding("UTF-8");
