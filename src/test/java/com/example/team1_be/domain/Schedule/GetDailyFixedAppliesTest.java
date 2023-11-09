@@ -36,14 +36,14 @@ public class GetDailyFixedAppliesTest {
 		// given
 		LocalDate date = LocalDate.parse("2023-10-16");
 		mvc.perform(
-				get(String.format("/schedule/recommend/%s", date)))
+				get(String.format("/api/schedule/recommend/%s", date)))
 			.andExpect(status().isOk())
 			.andDo(print());
 
 		FixSchedule.Request requestDTO = new FixSchedule.Request(date, 1);
 		String request = om.writeValueAsString(requestDTO);
 		mvc.perform(
-				post("/schedule/fix")
+				post("/api/schedule/fix")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(request))
 			.andExpect(status().isOk())
@@ -51,7 +51,7 @@ public class GetDailyFixedAppliesTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/fix/day/%s", date)));
+			get(String.format("/api/schedule/fix/day/%s", date)));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}
@@ -62,7 +62,7 @@ public class GetDailyFixedAppliesTest {
 	public void test2() throws Exception {
 		String wrongDateFormat = "2023-22";
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/fix/day/%s", wrongDateFormat)));
+			get(String.format("/api/schedule/fix/day/%s", wrongDateFormat)));
 		perform.andExpect(status().isBadRequest());
 	}
 }

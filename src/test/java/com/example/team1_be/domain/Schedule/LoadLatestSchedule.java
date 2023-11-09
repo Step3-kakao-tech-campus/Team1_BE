@@ -33,7 +33,7 @@ public class LoadLatestSchedule {
 	void test1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/worktime/%s", startWeekDate)));
+			get(String.format("/api/schedule/worktime/%s", startWeekDate)));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}

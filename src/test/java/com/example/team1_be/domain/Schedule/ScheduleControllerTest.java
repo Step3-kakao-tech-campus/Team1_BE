@@ -42,7 +42,7 @@ class ScheduleControllerTest {
 	@Test
 	void weeklyScheduleCheck1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
-		ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
 		perform.andExpect(status().isNotFound());
 		perform.andDo(print());
@@ -53,7 +53,7 @@ class ScheduleControllerTest {
 	@Test
 	void weeklyScheduleCheck2() throws Exception {
 		String wrongDate = "10-10";
-		ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", wrongDate)));
+		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", wrongDate)));
 
 		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
@@ -64,7 +64,7 @@ class ScheduleControllerTest {
 	@Test
 	void weeklyScheduleCheck3() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
-		ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
 		perform.andExpect(status().isNotFound());
 	}
@@ -74,7 +74,7 @@ class ScheduleControllerTest {
 	@Test
 	void weeklyScheduleCheck4() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
-		ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
 		perform.andExpect(status().isNotFound());
 	}
@@ -84,7 +84,7 @@ class ScheduleControllerTest {
 	@Test
 	void weeklyScheduleCheck5() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
-		ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
@@ -95,7 +95,7 @@ class ScheduleControllerTest {
 	@Test
 	void weeklyScheduleCheck7() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
-		ResultActions perform = mvc.perform(get(String.format("/schedule/remain/week/%s", startWeekDate)));
+		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
@@ -108,7 +108,7 @@ class ScheduleControllerTest {
 		YearMonth month = YearMonth.parse("2023-10");
 		Long memberId = 2L;
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/fix/month/%s/%s", month, memberId)));
+			get(String.format("/api/schedule/fix/month/%s/%s", month, memberId)));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}
@@ -119,7 +119,7 @@ class ScheduleControllerTest {
 	void getFixedWeeklySchedule2() throws Exception {
 		Long memberId = 2L;
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/fix/month/%s/%s", "2023", memberId)));
+			get(String.format("/api/schedule/fix/month/%s/%s", "2023", memberId)));
 		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
@@ -130,7 +130,7 @@ class ScheduleControllerTest {
 	void recommendSchedule1() throws Exception {
 		LocalDate date = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/recommend/%s", date)));
+			get(String.format("/api/schedule/recommend/%s", date)));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}
@@ -142,13 +142,13 @@ class ScheduleControllerTest {
 		// given
 		LocalDate date = LocalDate.parse("2023-10-16");
 		mvc.perform(
-			get(String.format("/schedule/recommend/%s", date)));
+			get(String.format("/api/schedule/recommend/%s", date)));
 
 		// when
 		FixSchedule.Request requestDTO = new FixSchedule.Request(date, 1);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-			post("/schedule/fix")
+			post("/api/schedule/fix")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request)
 		);
