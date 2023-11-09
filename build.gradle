@@ -37,6 +37,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.commons:commons-text:1.10.0'

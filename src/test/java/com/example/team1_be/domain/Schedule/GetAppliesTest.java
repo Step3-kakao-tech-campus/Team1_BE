@@ -41,7 +41,7 @@ public class GetAppliesTest {
 	@Test
 	void test1() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
-		String URL = String.format("/schedule/application/%s", startWeekDate);
+		String URL = String.format("/api/schedule/application/%s", startWeekDate);
 		ResultActions perform = mvc.perform(get(URL));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
@@ -99,7 +99,7 @@ public class GetAppliesTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-			put("/schedule/application").contentType(MediaType.APPLICATION_JSON).content(DTO));
+			put("/api/schedule/application").contentType(MediaType.APPLICATION_JSON).content(DTO));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}

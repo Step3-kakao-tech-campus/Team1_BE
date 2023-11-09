@@ -33,7 +33,7 @@ public class GetUsersFixedWeeklyScheduleTest {
 	void GetUsersFixedWeeklySchedule1() throws Exception {
 		YearMonth month = YearMonth.parse("2023-10");
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/fix/month/%s", month)));
+			get(String.format("/api/schedule/fix/month/%s", month)));
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
 	}
@@ -43,7 +43,7 @@ public class GetUsersFixedWeeklyScheduleTest {
 	@Test
 	void GetUsersFixedWeeklySchedule2() throws Exception {
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/fix/month/%s", "2023")));
+			get(String.format("/api/schedule/fix/month/%s", "2023")));
 		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}

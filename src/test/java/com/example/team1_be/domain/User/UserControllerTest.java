@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.example.team1_be.domain.User.DTO.Login;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.team1_be.domain.User.DTO.Join;
+import com.example.team1_be.domain.User.DTO.Login;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
@@ -40,7 +40,7 @@ class UserControllerTest {
 		Login.Request requestDTO = new Login.Request(null);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-				post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-10004"));
@@ -53,7 +53,7 @@ class UserControllerTest {
 		Login.Request requestDTO = new Login.Request("nnnn");
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-				post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isInternalServerError());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-10007"));
@@ -74,7 +74,7 @@ class UserControllerTest {
 		Join.Request requestDTO = new Join.Request("bbbb", "dlwogns", true);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isOk());
 		perform.andDo(print());
@@ -87,7 +87,7 @@ class UserControllerTest {
 		Join.Request requestDTO = new Join.Request("bbbb", null, true);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-10004"));
@@ -101,7 +101,7 @@ class UserControllerTest {
 		Join.Request requestDTO = new Join.Request("bbbb", "01234567890123456789", true);	// userName @Size(min = 2, max = 10)
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-10005"));
@@ -115,7 +115,7 @@ class UserControllerTest {
 		Join.Request requestDTO = new Join.Request("cccc", "jiwon", true);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-				post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-21008"));

@@ -33,7 +33,9 @@ public class UserController {
 	}
 
 	@PostMapping("/auth/login")
-	public ResponseEntity<?> login(@RequestBody @Valid Login.Request request) {
+	public ResponseEntity<ApiUtils.ApiResult<Login.Response>> login(
+		@RequestBody @Valid Login.Request request) {
+		
 		String code = request.getCode();
 		Long kakaoId = null;
 		try {
@@ -51,7 +53,9 @@ public class UserController {
 	}
 
 	@PostMapping("/auth/join")
-	public ResponseEntity<?> join(@RequestBody @Valid Join.Request request) {
+	public ResponseEntity<ApiUtils.ApiResult<Join.Response>> join(
+		@RequestBody @Valid Join.Request request) {
+
 		Long kakaoId = userService.matchKakaoId(request.getCode());
 
 		Join.Response responseDTO = userService.join(request, kakaoId);

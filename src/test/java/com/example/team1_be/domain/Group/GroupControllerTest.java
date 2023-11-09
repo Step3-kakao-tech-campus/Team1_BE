@@ -48,7 +48,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group")
+		ResultActions perform = mvc.perform(post("/api/group")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -92,7 +92,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group")
+		ResultActions perform = mvc.perform(post("/api/group")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -141,7 +141,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group")
+		ResultActions perform = mvc.perform(post("/api/group")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -170,7 +170,7 @@ public class GroupControllerTest {
 				.content(request));
 
 		// when
-		ResultActions perform = mvc.perform(post("/group")
+		ResultActions perform = mvc.perform(post("/api/group")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -188,7 +188,7 @@ public class GroupControllerTest {
 	@Test
 	void getMembers_success_inGroup() throws Exception {
 		// when
-		ResultActions perform = mvc.perform(get("/group"));
+		ResultActions perform = mvc.perform(get("/api/group"));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -201,7 +201,7 @@ public class GroupControllerTest {
 	@Test
 	void getMembers_success_notInGroup() throws Exception {
 		// when
-		ResultActions perform = mvc.perform(get("/group"));
+		ResultActions perform = mvc.perform(get("/api/group"));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -231,7 +231,7 @@ public class GroupControllerTest {
 	@Test
 	void getInvitation_success() throws Exception {
 		// when
-		ResultActions perform = mvc.perform(get("/group/invitation"));
+		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -244,7 +244,7 @@ public class GroupControllerTest {
 	@Test
 	void getInvitation_fail_21004() throws Exception {
 		// when
-		ResultActions perform = mvc.perform(get("/group/invitation"));
+		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
 		// then
 		perform.andExpect(status().isForbidden());
@@ -258,7 +258,7 @@ public class GroupControllerTest {
 	@Test
 	void getInvitation_fail_21001() throws Exception {
 		// when
-		ResultActions perform = mvc.perform(get("/group/invitation"));
+		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -278,7 +278,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -297,7 +297,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -317,7 +317,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -337,7 +337,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -357,7 +357,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -376,7 +376,7 @@ public class GroupControllerTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(request));
 
@@ -397,7 +397,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-				get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/api/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isOk());
@@ -414,7 +414,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-				get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/api/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -432,7 +432,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-				get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/api/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isBadRequest());
@@ -449,7 +449,7 @@ public class GroupControllerTest {
 
 		// when
 		ResultActions perform = mvc.perform(
-				get(String.format("/group/invitation/information/%s", invitationKey)));
+				get(String.format("/api/group/invitation/information/%s", invitationKey)));
 
 		// then
 		perform.andExpect(status().isForbidden());

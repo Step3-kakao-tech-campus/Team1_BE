@@ -1,38 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:test;MODE=MySQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  sql:
-    init:
-      mode: always
-  h2:
-    console:
-      enabled: true
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    defer-datasource-initialization: true
-
-jwt:
-  secretKey:"aalbbaim.letsgo.1.jo"
-
-kakao:
-  clientId:"d573e4a7b2fcae0f0289d5807605d726"
-  redirectURI:"http://localhost:3000/login/kakao"
-
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+  profiles:
+    active:
+      - local
