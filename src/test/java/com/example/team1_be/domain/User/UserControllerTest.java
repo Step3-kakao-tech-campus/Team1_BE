@@ -94,20 +94,6 @@ class UserControllerTest {
 		perform.andDo(print());
 	}
 
-	@DisplayName("회원가입 시, request body 폼 입력값 형식 오류 실패 테스트")
-	@Sql("register.sql")
-	@Test
-	void register_fail_10005() throws Exception {
-		Join.Request requestDTO = new Join.Request("bbbb", "01234567890123456789", true);	// userName @Size(min = 2, max = 10)
-		String request = om.writeValueAsString(requestDTO);
-		ResultActions perform = mvc.perform(
-			post("/api/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
-
-		perform.andExpect(status().isBadRequest());
-		perform.andExpect(jsonPath("$.error.errorCode").value("-10005"));
-		perform.andDo(print());
-	}
-
 	@DisplayName("회원가입 시, login을 거치지 않았으면 실패 테스트")
 	@Sql("register.sql")
 	@Test

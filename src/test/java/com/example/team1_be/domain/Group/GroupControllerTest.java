@@ -102,30 +102,6 @@ public class GroupControllerTest {
 		perform.andDo(print());
 	}
 
-	@DisplayName("그룹 생성하기 DTO 검증 실패(폼 입력값 형식 오류)")
-	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
-	@Test
-	void create_fail_10005() throws Exception {
-		// given
-//		Create.Request requestDTO = Create.Request.builder()
-//				.marketName("1")
-//				.marketNumber("10-31223442")
-//				.mainAddress("금강로 279번길 19")
-//				.detailAddress("ㅁㅁ건물 2층 ㅇㅇ상가")
-//				.build();
-//		String request = om.writeValueAsString(requestDTO);
-//
-//		// when
-//		ResultActions perform = mvc.perform(post("/group")
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(request));
-//
-//		// then
-//		perform.andExpect(status().isBadRequest());
-//		perform.andExpect(jsonPath("$.error.errorCode").value("-10005"));
-//		perform.andDo(print());
-	}
-
 	@DisplayName("그룹 생성은 매니저만 가능")
 	@WithMockCustomMemberUser
 	@Sql("group-create1.sql")
@@ -209,18 +185,16 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹원 조회 - 토큰 인증 실패")
-	@WithMockCustomMemberUser
 	@Sql("group-getMembers2.sql")
 	@Test
 	void getMembers_fail_21000() throws Exception {
-//		// when
-//		ResultActions perform = mvc.perform(get("/group"));
-//
-//		// then
-//		perform.andExpect(status().isUnauthorized());
-//		perform.andExpect(jsonPath("$.error.errorCode").value("-21000"));
-//		perform.andDo(print());
+		// when
+		ResultActions perform = mvc.perform(get("/group"));
 
+		// then
+		perform.andExpect(status().isUnauthorized());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-21000"));
+		perform.andDo(print());
 	}
 
 	// GET /group/invitation
@@ -284,6 +258,25 @@ public class GroupControllerTest {
 
 		// then
 		perform.andExpect(status().isOk());
+		perform.andDo(print());
+	}
+
+	@DisplayName("그룹 초대장 제출 - 토큰 유효성 검사 실패")
+	@Sql("group-invitationAccept1.sql")
+	@Test
+	void invitationAccept_fail_21000() throws Exception {
+		// given
+		InvitationAccept.Request requestDTO = new InvitationAccept.Request("testcode1");
+		String request = om.writeValueAsString(requestDTO);
+
+		// when
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
+
+		// then
+		perform.andExpect(status().isUnauthorized());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-21000"));
 		perform.andDo(print());
 	}
 

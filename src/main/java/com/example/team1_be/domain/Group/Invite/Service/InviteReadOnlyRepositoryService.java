@@ -56,6 +56,6 @@ public class InviteReadOnlyRepositoryService {
 
 	public Invite findByGroup(Group group) {
 		return repository.findByGroup(group)
-			.orElseThrow(() -> new RuntimeException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));
+			.orElseThrow(() -> new CustomException("그룹원과 초대장이 1:1이 되지 않는 에러입니다.", HttpStatus.INTERNAL_SERVER_ERROR));
 	}
 }

@@ -34,30 +34,10 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.REQUEST_TIMEOUT);
 	}
 
-//	@ExceptionHandler(AccessDeniedException.class)
-//	public ResponseEntity<?> accessDeniedException(AccessDeniedException exception) {
-//		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.MANAGER_API_REQUEST_ERROR.getMessage(), ClientErrorCode.MANAGER_API_REQUEST_ERROR);
-//		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-//	}
-
-	// -10005
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<?> handleRequestDTOIntegrityException(DataIntegrityViolationException exception) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_FORM_INPUT.getMessage(), ClientErrorCode.INVALID_FORM_INPUT);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-	}
-
 	// -10004
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) {
-//		ObjectError objectError = exception.getBindingResult().getFieldError();
-//
-//		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_FORM_INPUT.getMessage(), ClientErrorCode.INVALID_FORM_INPUT);
-//		if (objectError.getCode().equals("NotBlank")) {
-//			error = ApiUtils.error(exception.getMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
-//		}
-
-		ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
+		ApiUtils.ApiResult<?> error = ApiUtils.error(exception.getAllErrors().get(0).getDefaultMessage(), ClientErrorCode.INVALID_REQUEST_BODY);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
