@@ -73,7 +73,7 @@ public class AuthenticationConfig {
 		return http.build();
 	}
 
-	private static void applyCorsPolicy(HttpSecurity http) throws Exception {
+	private void applyCorsPolicy(HttpSecurity http) throws Exception {
 		http.cors()
 			.configurationSource(request -> {
 				CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -85,12 +85,12 @@ public class AuthenticationConfig {
 			});
 	}
 
-	private static void authorizeError(HttpSecurity http) throws Exception {
+	private void authorizeError(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers("/error").permitAll();
 	}
 
-	private static void authorizeSchedule(HttpSecurity http) throws Exception {
+	private void authorizeSchedule(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers(HttpMethod.GET, "/schedule/application/**")
 			.hasRole(Roles.ROLE_MEMBER.getAuth())
@@ -114,7 +114,7 @@ public class AuthenticationConfig {
 			.hasAnyRole(Roles.ROLE_ADMIN.getAuth());
 	}
 
-	private static void authorizeGroup(HttpSecurity http) throws Exception {
+	private void authorizeGroup(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers(HttpMethod.POST, "/group").hasRole(Roles.ROLE_ADMIN.getAuth())
 			.antMatchers(HttpMethod.GET, "/group").hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
@@ -123,18 +123,18 @@ public class AuthenticationConfig {
 			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole(Roles.ROLE_MEMBER.getAuth());
 	}
 
-	private static void authorizeLogin(HttpSecurity http) throws Exception {
+	private void authorizeLogin(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers("/login/kakao").permitAll()
 			.antMatchers("/auth/**").permitAll();
 	}
 
-	private static void authorizeApiAndDocs(HttpSecurity http) throws Exception {
+	private void authorizeApiAndDocs(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll();
 	}
 
-	private static void authorizeH2Console(HttpSecurity http) throws Exception {
+	private void authorizeH2Console(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers("/h2-console/**").permitAll();
 	}
