@@ -20,10 +20,11 @@ spring:
       hibernate:
         format_sql: true
 
-jwt:secretKey: ${SECRET_KEY}
+jwt:
+  secretKey: ${SECRET_KEY}
 kakao:
-  clientId:${KAKAO_CLIENT_ID}
-  redirectURI:${KAKAO_REDIRECT_URI}
+  clientId: ${KAKAO_CLIENT_ID}
+  redirectURI: ${KAKAO_REDIRECT_URI}
 
 logging:
   level:
