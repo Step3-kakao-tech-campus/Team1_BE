@@ -101,10 +101,12 @@ class ScheduleControllerTest {
 		perform.andDo(print());
 	}
 
+	// GET /schedule/fix/month
+
 	@DisplayName("멤버별 확정 스케줄 조회 성공")
 	@WithMockCustomAdminUser
 	@Test
-	void getFixedWeeklySchedule1() throws Exception {
+	void getFixedWeeklySchedule_success() throws Exception {
 		YearMonth month = YearMonth.parse("2023-10");
 		Long memberId = 2L;
 		ResultActions perform = mvc.perform(
@@ -113,14 +115,27 @@ class ScheduleControllerTest {
 		perform.andDo(print());
 	}
 
+	@DisplayName("멤버별 확정 스케줄 조회 - 토큰 유효성 실패")
+	@Test
+	void getFixedWeeklySchedule_fail_21000() throws Exception {
+		YearMonth month = YearMonth.parse("2023-10");
+		Long memberId = 2L;
+		ResultActions perform = mvc.perform(
+				get(String.format("/api/schedule/fix/month/%s/%s", month, memberId)));
+		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-21000"));
+		perform.andDo(print());
+	}
+
 	@DisplayName("멤버별 확정 스케줄 조회 실패(파라미터 에러)")
 	@WithMockCustomAdminUser
 	@Test
-	void getFixedWeeklySchedule2() throws Exception {
+	void getFixedWeeklySchedule_fail_another_10002() throws Exception {
 		Long memberId = 2L;
 		ResultActions perform = mvc.perform(
 			get(String.format("/api/schedule/fix/month/%s/%s", "2023", memberId)));
 		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-10003"));
 		perform.andDo(print());
 	}
 

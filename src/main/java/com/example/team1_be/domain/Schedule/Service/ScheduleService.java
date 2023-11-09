@@ -69,6 +69,20 @@ public class ScheduleService {
 
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
+
+//		WeekRecruitmentStatus status = weekService.getWeekStatus(group, request);
+//		if (status == null) {
+//			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);
+//		}
+//		else if (status.equals(WeekRecruitmentStatus.ENDED)) {
+//			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);
+//		}
 
 		Week week = weekService.findByGroupAndStartDate(group, request);
 		weekService.checkAppliable(user, week);
@@ -83,6 +97,13 @@ public class ScheduleService {
 
 	public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long userId) {
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
+
 		User member = userService.findById(userId);
 
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
@@ -160,6 +181,17 @@ public class ScheduleService {
 
 	public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
+
+		WeekRecruitmentStatus status = weekService.getWeekStatus(group, selectedDate);
+		if (!user.getIsAdmin() && status.equals(WeekRecruitmentStatus.STARTED)) {
+			throw new CustomException(ClientErrorCode.NO_CONFIRMED_SCHEDULE, HttpStatus.BAD_REQUEST);
+		}
 
 		Map<Worktime, List<User>> dailyApplyMap = new HashMap<>();
 		List<DetailWorktime> detailWorktimes = detailWorktimeService.findByGroupAndDate(group, selectedDate);

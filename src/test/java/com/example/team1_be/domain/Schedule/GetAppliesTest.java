@@ -41,7 +41,7 @@ public class GetAppliesTest {
 
 	@DisplayName("스케줄 신청/수정 조회 요청 성공")
 	@WithMockCustomMemberUser(userId = "2")
-	@Sql("schedule-application.sql")
+	@Sql("schedule1.sql")
 	@Test
 	void get_application_success() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
@@ -76,7 +76,7 @@ public class GetAppliesTest {
 
 	@DisplayName("스케줄 신청/수정 조회 요청 - 알바생만 가능")
 	@WithMockCustomAdminUser(isAdmin = "true")
-	@Sql("schedule-application.sql")
+	@Sql("schedule1.sql")
 	@Test
 	void get_application_fail_21005() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");

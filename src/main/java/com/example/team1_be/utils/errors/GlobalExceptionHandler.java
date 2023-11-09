@@ -35,13 +35,6 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.REQUEST_TIMEOUT);
 	}
 
-	// -10003
-	@ExceptionHandler(DateTimeParseException.class)
-	public ResponseEntity<?> dateTimeParseException(DateTimeParseException exception) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_PARAMETER.getMessage(), ClientErrorCode.INVALID_PARAMETER);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-	}
-
 	// -10002
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
