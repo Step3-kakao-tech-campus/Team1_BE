@@ -1,0 +1,36 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: ${DATABASE_URL}?allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  sql:
+    init:
+      mode: always
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secretKey: ${SECRET_KEY}
+kakao:
+  clientId: ${KAKAO_CLIENT_ID}
+  redirectURI: ${KAKAO_REDIRECT_URI}
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+    '[com.example.team1_be]': INFO
