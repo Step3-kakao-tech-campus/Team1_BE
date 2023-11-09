@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.stream.Collectors;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -188,7 +191,22 @@ public class ScheduleService {
 	}
 
 	public GetApplies.Response getApplies(User user, LocalDate startWeekDate) {
+		if (user.getIsAdmin()) {
+			throw new CustomException(ClientErrorCode.MEMBER_API_REQUEST_ERROR, HttpStatus.BAD_REQUEST);	// 알바생만 본인의 스케줄 조회 가능
+		}
+
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+
+		WeekRecruitmentStatus status = weekService.getWeekStatus(group, startWeekDate);
+		if (status == null) {
+			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);
+		}
+		else if (status.equals(WeekRecruitmentStatus.ENDED)) {
+			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);
+		}
 
 		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, startWeekDate);
 
@@ -199,7 +217,22 @@ public class ScheduleService {
 	}
 
 	public void postApplies(User user, PostApplies.Request requestDTO) {
+		if (user.getIsAdmin()) {
+			throw new CustomException(ClientErrorCode.MEMBER_API_REQUEST_ERROR, HttpStatus.BAD_REQUEST);	// 알바생만 본인의 스케줄 조회 가능
+		}
+
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+
+		WeekRecruitmentStatus status = weekService.getWeekStatus(group, requestDTO.getWeekStartDate());
+		if (status == null) {
+			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);
+		}
+		else if (status.equals(WeekRecruitmentStatus.ENDED)) {
+			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);
+		}
 
 		List<DetailWorktime> previousDetailWorktimes = detailWorktimeService.findByStartDateAndGroup(
 			requestDTO.getWeekStartDate(), group);

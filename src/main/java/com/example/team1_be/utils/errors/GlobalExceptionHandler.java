@@ -15,6 +15,7 @@ import com.example.team1_be.utils.errors.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.format.DateTimeParseException;
 import java.util.concurrent.TimeoutException;
 
 @RestControllerAdvice
@@ -34,6 +35,23 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.REQUEST_TIMEOUT);
 	}
 
+	// -10003
+	@ExceptionHandler(DateTimeParseException.class)
+	public ResponseEntity<?> dateTimeParseException(DateTimeParseException exception) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_PARAMETER.getMessage(), ClientErrorCode.INVALID_PARAMETER);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	// -10002
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error("요청주소의 양식이 잘못되었습니다.", ClientErrorCode.INVALID_URI);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+
+
+
 	// -10004
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) {
@@ -41,11 +59,7 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error("요청주소의 양식이 잘못되었습니다.", ClientErrorCode.UNKNOWN_ERROR);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-	}
+
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
