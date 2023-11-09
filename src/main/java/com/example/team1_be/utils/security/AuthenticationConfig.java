@@ -13,6 +13,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.team1_be.utils.security.XSS.XSSProtectFilter;
+import com.example.team1_be.utils.security.auth.CustomAccessDeniedHandler;
+import com.example.team1_be.utils.security.auth.CustomAuthenticationEntryPoint;
 import com.example.team1_be.utils.security.auth.jwt.JwtAuthenticationFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +57,12 @@ public class AuthenticationConfig {
 
 		http.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http.exceptionHandling()
+			.authenticationEntryPoint(new CustomAuthenticationEntryPoint(om));
+
+		http.exceptionHandling()
+			.accessDeniedHandler(new CustomAccessDeniedHandler(om));
 
 		http.authorizeHttpRequests()
 			.antMatchers("/h2-console/**").permitAll()
