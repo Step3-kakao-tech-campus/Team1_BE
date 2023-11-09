@@ -1,10 +1,14 @@
 package com.example.team1_be.utils.security.auth.kakao;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,6 +23,8 @@ public class KakaoOAuth {
 	private String REDIRECT_URI;
 	@Value("${kakao:redirectURI}")
 	private String CLIENT_ID;
+	private String PROXY_HOST_NAME = "krmp-proxy.9rum.cc";
+	private int PROXY_PORT = 3128;
 
 	public KakaoOAuthToken getToken(String code) throws JsonProcessingException {
 		HttpHeaders headers = new HttpHeaders();
@@ -26,8 +32,8 @@ public class KakaoOAuth {
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-		params.add("client_id", CLIENT_ID);    // BE 테스트 시 : ba5bf7b3c440fb54f054ac5c3bfff761
-		params.add("redirect_uri", REDIRECT_URI);    // BE 테스트 시 : 8080
+		params.add("client_id", CLIENT_ID);
+		params.add("redirect_uri", REDIRECT_URI);
 		params.add("code", code);
 
 		return executeRequest(
@@ -54,7 +60,12 @@ public class KakaoOAuth {
 
 	public <T> T executeRequest(String url, HttpMethod method, HttpHeaders headers, MultiValueMap<String, String> body,
 		Class<T> clazz) throws JsonProcessingException {
-		RestTemplate rt = new RestTemplate();
+
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(PROXY_HOST_NAME, PROXY_PORT));
+		requestFactory.setProxy(proxy);
+
+		RestTemplate rt = new RestTemplate(requestFactory);
 
 		HttpEntity<MultiValueMap<String, String>> requestEntity;
 
