@@ -3,6 +3,7 @@ package com.example.team1_be.utils.security;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationConfig {
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper om;
+	private final Environment env;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,15 +45,17 @@ public class AuthenticationConfig {
 		http.headers()
 			.xssProtection();
 
-		http.headers()
-			.contentSecurityPolicy("script-src 'self'");
-
 		http.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		authorizeH2Console(http);
+		if (isLocalMode()) {
+			authorizeH2Console(http);
+			authorizeApiAndDocs(http);
 
-		authorizeApiAndDocs(http);
+		} else {
+			http.headers()
+				.contentSecurityPolicy("script-src 'self'");
+		}
 
 		authorizeLogin(http);
 
@@ -71,6 +75,11 @@ public class AuthenticationConfig {
 			ChannelProcessingFilter.class);
 
 		return http.build();
+	}
+
+	private boolean isLocalMode() {
+		String profile = env.getActiveProfiles().length > 0 ? env.getActiveProfiles()[0] : "local";
+		return profile.equals("local");
 	}
 
 	private void applyCorsPolicy(HttpSecurity http) throws Exception {
