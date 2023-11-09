@@ -32,38 +32,47 @@ public class GroupController {
 	private final InviteService inviteService;
 
 	@PostMapping
-	public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails,
+	public ResponseEntity<ApiUtils.ApiResult<String>> create(@AuthenticationPrincipal CustomUserDetails userDetails,
 		@RequestBody @Valid Create.Request request) {
+
 		groupService.create(userDetails.getUser(), request);
 		ApiUtils.ApiResult<String> response = ApiUtils.success(null);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/invitation/information/{invitationKey}")
-	public ResponseEntity<?> invitationCheck(@AuthenticationPrincipal CustomUserDetails userDetails,
+	public ResponseEntity<ApiUtils.ApiResult<InvitationCheck.Response>> invitationCheck(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
 		@PathVariable("invitationKey") String invitationKey) {
+
 		InvitationCheck.Response responseDTO = inviteService.invitationCheck(invitationKey);
 		ApiUtils.ApiResult<InvitationCheck.Response> response = ApiUtils.success(responseDTO);
 		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/invitation")
-	public ResponseEntity<?> invitationAccept(@AuthenticationPrincipal CustomUserDetails userDetails,
+	public ResponseEntity<ApiUtils.ApiResult<String>> invitationAccept(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
 		@RequestBody @Valid InvitationAccept.Request request) {
+
 		groupService.invitationAccept(userDetails.getUser(), request);
 		ApiUtils.ApiResult<String> response = ApiUtils.success(null);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping
-	public ResponseEntity<?> getMembers(@AuthenticationPrincipal CustomUserDetails userDetails) {
+	public ResponseEntity<ApiUtils.ApiResult<GetMembers.Response>> getMembers(
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+
 		GetMembers.Response responseDTO = groupService.getMembers(userDetails.getUser());
 		ApiUtils.ApiResult<GetMembers.Response> response = ApiUtils.success(responseDTO);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/invitation")
-	public ResponseEntity<?> getInvitation(@AuthenticationPrincipal CustomUserDetails userDetails) {
+	public ResponseEntity<ApiUtils.ApiResult<GetInvitation.Response>> getInvitation(
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		
 		GetInvitation.Response responseDTO = inviteService.getInvitation(userDetails.getUser());
 		ApiUtils.ApiResult<GetInvitation.Response> response = ApiUtils.success(responseDTO);
 		return ResponseEntity.ok(response);
