@@ -12,6 +12,7 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import com.example.team1_be.domain.User.Role.Roles;
 import com.example.team1_be.utils.security.XSS.XSSProtectFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtAuthenticationFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
@@ -65,23 +66,33 @@ public class AuthenticationConfig {
 			.antMatchers("/auth/**").permitAll();
 
 		http.authorizeHttpRequests()
-			.antMatchers(HttpMethod.POST, "/group").hasRole("ADMIN")
-			.antMatchers(HttpMethod.GET, "/group").hasAnyRole("ADMIN", "MEMBER")
-			.antMatchers(HttpMethod.GET, "/group/invitation").hasRole("ADMIN")
-			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole("MEMBER")
-			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole("MEMBER");
+			.antMatchers(HttpMethod.POST, "/group").hasRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.GET, "/group").hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/group/invitation").hasRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole(Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole(Roles.ROLE_MEMBER.getAuth());
 
 		http.authorizeHttpRequests()
-			.antMatchers(HttpMethod.GET, "/schedule/application/**").hasRole("MEMBER")
-			.antMatchers(HttpMethod.PUT, "/schedule/application").hasRole("MEMBER")
-			.antMatchers(HttpMethod.GET, "/schedule/fix/month/**").hasAnyRole("ADMIN", "MEMBER")
-			.antMatchers(HttpMethod.GET, "/schedule/fix/day/**").hasAnyRole("ADMIN", "MEMBER")
-			.antMatchers(HttpMethod.GET, "/schedule/remain/week/**").hasAnyRole("ADMIN", "MEMBER")
-			.antMatchers(HttpMethod.GET, "/schedule/recommend/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.POST, "/schedule/fix/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.GET, "/schedule/status/**").hasAnyRole("ADMIN", "MEMBER")
-			.antMatchers(HttpMethod.POST, "/schedule/worktime").hasAnyRole("ADMIN")
-			.antMatchers(HttpMethod.GET, "/schedule/worktime/**").hasAnyRole("ADMIN");
+			.antMatchers(HttpMethod.GET, "/schedule/application/**")
+			.hasRole(Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.PUT, "/schedule/application")
+			.hasRole(Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/schedule/fix/month/**")
+			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/schedule/fix/day/**")
+			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/schedule/remain/week/**")
+			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/schedule/recommend/**")
+			.hasRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.POST, "/schedule/fix/**")
+			.hasRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.GET, "/schedule/status/**")
+			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.POST, "/schedule/worktime")
+			.hasAnyRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.GET, "/schedule/worktime/**")
+			.hasAnyRole(Roles.ROLE_ADMIN.getAuth());
 
 		http.authorizeHttpRequests()
 			.antMatchers("/error").permitAll();
