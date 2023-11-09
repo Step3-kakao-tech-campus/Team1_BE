@@ -34,15 +34,7 @@ public class AuthenticationConfig {
 		http.csrf()
 			.disable();
 
-		http.cors()
-			.configurationSource(request -> {
-				CorsConfiguration corsConfiguration = new CorsConfiguration();
-				corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-				corsConfiguration.setAllowedHeaders(List.of("*"));
-				corsConfiguration.addExposedHeader("Authorization");
-				return corsConfiguration;
-			});
+		applyCorsPolicy(http);
 
 		http.headers()
 			.frameOptions()
@@ -57,21 +49,48 @@ public class AuthenticationConfig {
 		http.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.authorizeHttpRequests()
-			.antMatchers("/h2-console/**").permitAll()
-			.antMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll();
+		authorizeH2Console(http);
+
+		authorizeApiAndDocs(http);
+
+		authorizeLogin(http);
+
+		authorizeGroup(http);
+
+		authorizeSchedule(http);
+
+		authorizeError(http);
 
 		http.authorizeHttpRequests()
-			.antMatchers("/login/kakao").permitAll()
-			.antMatchers("/auth/**").permitAll();
+			.anyRequest().denyAll();
 
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+			UsernamePasswordAuthenticationFilter.class);
+
+		http.addFilterBefore(new XSSProtectFilter(om),
+			ChannelProcessingFilter.class);
+
+		return http.build();
+	}
+
+	private static void applyCorsPolicy(HttpSecurity http) throws Exception {
+		http.cors()
+			.configurationSource(request -> {
+				CorsConfiguration corsConfiguration = new CorsConfiguration();
+				corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+				corsConfiguration.setAllowedHeaders(List.of("*"));
+				corsConfiguration.addExposedHeader("Authorization");
+				return corsConfiguration;
+			});
+	}
+
+	private static void authorizeError(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
-			.antMatchers(HttpMethod.POST, "/group").hasRole(Roles.ROLE_ADMIN.getAuth())
-			.antMatchers(HttpMethod.GET, "/group").hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
-			.antMatchers(HttpMethod.GET, "/group/invitation").hasRole(Roles.ROLE_ADMIN.getAuth())
-			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole(Roles.ROLE_MEMBER.getAuth())
-			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole(Roles.ROLE_MEMBER.getAuth());
+			.antMatchers("/error").permitAll();
+	}
 
+	private static void authorizeSchedule(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers(HttpMethod.GET, "/schedule/application/**")
 			.hasRole(Roles.ROLE_MEMBER.getAuth())
@@ -93,19 +112,30 @@ public class AuthenticationConfig {
 			.hasAnyRole(Roles.ROLE_ADMIN.getAuth())
 			.antMatchers(HttpMethod.GET, "/schedule/worktime/**")
 			.hasAnyRole(Roles.ROLE_ADMIN.getAuth());
+	}
 
+	private static void authorizeGroup(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
-			.antMatchers("/error").permitAll();
+			.antMatchers(HttpMethod.POST, "/group").hasRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.GET, "/group").hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/group/invitation").hasRole(Roles.ROLE_ADMIN.getAuth())
+			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole(Roles.ROLE_MEMBER.getAuth())
+			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole(Roles.ROLE_MEMBER.getAuth());
+	}
 
+	private static void authorizeLogin(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
-			.anyRequest().denyAll();
+			.antMatchers("/login/kakao").permitAll()
+			.antMatchers("/auth/**").permitAll();
+	}
 
-		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-			UsernamePasswordAuthenticationFilter.class);
+	private static void authorizeApiAndDocs(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests()
+			.antMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll();
+	}
 
-		http.addFilterBefore(new XSSProtectFilter(om),
-			ChannelProcessingFilter.class);
-
-		return http.build();
+	private static void authorizeH2Console(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests()
+			.antMatchers("/h2-console/**").permitAll();
 	}
 }
