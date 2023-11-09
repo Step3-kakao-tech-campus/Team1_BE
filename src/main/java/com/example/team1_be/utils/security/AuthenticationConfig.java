@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.team1_be.domain.User.Role.Roles;
 import com.example.team1_be.utils.security.XSS.XSSProtectFilter;
+import com.example.team1_be.utils.security.auth.CustomAccessDeniedHandler;
+import com.example.team1_be.utils.security.auth.CustomAuthenticationEntryPoint;
 import com.example.team1_be.utils.security.auth.jwt.JwtAuthenticationFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
