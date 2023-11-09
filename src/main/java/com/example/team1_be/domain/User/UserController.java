@@ -2,7 +2,6 @@ package com.example.team1_be.domain.User;
 
 import javax.validation.Valid;
 
-import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
-import com.example.team1_be.utils.errors.exception.BadRequestException;
+import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
@@ -32,7 +31,9 @@ public class UserController {
 	}
 
 	@PostMapping("/auth/login")
-	public ResponseEntity<?> login(@RequestBody @Valid Login.Request request) {
+	public ResponseEntity<ApiUtils.ApiResult<Login.Response>> login(
+		@RequestBody @Valid Login.Request request) {
+		
 		String code = request.getCode();
 		Long kakaoId = null;
 		try {
@@ -50,7 +51,9 @@ public class UserController {
 	}
 
 	@PostMapping("/auth/join")
-	public ResponseEntity<?> join(@RequestBody @Valid Join.Request request) {
+	public ResponseEntity<ApiUtils.ApiResult<Join.Response>> join(
+		@RequestBody @Valid Join.Request request) {
+
 		Long kakaoId = userService.matchKakaoId(request.getCode());
 
 		Join.Response responseDTO = userService.join(request, kakaoId);

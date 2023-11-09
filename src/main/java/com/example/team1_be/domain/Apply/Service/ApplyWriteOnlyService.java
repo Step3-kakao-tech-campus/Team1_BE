@@ -20,10 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class ApplyWriteOnlyService {
 	private final ApplyRepository repository;
 
-	public void createApplies(List<Apply> applies) {
-		repository.saveAll(applies);
-	}
-
 	public void deleteAll(List<Apply> appliesToDelete) {
 		repository.deleteAll(appliesToDelete);
 	}
@@ -38,5 +34,9 @@ public class ApplyWriteOnlyService {
 			.collect(
 				Collectors.toList());
 		createApplies(applies);
+	}
+
+	public void createApplies(List<Apply> applies) {
+		repository.saveAll(applies);
 	}
 }

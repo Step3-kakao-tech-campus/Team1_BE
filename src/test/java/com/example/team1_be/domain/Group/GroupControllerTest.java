@@ -120,7 +120,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 제출 실패(초대장 갱신시점이 없음)")
-	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept2.sql")
 	@Test
 	void invitationAccept2() throws Exception {
@@ -228,7 +228,7 @@ public class GroupControllerTest {
 	}
 
 	@DisplayName("그룹 초대장 확인 실패(초대장 미갱신)")
-	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck4.sql")
 	@Test
 	void invitationCheck4() throws Exception {
