@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.User.Role.Role;
 import com.example.team1_be.domain.User.Role.RoleRepository;
-import com.example.team1_be.domain.User.Role.Roles;
+import com.example.team1_be.domain.User.Role.RoleType;
 import com.example.team1_be.domain.User.User;
 
 import lombok.RequiredArgsConstructor;
@@ -18,20 +18,20 @@ import lombok.extern.slf4j.Slf4j;
 public class RoleWriteOnlyService {
 	private final RoleRepository repository;
 
-	private void createRole(User user, Roles role) {
-		log.info(role + " 역할을 생성하고 저장합니다.");
+	private void createRole(User user, RoleType roleType) {
+		log.info(roleType + " 역할을 생성하고 저장합니다.");
 		repository.save(Role.builder()
-			.role(role)
+			.roleType(roleType)
 			.user(user)
 			.build());
-		log.info(role + " 역할 생성 및 저장이 완료되었습니다.");
+		log.info(roleType + " 역할 생성 및 저장이 완료되었습니다.");
 	}
 
 	public void createAdmin(User user) {
-		createRole(user, Roles.ROLE_ADMIN);
+		createRole(user, RoleType.ROLE_ADMIN);
 	}
 
 	public void createMember(User user) {
-		createRole(user, Roles.ROLE_MEMBER);
+		createRole(user, RoleType.ROLE_MEMBER);
 	}
 }

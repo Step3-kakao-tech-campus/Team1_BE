@@ -55,7 +55,7 @@ values (1, 1, '이재훈', '010-0000-0001', true, 1),
        (6, 6, '민하린', '010-0000-0006', false, 1),
        (7, 7, '홍길동', '010-0000-0007', false, 1);
 
-insert into roles (`id`, `role`, `user_id`)
+insert into roles (`id`, `role_type`, `user_id`)
 values (1, 'ROLE_ADMIN', 1),
        (2, 'ROLE_MEMBER', 2),
        (3, 'ROLE_MEMBER', 3),
