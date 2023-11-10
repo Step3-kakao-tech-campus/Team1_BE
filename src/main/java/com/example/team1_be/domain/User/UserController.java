@@ -2,17 +2,18 @@ package com.example.team1_be.domain.User;
 
 import javax.validation.Valid;
 
-import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
 	private final UserService userService;
 	private final KakaoOAuth kakaoOAuth;
@@ -34,7 +36,7 @@ public class UserController {
 	@PostMapping("/auth/login")
 	public ResponseEntity<ApiUtils.ApiResult<Login.Response>> login(
 		@RequestBody @Valid Login.Request request) {
-		
+
 		String code = request.getCode();
 		Long kakaoId = null;
 		try {
