@@ -63,11 +63,14 @@ public class ScheduleService {
 
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
 		log.info("스케줄을 모집합니다.");
+<<<<<<< HEAD
 
 		if (!user.getIsAdmin()) {
 			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -90,6 +93,7 @@ public class ScheduleService {
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
 		log.info("주간 스케줄을 확인합니다.");
 		Group group = userService.findGroupByUser(user);
+<<<<<<< HEAD
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
 		}
@@ -100,6 +104,10 @@ public class ScheduleService {
 		Week week = weekService.findByGroupAndStartDate(group, request);
 		weekService.checkAppliable(week);
 
+=======
+		Week week = weekService.findByGroupAndStartDate(group, request);
+		weekService.checkAppliable(user, week);
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		List<Worktime> weeklyWorktimes = weekService.findWorktimes(week);
 		ApplyStatus applyStatus = user.getIsAdmin() ? ApplyStatus.REMAIN : ApplyStatus.FIX;
 		Map<String, List<Map<Worktime, List<Apply>>>> weeklyApplies = detailWorktimeService.findAppliesByWorktimeAndDayAndStatus(
@@ -112,6 +120,7 @@ public class ScheduleService {
 	public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long userId) {
 		log.info("고정 주간 스케줄을 가져옵니다.");
 		Group group = userService.findGroupByUser(user);
+<<<<<<< HEAD
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
 		}
@@ -119,6 +128,8 @@ public class ScheduleService {
 			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		User member = userService.findById(userId);
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
 			group,
@@ -143,11 +154,14 @@ public class ScheduleService {
 
 	public void fixSchedule(User user, FixSchedule.Request request) {
 		log.info("스케줄을 고정합니다.");
+<<<<<<< HEAD
 
 		if (!user.getIsAdmin()) {
 			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -177,11 +191,14 @@ public class ScheduleService {
 
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
 		log.info("스케줄을 추천합니다.");
+<<<<<<< HEAD
 
 		if (!user.getIsAdmin()) {
 			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -253,11 +270,14 @@ public class ScheduleService {
 
 	public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
 		log.info("최신 스케줄을 불러옵니다.");
+<<<<<<< HEAD
 
 		if (!user.getIsAdmin()) {
 			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -266,11 +286,14 @@ public class ScheduleService {
 			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
 		}
 
+<<<<<<< HEAD
 		WeekRecruitmentStatus selectedStatus = weekService.getWeekStatus(group, startWeekDate);
 		if (selectedStatus != null) {
 			throw new CustomException(ClientErrorCode.RECRUITMENT_OBJECT_EXIST, HttpStatus.BAD_REQUEST);
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Week latestWeek = weekService.findLatestByGroup(group);
 		log.info("최신 스케줄 불러오기가 완료되었습니다.");
 		return new LoadLatestSchedule.Response(latestWeek.getWorktimes());
@@ -293,11 +316,14 @@ public class ScheduleService {
 
 	public GetApplies.Response getApplies(User user, LocalDate startWeekDate) {
 		log.info("신청서를 가져옵니다.");
+<<<<<<< HEAD
 
 		if (user.getIsAdmin()) {
 			throw new CustomException(ClientErrorCode.MEMBER_API_REQUEST_ERROR, HttpStatus.BAD_REQUEST);	// 알바생만 본인의 스케줄 조회 가능
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -321,11 +347,14 @@ public class ScheduleService {
 
 	public void postApplies(User user, PostApplies.Request requestDTO) {
 		log.info("신청서를 게시합니다.");
+<<<<<<< HEAD
 
 		if (user.getIsAdmin()) {
 			throw new CustomException(ClientErrorCode.MEMBER_API_REQUEST_ERROR, HttpStatus.BAD_REQUEST);	// 알바생만 본인의 스케줄 조회 가능
 		}
 
+=======
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);

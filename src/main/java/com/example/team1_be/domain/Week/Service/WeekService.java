@@ -43,7 +43,11 @@ public class WeekService {
 		Week week = readOnlyService.findByGroupAndStartDate(group, startDate);
 		if (null == week) {
 			log.info("해당 주차를 찾을 수 없습니다.");
+<<<<<<< HEAD
 			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);	// 해당 주차를 찾을 수 없습니다.
+=======
+			throw new NotFoundException("해당 주차를 찾을 수 없습니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("그룹과 시작 날짜에 따른 주차를 찾았습니다.");
 		return week;
@@ -54,7 +58,11 @@ public class WeekService {
 		List<Worktime> worktimes = week.getWorktimes();
 		if (null == worktimes) {
 			log.info("근무일정이 존재하지 않습니다.");
+<<<<<<< HEAD
 			throw new CustomException("근무일정이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+=======
+			throw new NotFoundException("근무일정이 존재하지 않습니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("주차의 근무 시간을 찾았습니다.");
 		return worktimes;
@@ -79,11 +87,23 @@ public class WeekService {
 		}
 	}
 
+<<<<<<< HEAD
 	public void checkAppliable(Week week) {
 		log.info("주차가 적용 가능한지 확인합니다.");
 		if (week.getStatus().equals(WeekRecruitmentStatus.ENDED)) {
 			log.info("이미 마감된 스케줄입니다.");
 			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);	// 이미 마감된 스케줄입니다.
+=======
+	public void checkAppliable(User user, Week week) {
+		log.info("주차가 적용 가능한지 확인합니다.");
+		if (user.getIsAdmin() && week.getStatus().equals(WeekRecruitmentStatus.ENDED)) {
+			log.info("이미 마감된 스케줄입니다.");
+			throw new NotFoundException("이미 마감된 스케줄입니다.");
+		}
+		if (!user.getIsAdmin() && week.getStatus().equals(WeekRecruitmentStatus.STARTED)) {
+			log.info("확정된 스케줄이 아닙니다.");
+			throw new NotFoundException("확정된 스케줄이 아닙니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("주차가 적용 가능합니다.");
 	}

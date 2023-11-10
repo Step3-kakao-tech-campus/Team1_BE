@@ -34,7 +34,11 @@ public class RecommendedWeeklyScheduleService {
 			week.getId());
 		if (recommendedWeeklySchedules.isEmpty()) {
 			log.error("등록된 추천 스케줄이 존재하지 않습니다.");
+<<<<<<< HEAD
 			throw new CustomException("등록된 추천 스케줄이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+=======
+			throw new NotFoundException("등록된 추천 스케줄이 존재하지 않습니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("주별로 추천 스케줄 찾기가 완료되었습니다.");
 		return recommendedWeeklySchedules;

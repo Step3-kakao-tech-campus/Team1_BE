@@ -42,7 +42,11 @@ public class WeekReadOnlyService {
 			PageRequest.of(0, LATEST_WEEK_LIMIT)).getContent();
 		if (weeks.isEmpty()) {
 			log.info("해당 그룹과 상태에 해당하는 최근 주차 정보를 찾을 수 없습니다.");
+<<<<<<< HEAD
 			throw new CustomException("최근 스케줄을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+=======
+			throw new NotFoundException("최근 스케줄을 찾을 수 없습니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("해당 그룹과 상태에 해당하는 최근 주차 정보를 찾았습니다.");
 		return weeks.get(0);

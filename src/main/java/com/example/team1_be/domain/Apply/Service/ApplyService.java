@@ -33,8 +33,13 @@ public class ApplyService {
 
 	public List<Apply> findAppliesByWorktimes(List<Worktime> worktimes) {
 		List<Long> worktimeIds = worktimes.stream()
+<<<<<<< HEAD
 				.map(Worktime::getId)
 				.collect(Collectors.toList());
+=======
+			.map(Worktime::getId)
+			.collect(Collectors.toList());
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		log.info("{}개의 근무 시간에 대한 신청 정보를 조회합니다.", worktimeIds.size());
 		return readOnlyService.findAppliesByWorktimes(worktimeIds);
 	}
@@ -65,7 +70,11 @@ public class ApplyService {
 		List<User> users = readOnlyService.findUsersByWorktimeAndApplyStatus(worktime, status);
 		if (users.isEmpty()) {
 			log.warn("근무 시간 ID: {}, 상태: {}에 따른 신청자를 찾을 수 없습니다.", worktime.getId(), status);
+<<<<<<< HEAD
 			throw new CustomException("확정된 신청자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+=======
+			throw new NotFoundException("확정된 신청자를 찾을 수 없습니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("근무 시간 ID: {}, 상태: {}에 따른 신청자를 조회하였습니다.", worktime.getId(), status);
 		return users;
@@ -105,7 +114,11 @@ public class ApplyService {
 	}
 
 	public void updateApplies(User user, List<DetailWorktime> previousDetailWorktimes,
+<<<<<<< HEAD
 							  List<DetailWorktime> appliedDetailWorktimes) {
+=======
+		List<DetailWorktime> appliedDetailWorktimes) {
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		HashSet<DetailWorktime> previousDetailWorktimeSet = new HashSet<>(previousDetailWorktimes);
 		HashSet<DetailWorktime> appliedDetailWorktimeSet = new HashSet<>(appliedDetailWorktimes);
 

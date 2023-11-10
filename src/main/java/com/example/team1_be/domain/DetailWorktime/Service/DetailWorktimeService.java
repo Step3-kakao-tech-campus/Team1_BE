@@ -86,7 +86,11 @@ public class DetailWorktimeService {
 
 		if (monthlyDetailsWorktimesMap.isEmpty()) {
 			log.warn("확정된 스케줄이 없습니다.");
+<<<<<<< HEAD
 			throw new CustomException("확정된 스케줄이 없습니다.", HttpStatus.NOT_FOUND);
+=======
+			throw new NotFoundException("확정된 스케줄이 없습니다.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("그룹 ID: {}, 년월: {}에 따른 종료된 상세 근무 시간 정보를 조회하였습니다.", group.getId(), yearMonth);
 		return monthlyDetailsWorktimesMap;

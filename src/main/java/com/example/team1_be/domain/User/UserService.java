@@ -45,7 +45,11 @@ public class UserService {
 		return user;
 	}
 
+<<<<<<< HEAD
 	@Transactional(noRollbackFor = NotUserException.class)
+=======
+	@Transactional(noRollbackFor = NotFoundException.class)
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 	public Login.Response login(String code, Long kakaoId) {
 		log.info("로그인을 시작합니다.");
 		User user = repository.findByKakaoId(kakaoId).orElse(null);
@@ -56,8 +60,12 @@ public class UserService {
 				.kakaoId(kakaoId)
 				.build();
 			unfinishedUserRepository.save(unfinishedUser);
+<<<<<<< HEAD
 
 			throw new NotUserException(ClientErrorCode.NOT_USER);
+=======
+			throw new NotFoundException("임시 정보 저장.");
+>>>>>>> d256c8f9e163637e57105a885dfdafc4f346b90c
 		}
 		log.info("로그인이 완료되었습니다.");
 		return new Login.Response(user.getIsAdmin());
