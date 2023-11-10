@@ -29,11 +29,6 @@ class UserControllerTest {
 
 	// POST /auth/login
 
-	@DisplayName("로그인 성공")
-	@Test
-	void login_success() throws Exception {
-	}
-
 	@DisplayName("로그인 시 request body가 누락된 경우 테스트")
 	@Test
 	void login_fail_10004() throws Exception {
@@ -58,11 +53,6 @@ class UserControllerTest {
 		perform.andExpect(status().isInternalServerError());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-10007"));
 		perform.andDo(print());
-	}
-
-	@DisplayName("로그인 시, 해당 kakaoId가 회원이 아닐 때")
-	@Test
-	void login_fail_10006() throws Exception {
 	}
 
 	// POST /auth/join
@@ -115,7 +105,7 @@ class UserControllerTest {
 		Join.Request requestDTO = new Join.Request("aaaa", "eunjin", true);
 		String request = om.writeValueAsString(requestDTO);
 		ResultActions perform = mvc.perform(
-			post("/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
+			post("/api/auth/join").contentType(MediaType.APPLICATION_JSON).content(request));
 
 		perform.andExpect(status().isBadRequest());
 		perform.andExpect(jsonPath("$.error.errorCode").value("-20000"));
