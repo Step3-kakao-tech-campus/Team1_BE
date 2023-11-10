@@ -3,6 +3,7 @@ package com.example.team1_be.domain.User;
 import javax.validation.Valid;
 
 import com.example.team1_be.utils.errors.ClientErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -38,8 +40,11 @@ public class UserController {
 		String code = request.getCode();
 		Long kakaoId = null;
 		try {
+			log.info("토큰 발행");
 			KakaoOAuthToken kakaoOAuthToken = kakaoOAuth.getToken(code);
+			log.info("프로필 조회");
 			KakaoUserProfile kakaoOAuthProfile = kakaoOAuth.getProfile(kakaoOAuthToken);
+			log.info("아이디 조회");
 			kakaoId = kakaoOAuthProfile.getId();
 		} catch (Exception e) {
 			throw new ServerErrorException("code가 만료되었거나 유효하지 않습니다.", ClientErrorCode.KAKAO_CONNECT_FAIL);
