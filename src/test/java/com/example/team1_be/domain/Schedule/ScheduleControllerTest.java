@@ -128,7 +128,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("멤버별 확정 스케줄 조회 실패(파라미터 에러)")
-	@WithMockCustomAdminUser
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Test
 	void getFixedWeeklySchedule_fail_another_10002() throws Exception {
 		Long memberId = 2L;
@@ -140,7 +140,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("추천 스케줄 후보 리스팅")
-	@WithMockCustomAdminUser
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Test
 	void recommendSchedule1() throws Exception {
 		LocalDate date = LocalDate.parse("2023-10-09");
@@ -151,7 +151,7 @@ class ScheduleControllerTest {
 	}
 
 	@DisplayName("스케줄 확정하기 성공")
-	@WithMockCustomAdminUser
+	@WithMockCustomAdminUser(isAdmin = "true")
 	@Test
 	void fixSchedule1() throws Exception {
 		// given

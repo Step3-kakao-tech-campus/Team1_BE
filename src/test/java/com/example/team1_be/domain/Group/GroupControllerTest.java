@@ -340,6 +340,26 @@ public class GroupControllerTest {
 		perform.andDo(print());
 	}
 
+	@DisplayName("그룹 초대장 제출 - 초대키로 그룹을 찾을 수 없음")
+	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
+	@Sql("group-invitationAccept1.sql")
+	@Test
+	void invitationAccept_fail_20004() throws Exception {
+		// given
+		InvitationAccept.Request requestDTO = new InvitationAccept.Request("nocode");
+		String request = om.writeValueAsString(requestDTO);
+
+		// when
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(request));
+
+		// then
+		perform.andExpect(status().isBadRequest());
+		perform.andExpect(jsonPath("$.error.errorCode").value("-20004"));
+		perform.andDo(print());
+	}
+
 	@DisplayName("그룹 초대장 제출 실패(초대장 갱신시점이 없음)")
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept2.sql")
