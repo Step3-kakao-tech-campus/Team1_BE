@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class UserService {
 				.kakaoId(kakaoId)
 				.build();
 			unfinishedUserRepository.save(unfinishedUser);
-			throw new NotFoundException("임시 정보 저장.");
+			throw new NotFoundException("회원이 아닙니다.", ClientErrorCode.NOT_USER);
 		}
 		log.info("로그인이 완료되었습니다.");
 		return new Login.Response(user.getIsAdmin());
@@ -64,7 +65,7 @@ public class UserService {
 	public Long matchKakaoId(String code) {
 		log.info("카카오 ID를 매칭합니다.");
 		UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
-			() -> new BadRequestException("유효하지 않은 code입니다.")
+			() -> new BadRequestException("유효하지 않은 code입니다.", ClientErrorCode.UNFINISHED_USER_NOT_FOUND)
 		);
 		return unfinishedUser.getKakaoId();
 	}
@@ -73,7 +74,7 @@ public class UserService {
 	public Join.Response join(Join.Request request, Long kakaoId) {
 		log.info("회원 가입을 시작합니다.");
 		repository.findByKakaoId(kakaoId).ifPresent(existingUser -> {
-			throw new BadRequestException("이미 가입되었습니다.");
+			throw new BadRequestException("이미 가입되었습니다.", ClientErrorCode.DUPLICATE_KAKAO_ID);
 		});
 
 		User user = createUserAndAssignRole(request, kakaoId);
