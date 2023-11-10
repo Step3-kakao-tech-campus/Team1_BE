@@ -41,6 +41,8 @@ class AuthenticationConfigTest {
 		ResultActions perform = mvc.perform(post("/group/invitation")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(request));
+
+		perform.andDo(print());
 	}
 
 	@DisplayName("접근인가 거부시 response entity를 반환할 수 있다.")
