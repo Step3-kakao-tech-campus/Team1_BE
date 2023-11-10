@@ -118,7 +118,7 @@ public class AuthenticationConfig {
 			.antMatchers(HttpMethod.GET, "/schedule/fix/day/**")
 			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority(), RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/remain/week/**")
-			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority(), RoleType.ROLE_MEMBER.getAuthority())
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/recommend/**")
 			.hasRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.POST, "/schedule/fix/**")
