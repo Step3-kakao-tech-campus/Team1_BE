@@ -29,7 +29,7 @@ import com.example.team1_be.domain.Schedule.DTO.PostApplies;
 import com.example.team1_be.domain.Schedule.DTO.RecommendSchedule;
 import com.example.team1_be.domain.Schedule.DTO.RecruitSchedule;
 import com.example.team1_be.domain.Schedule.DTO.WeeklyScheduleCheck;
-import com.example.team1_be.domain.Schedule.Recommend.SchduleGenerator;
+import com.example.team1_be.domain.Schedule.Recommend.ScheduleGenerator;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklySchedule;
 import com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule.RecommendedWeeklyScheduleService;
 import com.example.team1_be.domain.Schedule.Recommend.WorktimeApply.RecommendedWorktimeApply;
@@ -109,7 +109,7 @@ public class ScheduleService {
 		RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
 
 		weekService.updateWeekStatus(week, WeekRecruitmentStatus.ENDED);
-		
+
 		List<Apply> selectedApplies = new ArrayList<>();
 		recommendedWeeklySchedule.getRecommendedWorktimeApplies()
 			.forEach(recommendedWorktimeApply ->
@@ -132,7 +132,7 @@ public class ScheduleService {
 		Map<Long, Long> requestMap = weeklyDetailWorktimes.stream()
 			.collect(Collectors.toMap(DetailWorktime::getId, DetailWorktime::getAmount));
 
-		SchduleGenerator generator = new SchduleGenerator(weeklyWorktimes, weeklyApplies, requestMap);
+		ScheduleGenerator generator = new ScheduleGenerator(weeklyWorktimes, weeklyApplies, requestMap);
 		List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> generatedSchedules = generator.generateSchedule();
 
 		for (Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> generatedSchedule : generatedSchedules) {
