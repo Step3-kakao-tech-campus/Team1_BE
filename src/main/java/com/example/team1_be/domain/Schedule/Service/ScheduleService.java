@@ -78,14 +78,6 @@ public class ScheduleService {
 			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
 		}
 
-//		WeekRecruitmentStatus status = weekService.getWeekStatus(group, request);
-//		if (status == null) {
-//			throw new CustomException(ClientErrorCode.RECRUITMENT_NOT_STARTED, HttpStatus.BAD_REQUEST);
-//		}
-//		else if (status.equals(WeekRecruitmentStatus.ENDED)) {
-//			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);
-//		}
-
 		Week week = weekService.findByGroupAndStartDate(group, request);
 		weekService.checkAppliable(week);
 
@@ -129,8 +121,21 @@ public class ScheduleService {
 	}
 
 	public void fixSchedule(User user, FixSchedule.Request request) {
+		if (!user.getIsAdmin()) {
+			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
+		}
+
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
+
 		Week week = weekService.findByGroupAndStartDate(group, request.getWeekStartDate());
+		weekService.checkAppliable(week);
+
 		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByWeek(week);
 		RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedSchedule.get(request.getSelection());
 
