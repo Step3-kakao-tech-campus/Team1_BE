@@ -53,8 +53,7 @@ public class DetailWorktimeReadOnlyService {
 	}
 
 	public List<DetailWorktime> findByStartDateAndWorktimes(LocalDate date, List<Long> ids) {
-		List<DetailWorktime> detailWorktimes = repository.findByStartDateAndWorktimes(date, ids);
-		return detailWorktimes;
+		return repository.findByStartDateAndWorktimes(date, ids);
 	}
 
 	public List<DetailWorktime> findByDayAndWorktimeIds(DayOfWeek day, List<Long> worktimeIds) {
