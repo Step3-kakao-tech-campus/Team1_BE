@@ -44,7 +44,7 @@ class ScheduleControllerTest {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
-		perform.andExpect(status().isNotFound());
+		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
 
@@ -66,7 +66,7 @@ class ScheduleControllerTest {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(get(String.format("/api/schedule/remain/week/%s", startWeekDate)));
 
-		perform.andExpect(status().isNotFound());
+		perform.andExpect(status().isBadRequest());
 	}
 
 	@DisplayName("주별 스케줄 신청 현황 조회 실패(알바생 마감한 주 신청아님)")
