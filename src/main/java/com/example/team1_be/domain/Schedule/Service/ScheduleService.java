@@ -61,15 +61,29 @@ public class ScheduleService {
 	private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
+		if (!user.getIsAdmin()) {
+			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
+		}
+
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
+
+		WeekRecruitmentStatus status = weekService.getWeekStatus(group, request.getWeekStartDate());
+		if (status != null) {
+			throw new CustomException(ClientErrorCode.RECRUITMENT_OBJECT_EXIST, HttpStatus.BAD_REQUEST);
+		}
+
 		Week week = weekService.createWeek(group, request.getWeekStartDate());
 		List<Worktime> weeklyWorktimes = worktimeService.createWorktimes(week, request.getWorktimes());
 		detailWorktimeService.createDays(week.getStartDate(), weeklyWorktimes, request.getAmount());
 	}
 
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
-
-
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -235,6 +249,12 @@ public class ScheduleService {
 
 	public GetWeekStatus.Response getWeekStatus(User user, LocalDate startDate) {
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
 
 		WeekRecruitmentStatus status = weekService.getWeekStatus(group, startDate);
 

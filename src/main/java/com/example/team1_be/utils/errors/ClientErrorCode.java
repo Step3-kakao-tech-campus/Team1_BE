@@ -22,7 +22,7 @@ public enum ClientErrorCode {
     // 20xxx
     DUPLICATE_KAKAO_ID(-20000, Series.DUPLICATE, "이미 가입된 kakaoId 입니다."),
     DUPLICATE_GRUOP(-20001, Series.DUPLICATE, "이미 그룹이 존재합니다."),
-    RECRUITMENT_ON_GOING(-20002, Series.DUPLICATE, "이미 startWeekDate가 모집 중으로, 스케줄 객체가 있습니다."),
+    RECRUITMENT_OBJECT_EXIST(-20002, Series.DUPLICATE, "이미 startWeekDate가 모집 중으로, 스케줄 객체가 있습니다."),
     RECRUITMENT_CLOSED(-20003, Series.DUPLICATE, "이미 startWeekDate가 모집 마감 되었습니다."),
     GROUP_NOT_FOUND(-20004, Series.DUPLICATE, "초대키로 그룹을 찾을 수 없습니다."),
 
