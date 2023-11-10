@@ -2,7 +2,6 @@ package com.example.team1_be.domain.Group.Service;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,6 @@ import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.Service.InviteService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
-import com.example.team1_be.utils.errors.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,10 +26,6 @@ public class GroupService {
 	private final GroupWriteOnlyRepositoryService writeOnlyRepositoryService;
 
 	public void create(User user, Create.Request request) {
-		if (!user.getIsAdmin()) {
-			throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
-		}
-
 		Group group = request.toGroup();
 		writeOnlyRepositoryService.creatGroup(group);
 
@@ -41,10 +35,6 @@ public class GroupService {
 	}
 
 	public void invitationAccept(User user, InvitationAccept.Request request) {
-		if (user.getIsAdmin()) {
-			throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
-		}
-
 		Invite invite = inviteService.findInvitation(request.getInvitationKey());
 
 		Group group = invite.getGroup();
