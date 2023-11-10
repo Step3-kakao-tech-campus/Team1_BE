@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.Group.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.Service.InviteService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
+import com.example.team1_be.utils.errors.exception.ForbiddenException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +31,12 @@ public class GroupService {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void create(User user, Create.Request request) {
-		Group group = request.toGroup();
+		Group group = userService.findGroupByUserOrNull(user);
+		if (group != null) {
+			logger.error("그룹 생성 됨, id  : {}", group.getId());
+			throw new ForbiddenException("이미 가입된 그룹이 있습니다.");
+		}
+		group = request.toGroup();
 		writeOnlyRepositoryService.creatGroup(group);
 		logger.info("그룹 생성 됨, id  : {}", group.getId());
 
@@ -50,10 +57,14 @@ public class GroupService {
 	}
 
 	public GetMembers.Response getMembers(User user) {
-		Group group = userService.findGroupByUser(user);
-		List<User> users = group.getUsers();
-		logger.info("그룹원 조회");
-
-		return new GetMembers.Response(group, user, users);
+		Group group = userService.findGroupByUserOrNull(user);
+		if (group != null) {
+			List<User> users = group.getUsers();
+			return new GetMembers.Response(group, user, users);
+		}
+		group = Group.builder()
+			.name(null)
+			.build();
+		return new GetMembers.Response(group, user, new ArrayList<>());
 	}
 }
