@@ -44,7 +44,9 @@ import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -58,51 +60,55 @@ public class ScheduleService {
 	private final RecommendedWeeklyScheduleService recommendedWeeklyScheduleService;
 
 	public void recruitSchedule(User user, RecruitSchedule.Request request) {
+		log.info("스케줄을 모집합니다.");
 		Group group = userService.findGroupByUser(user);
 		Week week = weekService.createWeek(group, request.getWeekStartDate());
 		List<Worktime> weeklyWorktimes = worktimeService.createWorktimes(week, request.getWorktimes());
 		detailWorktimeService.createDays(week.getStartDate(), weeklyWorktimes, request.getAmount());
+		log.info("스케줄 모집이 완료되었습니다.");
 	}
 
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
+		log.info("주간 스케줄을 확인합니다.");
 		Group group = userService.findGroupByUser(user);
-
 		Week week = weekService.findByGroupAndStartDate(group, request);
 		weekService.checkAppliable(user, week);
-
 		List<Worktime> weeklyWorktimes = weekService.findWorktimes(week);
 		ApplyStatus applyStatus = user.getIsAdmin() ? ApplyStatus.REMAIN : ApplyStatus.FIX;
 		Map<String, List<Map<Worktime, List<Apply>>>> weeklyApplies = detailWorktimeService.findAppliesByWorktimeAndDayAndStatus(
 			weeklyWorktimes,
 			applyStatus);
+		log.info("주간 스케줄 확인이 완료되었습니다.");
 		return new WeeklyScheduleCheck.Response(weeklyWorktimes, weeklyApplies);
 	}
 
 	public GetFixedWeeklySchedule.Response getFixedWeeklySchedule(User user, YearMonth requestMonth, Long userId) {
+		log.info("고정 주간 스케줄을 가져옵니다.");
 		Group group = userService.findGroupByUser(user);
 		User member = userService.findById(userId);
-
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
 			group,
 			requestMonth);
 		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedApplies(
 			monthlyDetailWorktimes, member);
-
+		log.info("고정 주간 스케줄 가져오기가 완료되었습니다.");
 		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
 	}
 
 	public GetFixedWeeklySchedule.Response getPersonalWeeklyFixedSchedule(User user, YearMonth requestMonth) {
+		log.info("개인 주간 고정 스케줄을 가져옵니다.");
 		Group group = userService.findGroupByUser(user);
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
 			group,
 			requestMonth);
 		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedPersonalApplies(
 			monthlyDetailWorktimes, user);
-
+		log.info("개인 주간 고정 스케줄 가져오기가 완료되었습니다.");
 		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
 	}
 
 	public void fixSchedule(User user, FixSchedule.Request request) {
+		log.info("스케줄을 고정합니다.");
 		Group group = userService.findGroupByUser(user);
 		Week week = weekService.findByGroupAndStartDate(group, request.getWeekStartDate());
 		List<RecommendedWeeklySchedule> recommendedSchedule = recommendedWeeklyScheduleService.findByWeek(week);
@@ -118,9 +124,11 @@ public class ScheduleService {
 
 		recommendedSchedule.forEach(x -> recommendedWorktimeApplyService.deleteAll(x.getRecommendedWorktimeApplies()));
 		recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
+		log.info("스케줄 고정이 완료되었습니다.");
 	}
 
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
+		log.info("스케줄을 추천합니다.");
 		Group group = userService.findGroupByUser(user);
 
 		Week week = weekService.findByGroupAndStartDate(group, date);
@@ -136,26 +144,26 @@ public class ScheduleService {
 		List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> generatedSchedules = generator.generateSchedule();
 
 		for (Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> generatedSchedule : generatedSchedules) {
-			RecommendedWeeklySchedule recommendedWeeklySchedule =
-				recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(week);
+			RecommendedWeeklySchedule recommendedWeeklySchedule = recommendedWeeklyScheduleService.creatRecommendedWeeklySchedule(
+				week);
 
-			List<RecommendedWorktimeApply> recommendedWorktimeApplies = new ArrayList<>();
-			for (DayOfWeek day : generatedSchedule.keySet()) {
-				for (List<Apply> applies : generatedSchedule.get(day).values()) {
-					for (Apply apply : applies) {
-						recommendedWorktimeApplies.add(RecommendedWorktimeApply.builder()
-							.recommendedWeeklySchedule(recommendedWeeklySchedule)
-							.apply(apply)
-							.build());
-					}
-				}
-			}
+			List<RecommendedWorktimeApply> recommendedWorktimeApplies = generatedSchedule.values().stream()
+				.flatMap(map -> map.values().stream())
+				.flatMap(List::stream)
+				.map(apply -> RecommendedWorktimeApply.builder()
+					.recommendedWeeklySchedule(recommendedWeeklySchedule)
+					.apply(apply)
+					.build())
+				.collect(Collectors.toList());
+
 			recommendedWorktimeApplyService.createRecommendedWorktimeApplies(recommendedWorktimeApplies);
 		}
+		log.info("스케줄 추천이 완료되었습니다.");
 		return new RecommendSchedule.Response(generatedSchedules);
 	}
 
 	public GetDailyFixedApplies.Response getDailyFixedApplies(User user, LocalDate selectedDate) {
+		log.info("일일 고정 신청서를 가져옵니다.");
 		Group group = userService.findGroupByUser(user);
 
 		Map<Worktime, List<User>> dailyApplyMap = new HashMap<>();
@@ -167,38 +175,42 @@ public class ScheduleService {
 			}
 			dailyApplyMap.put(detailWorktime.getWorktime(), appliers);
 		}
-
+		log.info("일일 고정 신청서 가져오기가 완료되었습니다.");
 		return new GetDailyFixedApplies.Response(dailyApplyMap);
 	}
 
 	public LoadLatestSchedule.Response loadLatestSchedule(User user, LocalDate startWeekDate) {
+		log.info("최신 스케줄을 불러옵니다.");
 		Group group = userService.findGroupByUser(user);
 
 		Week latestWeek = weekService.findLatestByGroup(group);
-
+		log.info("최신 스케줄 불러오기가 완료되었습니다.");
 		return new LoadLatestSchedule.Response(latestWeek.getWorktimes());
 	}
 
 	public GetWeekStatus.Response getWeekStatus(User user, LocalDate startDate) {
+		log.info("주간 상태를 가져옵니다.");
 		Group group = userService.findGroupByUser(user);
 
 		WeekRecruitmentStatus status = weekService.getWeekStatus(group, startDate);
-
+		log.info("주간 상태 가져오기가 완료되었습니다.");
 		return new GetWeekStatus.Response(status);
 	}
 
 	public GetApplies.Response getApplies(User user, LocalDate startWeekDate) {
+		log.info("신청서를 가져옵니다.");
 		Group group = userService.findGroupByUser(user);
 
 		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, startWeekDate);
 
 		List<SortedMap<Worktime, Apply>> weeklyApplies = applyService.findByUserAndWorktimeAndDay(user,
 			weeklyWorktimes);
-
+		log.info("신청서 가져오기가 완료되었습니다.");
 		return new GetApplies.Response(weeklyWorktimes, weeklyApplies);
 	}
 
 	public void postApplies(User user, PostApplies.Request requestDTO) {
+		log.info("신청서를 게시합니다.");
 		Group group = userService.findGroupByUser(user);
 
 		List<DetailWorktime> previousDetailWorktimes = detailWorktimeService.findByStartDateAndGroup(
@@ -206,5 +218,6 @@ public class ScheduleService {
 		List<DetailWorktime> appliedDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(
 			requestDTO.toWeeklyApplies());
 		applyService.updateApplies(user, previousDetailWorktimes, appliedDetailWorktimes);
+		log.info("신청서 게시가 완료되었습니다.");
 	}
 }
