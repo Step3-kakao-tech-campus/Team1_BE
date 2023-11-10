@@ -99,7 +99,7 @@ public class UserService {
 	public Group findGroupByUser(User user) {
 		log.info("사용자의 그룹을 찾습니다.");
 		return repository.findGroupByUser(user.getId())
-			.orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
+			.orElseThrow(() -> new BadRequestException("그룹을 찾을 수 없습니다.", ClientErrorCode.NO_GROUP));
 	}
 
 	public User findById(Long userId) {

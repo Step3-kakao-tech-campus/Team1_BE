@@ -3,6 +3,7 @@ package com.example.team1_be.domain.Group.Invite.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,6 @@ public class InviteReadOnlyRepositoryService {
 	public Invite findInviteByGroup(Group group) {
 		log.info("그룹 ID: {}에 대한 초대장을 조회합니다.", group.getId());
 		return repository.findByGroup(group)
-			.orElseThrow(() -> new RuntimeException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));
+			.orElseThrow(() -> new ServerErrorException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));
 	}
 }
