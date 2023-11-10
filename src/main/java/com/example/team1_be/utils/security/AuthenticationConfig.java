@@ -2,6 +2,7 @@ package com.example.team1_be.utils.security;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -29,6 +30,9 @@ public class AuthenticationConfig {
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper om;
 	private final Environment env;
+
+	@Value("${cors.origin}")
+	private String CORS_ORIGIN;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -94,7 +98,7 @@ public class AuthenticationConfig {
 		http.cors()
 			.configurationSource(request -> {
 				CorsConfiguration corsConfiguration = new CorsConfiguration();
-				corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+				corsConfiguration.setAllowedOrigins(List.of(CORS_ORIGIN));
 				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 				corsConfiguration.setAllowedHeaders(List.of("*"));
 				corsConfiguration.addExposedHeader("Authorization");
