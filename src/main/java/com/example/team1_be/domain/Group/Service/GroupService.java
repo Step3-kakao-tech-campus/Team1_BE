@@ -39,7 +39,7 @@ public class GroupService {
 		writeOnlyRepositoryService.creatGroup(group);
 		log.info("그룹 생성 됨, id  : {}", group.getId());
 
-		inviteService.createInviteWithGroup(group);
+		inviteService.createInviteForGroup(group);
 		log.info("초대장 생성");
 
 		userService.updateGroup(user, group);
@@ -47,7 +47,7 @@ public class GroupService {
 	}
 
 	public void invitationAccept(User user, InvitationAccept.Request request) {
-		Invite invite = inviteService.findInvitation(request.getInvitationKey());
+		Invite invite = inviteService.getInvitation(request.getInvitationKey());
 		log.info("초대장 조회");
 
 		Group group = invite.getGroup();
