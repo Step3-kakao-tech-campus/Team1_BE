@@ -33,8 +33,8 @@ public class ApplyService {
 
 	public List<Apply> findAppliesByWorktimes(List<Worktime> worktimes) {
 		List<Long> worktimeIds = worktimes.stream()
-			.map(Worktime::getId)
-			.collect(Collectors.toList());
+				.map(Worktime::getId)
+				.collect(Collectors.toList());
 		log.info("{}개의 근무 시간에 대한 신청 정보를 조회합니다.", worktimeIds.size());
 		return readOnlyService.findAppliesByWorktimes(worktimeIds);
 	}
@@ -45,7 +45,7 @@ public class ApplyService {
 	}
 
 	public SortedMap<LocalDate, List<Apply>> findFixedApplies(
-		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes, User user) {
+			SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes, User user) {
 		SortedMap<LocalDate, List<Apply>> monthlyApplies = new TreeMap<>((s1, s2) -> s1.compareTo(s2));
 		for (LocalDate date : monthlyDetailWorktimes.keySet()) {
 			List<Apply> applies = readOnlyService.findByUserAndDateAndStatus(user, date, ApplyStatus.FIX);
@@ -76,7 +76,7 @@ public class ApplyService {
 	}
 
 	public SortedMap<LocalDate, List<Apply>> findFixedPersonalApplies(
-		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes, User user) {
+			SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes, User user) {
 		SortedMap<LocalDate, List<Apply>> monthlyApplies = new TreeMap<>();
 		for (LocalDate date : monthlyDetailWorktimes.keySet()) {
 			List<Apply> applies = readOnlyService.findByUserAndDateAndStatus(user, date, ApplyStatus.FIX);
@@ -97,7 +97,7 @@ public class ApplyService {
 			SortedMap<Worktime, Apply> dailyApplies = new TreeMap<>((s1, s2) -> s1.getId().compareTo(s2.getId()));
 			for (Worktime worktime : weeklyWorktimes) {
 				dailyApplies.put(worktime,
-					readOnlyService.findByUserAndWorktimeAndDay(user, worktime, day));
+						readOnlyService.findByUserAndWorktimeAndDay(user, worktime, day));
 			}
 			weeklyApplies.add(dailyApplies);
 		}
@@ -105,7 +105,7 @@ public class ApplyService {
 	}
 
 	public void updateApplies(User user, List<DetailWorktime> previousDetailWorktimes,
-		List<DetailWorktime> appliedDetailWorktimes) {
+							  List<DetailWorktime> appliedDetailWorktimes) {
 		HashSet<DetailWorktime> previousDetailWorktimeSet = new HashSet<>(previousDetailWorktimes);
 		HashSet<DetailWorktime> appliedDetailWorktimeSet = new HashSet<>(appliedDetailWorktimes);
 
@@ -117,8 +117,8 @@ public class ApplyService {
 
 		List<DetailWorktime> detailWorktimesToDelete = new ArrayList<>(previousDetailWorktimes);
 		List<Long> detailWorktimeIds = detailWorktimesToDelete.stream()
-			.map(DetailWorktime::getId)
-			.collect(Collectors.toList());
+				.map(DetailWorktime::getId)
+				.collect(Collectors.toList());
 		List<Apply> appliesToDelete = readOnlyService.findByUserAndDetailWorktimeIds(user, detailWorktimeIds);
 		log.info("사용자 ID: {}, 상세 근무 시간 ID: {}에 따른 신청 정보를 삭제합니다.", user.getId(), detailWorktimeIds);
 		writeOnlyService.deleteAll(appliesToDelete);
