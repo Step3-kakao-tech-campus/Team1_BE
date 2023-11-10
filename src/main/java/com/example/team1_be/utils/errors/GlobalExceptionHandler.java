@@ -27,27 +27,27 @@ public final class GlobalExceptionHandler {
 
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<?> badRequest(BadRequestException e) {
-		return handleException(e, "잘못된 요청입니다.", e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<?> unauthorized(UnauthorizedException e) {
-		return handleException(e, "인증되지 않은 요청입니다.", e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	@ExceptionHandler(ForbiddenException.class)
 	public ResponseEntity<?> forbidden(ForbiddenException e) {
-		return handleException(e, "금지된 요청입니다.", e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<?> notFound(NotFoundException e) {
-		return handleException(e, "찾을 수 없는 리소스입니다.", e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	@ExceptionHandler(ServerErrorException.class)
 	public ResponseEntity<?> serverError(ServerErrorException e) {
-		return handleException(e, "서버 내부 오류입니다.", e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	@ExceptionHandler(Exception.class)

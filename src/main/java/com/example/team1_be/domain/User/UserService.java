@@ -1,5 +1,6 @@
 package com.example.team1_be.domain.User;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class UserService {
 				.kakaoId(kakaoId)
 				.build();
 			unfinishedUserRepository.save(unfinishedUser);
-			throw new NotFoundException("임시 정보 저장.");
+			throw new NotFoundException("회원이 아닙니다.", ClientErrorCode.NOT_USER);
 		}
 		log.info("로그인이 완료되었습니다.");
 		return new Login.Response(user.getIsAdmin());
