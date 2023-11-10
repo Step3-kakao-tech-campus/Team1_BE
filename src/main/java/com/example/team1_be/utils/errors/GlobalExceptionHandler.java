@@ -15,70 +15,68 @@ import com.example.team1_be.utils.errors.exception.ForbiddenException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import com.example.team1_be.utils.errors.exception.UnauthorizedException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
 
+	private ResponseEntity<?> handleException(Exception e, String message, HttpStatus status) {
+		log.error(message, e);
+		ApiUtils.ApiResult<?> error = ApiUtils.error(message, status);
+		return new ResponseEntity<>(error, status);
+	}
+
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<?> badRequest(BadRequestException e) {
-		return new ResponseEntity<>(e.body(), e.status());
+		return handleException(e, "잘못된 요청입니다.", e.status());
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<?> unauthorized(UnauthorizedException e) {
-		return new ResponseEntity<>(e.body(), e.status());
+		return handleException(e, "인증되지 않은 요청입니다.", e.status());
 	}
 
 	@ExceptionHandler(ForbiddenException.class)
 	public ResponseEntity<?> forbidden(ForbiddenException e) {
-		return new ResponseEntity<>(e.body(), e.status());
+		return handleException(e, "금지된 요청입니다.", e.status());
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<?> notFound(NotFoundException e) {
-		return new ResponseEntity<>(e.body(), e.status());
+		return handleException(e, "찾을 수 없는 리소스입니다.", e.status());
 	}
 
 	@ExceptionHandler(ServerErrorException.class)
 	public ResponseEntity<?> serverError(ServerErrorException e) {
-		return new ResponseEntity<>(e.body(), e.status());
+		return handleException(e, "서버 내부 오류입니다.", e.status());
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<?> unknownException(Exception exception) {
-		System.out.println(exception.getMessage());
-		exception.printStackTrace();
-		ApiUtils.ApiResult<?> error = ApiUtils.error("알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<?> unknownException(Exception e) {
+		return handleException(e, "알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException exception) throws
-		JsonProcessingException {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(
-			exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException e) {
+		return handleException(e, "유효하지 않은 요청 파라미터입니다.", HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<?> handleCustomException(CustomException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error(e.getMessage(), e.status());
-		return new ResponseEntity<>(error, e.getHttpStatus());
+		return handleException(e, e.getMessage(), e.status());
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error("요청주소의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		return handleException(e, "요청주소의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		return handleException(e, "요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
 	}
 }

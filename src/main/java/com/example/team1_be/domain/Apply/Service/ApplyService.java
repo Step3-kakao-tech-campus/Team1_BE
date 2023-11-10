@@ -20,7 +20,9 @@ import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,11 +34,12 @@ public class ApplyService {
 		List<Long> worktimeIds = worktimes.stream()
 			.map(Worktime::getId)
 			.collect(Collectors.toList());
-
+		log.info("{}개의 근무 시간에 대한 신청 정보를 조회합니다.", worktimeIds.size());
 		return readOnlyService.findAppliesByWorktimes(worktimeIds);
 	}
 
 	public void createApplies(List<Apply> applies) {
+		log.info("{}개의 신청 정보를 생성합니다.", applies.size());
 		writeOnlyService.createApplies(applies);
 	}
 
@@ -60,8 +63,10 @@ public class ApplyService {
 	public List<User> findUsersByWorktimeAndApplyStatus(DetailWorktime worktime, ApplyStatus status) {
 		List<User> users = readOnlyService.findUsersByWorktimeAndApplyStatus(worktime, status);
 		if (users.isEmpty()) {
+			log.warn("근무 시간 ID: {}, 상태: {}에 따른 신청자를 찾을 수 없습니다.", worktime.getId(), status);
 			throw new NotFoundException("확정된 신청자를 찾을 수 없습니다.");
 		}
+		log.info("근무 시간 ID: {}, 상태: {}에 따른 신청자를 조회하였습니다.", worktime.getId(), status);
 		return users;
 	}
 
@@ -100,10 +105,10 @@ public class ApplyService {
 
 	public void updateApplies(User user, List<DetailWorktime> previousDetailWorktimes,
 		List<DetailWorktime> appliedDetailWorktimes) {
-		HashSet<DetailWorktime> previousDetailWorktimeSet = new HashSet(previousDetailWorktimes);
-		HashSet<DetailWorktime> appliedDetailWorktimeSet = new HashSet(appliedDetailWorktimes);
+		HashSet<DetailWorktime> previousDetailWorktimeSet = new HashSet<>(previousDetailWorktimes);
+		HashSet<DetailWorktime> appliedDetailWorktimeSet = new HashSet<>(appliedDetailWorktimes);
 
-		HashSet<DetailWorktime> intersection = new HashSet(previousDetailWorktimes);
+		HashSet<DetailWorktime> intersection = new HashSet<>(previousDetailWorktimes);
 		intersection.retainAll(appliedDetailWorktimeSet);
 
 		previousDetailWorktimeSet.removeAll(intersection);
@@ -114,9 +119,11 @@ public class ApplyService {
 			.map(DetailWorktime::getId)
 			.collect(Collectors.toList());
 		List<Apply> appliesToDelete = readOnlyService.findByUserAndDetailWorktimeIds(user, detailWorktimeIds);
+		log.info("사용자 ID: {}, 상세 근무 시간 ID: {}에 따른 신청 정보를 삭제합니다.", user.getId(), detailWorktimeIds);
 		writeOnlyService.deleteAll(appliesToDelete);
 
 		List<DetailWorktime> appliesToCreate = new ArrayList<>(appliedDetailWorktimeSet);
+		log.info("사용자 ID: {}에 대하여 신청 정보를 생성합니다.", user.getId());
 		writeOnlyService.createApplies(user, appliesToCreate);
 	}
 }

@@ -1,8 +1,8 @@
 package com.example.team1_be.domain.Group.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +14,12 @@ import com.example.team1_be.domain.Group.Invite.Invite;
 import com.example.team1_be.domain.Group.Invite.Service.InviteService;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.User.UserService;
-import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.ForbiddenException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -28,33 +30,40 @@ public class GroupService {
 	private final GroupWriteOnlyRepositoryService writeOnlyRepositoryService;
 
 	public void create(User user, Create.Request request) {
-		if (!user.getIsAdmin()) {
-			throw new CustomException("매니저 계정만 그룹을 생성할 수 있습니다.", HttpStatus.FORBIDDEN);
+		Group group = userService.findGroupByUserOrNull(user);
+		if (group != null) {
+			log.error("그룹 생성 됨, id  : {}", group.getId());
+			throw new ForbiddenException("이미 가입된 그룹이 있습니다.");
 		}
-
-		Group group = request.toGroup();
+		group = request.toGroup();
 		writeOnlyRepositoryService.creatGroup(group);
+		log.info("그룹 생성 됨, id  : {}", group.getId());
 
 		inviteService.createInviteWithGroup(group);
+		log.info("초대장 생성");
 
 		userService.updateGroup(user, group);
+		log.info("그룹 가입함");
 	}
 
 	public void invitationAccept(User user, InvitationAccept.Request request) {
-		if (user.getIsAdmin()) {
-			throw new CustomException("알바생 계정만 그룹에 가입할 수 있습니다.", HttpStatus.FORBIDDEN);
-		}
-
 		Invite invite = inviteService.findInvitation(request.getInvitationKey());
+		log.info("초대장 조회");
 
 		Group group = invite.getGroup();
 		userService.updateGroup(user, group);
+		log.info("그룹 가입");
 	}
 
 	public GetMembers.Response getMembers(User user) {
-		Group group = userService.findGroupByUser(user);
-		List<User> users = group.getUsers();
-
-		return new GetMembers.Response(group, user, users);
+		Group group = userService.findGroupByUserOrNull(user);
+		if (group != null) {
+			List<User> users = group.getUsers();
+			return new GetMembers.Response(group, user, users);
+		}
+		group = Group.builder()
+			.name(null)
+			.build();
+		return new GetMembers.Response(group, user, new ArrayList<>());
 	}
 }

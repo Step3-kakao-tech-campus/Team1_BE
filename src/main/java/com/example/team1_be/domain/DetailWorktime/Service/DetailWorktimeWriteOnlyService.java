@@ -13,18 +13,21 @@ import com.example.team1_be.domain.DetailWorktime.DetailWorktimeRepository;
 import com.example.team1_be.domain.Worktime.Worktime;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class DetailWorktimeWriteOnlyService {
 	private final DetailWorktimeRepository repository;
 
-	public List<DetailWorktime> createDays(List<DetailWorktime> days) {
-		return repository.saveAll(days);
+	public void createDays(List<DetailWorktime> days) {
+		log.info("{}개의 상세 근무 시간 정보를 생성합니다.", days.size());
+		repository.saveAll(days);
 	}
 
-	public List<DetailWorktime> createDaysWithWorktimesAndAmounts(LocalDate startDate, List<Worktime> weeklyWorktimes,
+	public void createDaysWithWorktimesAndAmounts(LocalDate startDate, List<Worktime> weeklyWorktimes,
 		List<List<Long>> weeklyDemands) {
 		List<List<DetailWorktime>> weeklyDetailWorktimes = new ArrayList<>();
 		for (DayOfWeek day : DayOfWeek.values()) {
@@ -33,7 +36,8 @@ public class DetailWorktimeWriteOnlyService {
 			weeklyDetailWorktimes.add(createDailyDemands(date, weeklyWorktimes, weeklyDemands.get(weekdayOrdinal)));
 		}
 		List<DetailWorktime> falttenedDetailsWorktimes = flattenListOfListsImperatively(weeklyDetailWorktimes);
-		return createDays(falttenedDetailsWorktimes);
+		log.info("주간 근무 시간 정보를 생성합니다.");
+		createDays(falttenedDetailsWorktimes);
 	}
 
 	private List<DetailWorktime> createDailyDemands(LocalDate date, List<Worktime> weeklyWorktimes,
@@ -42,10 +46,13 @@ public class DetailWorktimeWriteOnlyService {
 		for (int i = 0; i < weeklyWorktimes.size(); i++) {
 			dailyDetailWorktimes.add(createDayWithWorktimeAndAmount(date, weeklyWorktimes.get(i), dailyDemands.get(i)));
 		}
+		log.info("{}에 대한 일간 근무 시간 정보를 생성합니다.", date);
 		return dailyDetailWorktimes;
 	}
 
 	private DetailWorktime createDayWithWorktimeAndAmount(LocalDate date, Worktime worktime, Long dailyDemand) {
+		log.info("근무 시간 ID: {}, 요일: {}, 요청량: {}에 대한 상세 근무 시간 정보를 생성합니다.", worktime.getId(), date.getDayOfWeek(),
+			dailyDemand);
 		return DetailWorktime.builder()
 			.date(date)
 			.dayOfWeek(date.getDayOfWeek())
