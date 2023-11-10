@@ -1,7 +1,6 @@
 package com.example.team1_be.utils;
 
 import com.example.team1_be.utils.errors.ClientErrorCode;
-import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

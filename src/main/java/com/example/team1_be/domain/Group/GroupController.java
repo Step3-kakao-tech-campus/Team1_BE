@@ -24,7 +24,7 @@ import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/group")
+@RequestMapping("/group")
 @RequiredArgsConstructor
 public class GroupController {
 

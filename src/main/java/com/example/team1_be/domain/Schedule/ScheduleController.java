@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/schedule")
+@RequestMapping("/schedule")
 public class ScheduleController {
 	private final ScheduleService scheduleService;
 
@@ -149,7 +149,7 @@ public class ScheduleController {
 	public ResponseEntity<ApiUtils.ApiResult<String>> postApplies(
 		@AuthenticationPrincipal CustomUserDetails userDetails,
 		@RequestBody PostApplies.Request requestDTO) {
-
+		
 		scheduleService.postApplies(userDetails.getUser(), requestDTO);
 		ApiUtils.ApiResult<String> response = ApiUtils.success(null);
 		return ResponseEntity.ok(response);

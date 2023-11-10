@@ -10,7 +10,7 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 public @interface WithMockCustomMemberUser {
 	String username() default "dlwogns";
 
-	String userId() default "1";
+	String userId() default "2";
 
 	String kakaoId() default "1";
 
