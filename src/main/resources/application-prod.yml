@@ -22,9 +22,12 @@ spring:
 
 jwt:
   secretKey: ${SECRET_KEY}
+
 kakao:
   clientId: ${KAKAO_CLIENT_ID}
   redirectURI: ${KAKAO_REDIRECT_URI}
+  baseURI: ${KAKAO_BASE_URI}
+
 
 logging:
   level:
