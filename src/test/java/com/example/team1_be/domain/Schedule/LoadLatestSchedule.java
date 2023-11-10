@@ -27,7 +27,7 @@ public class LoadLatestSchedule {
 	@Autowired
 	private ObjectMapper om;
 
-	@DisplayName("개인 확정 스케줄 조회 성공")
+	@DisplayName("최근 스케줄 조회 성공")
 	@WithMockCustomAdminUser(userId = "2")
 	@Test
 	void test1() throws Exception {

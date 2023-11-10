@@ -13,7 +13,7 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.example.team1_be.domain.User.Role.Roles;
+import com.example.team1_be.domain.User.Role.RoleType;
 import com.example.team1_be.utils.security.XSS.XSSProtectFilter;
 import com.example.team1_be.utils.security.auth.CustomAccessDeniedHandler;
 import com.example.team1_be.utils.security.auth.CustomAuthenticationEntryPoint;
@@ -110,34 +110,39 @@ public class AuthenticationConfig {
 	private void authorizeSchedule(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
 			.antMatchers(HttpMethod.GET, "/schedule/application/**")
-			.hasRole(Roles.ROLE_MEMBER.getAuth())
+			.hasRole(RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.PUT, "/schedule/application")
-			.hasRole(Roles.ROLE_MEMBER.getAuth())
+			.hasRole(RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/fix/month/**")
-			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority(), RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/fix/day/**")
-			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority(), RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/remain/week/**")
-			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/recommend/**")
-			.hasRole(Roles.ROLE_ADMIN.getAuth())
+			.hasRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.POST, "/schedule/fix/**")
-			.hasRole(Roles.ROLE_ADMIN.getAuth())
+			.hasRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/status/**")
-			.hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority(), RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.POST, "/schedule/worktime")
-			.hasAnyRole(Roles.ROLE_ADMIN.getAuth())
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.GET, "/schedule/worktime/**")
-			.hasAnyRole(Roles.ROLE_ADMIN.getAuth());
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority());
 	}
 
 	private void authorizeGroup(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
-			.antMatchers(HttpMethod.POST, "/group").hasRole(Roles.ROLE_ADMIN.getAuth())
-			.antMatchers(HttpMethod.GET, "/group").hasAnyRole(Roles.ROLE_ADMIN.getAuth(), Roles.ROLE_MEMBER.getAuth())
-			.antMatchers(HttpMethod.GET, "/group/invitation").hasRole(Roles.ROLE_ADMIN.getAuth())
-			.antMatchers(HttpMethod.POST, "/group/invitation").hasRole(Roles.ROLE_MEMBER.getAuth())
-			.antMatchers(HttpMethod.GET, "/group/invitation/information/**").hasRole(Roles.ROLE_MEMBER.getAuth());
+			.antMatchers(HttpMethod.POST, "/group")
+			.hasRole(RoleType.ROLE_ADMIN.getAuthority())
+			.antMatchers(HttpMethod.GET, "/group")
+			.hasAnyRole(RoleType.ROLE_ADMIN.getAuthority(), RoleType.ROLE_MEMBER.getAuthority())
+			.antMatchers(HttpMethod.GET, "/group/invitation")
+			.hasRole(RoleType.ROLE_ADMIN.getAuthority())
+			.antMatchers(HttpMethod.POST, "/group/invitation")
+			.hasRole(RoleType.ROLE_MEMBER.getAuthority())
+			.antMatchers(HttpMethod.GET, "/group/invitation/information/**")
+			.hasRole(RoleType.ROLE_MEMBER.getAuthority());
 	}
 
 	private void authorizeLogin(HttpSecurity http) throws Exception {

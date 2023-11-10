@@ -24,36 +24,36 @@ public class InviteService {
 	private final InviteReadOnlyRepositoryService readOnlyRepositoryService;
 	private final InviteWriteRepositoryService writeRepositoryService;
 
-	public InvitationCheck.Response invitationCheck(String invitationKey) {
+	public InvitationCheck.Response checkInvitation(String invitationKey) {
 		log.info("초대장 코드: {}에 대한 초대장을 검증합니다.", invitationKey);
-		Invite invite = readOnlyRepositoryService.findByCode(invitationKey);
-		readOnlyRepositoryService.checkValidation(invite);
+		Invite invite = readOnlyRepositoryService.findInviteByCode(invitationKey);
+		readOnlyRepositoryService.validateInvite(invite);
 		return new InvitationCheck.Response(invite.getGroup());
 	}
 
-	public GetInvitation.Response getInvitation(User user) {
+	public GetInvitation.Response retrieveInvitation(User user) {
 		if (!user.getIsAdmin()) {
 			throw new CustomException("매니저 계정만 초대장을 발급할 수 있습니다.", HttpStatus.FORBIDDEN);
 		}
 		Group group = userService.findGroupByUser(user);
-		Invite invite = readOnlyRepositoryService.findByGroup(group);
-		writeRepositoryService.renewInvitation(invite);
+		Invite invite = readOnlyRepositoryService.findInviteByGroup(group);
+		writeRepositoryService.refreshInvitation(invite);
 		return new GetInvitation.Response(invite.getCode());
 	}
 
-	public void createInviteWithGroup(Group group) {
+	public void createInviteForGroup(Group group) {
 		log.info("그룹 ID: {}에 대한 새로운 초대장을 생성합니다.", group.getId());
-		String invitationCode = readOnlyRepositoryService.generateInviteCode();
-		writeRepositoryService.createInvite(Invite.builder()
+		String invitationCode = readOnlyRepositoryService.createInviteCode();
+		writeRepositoryService.registerInvite(Invite.builder()
 			.code(invitationCode)
 			.group(group)
 			.build());
 	}
 
-	public Invite findInvitation(String invitationKey) {
+	public Invite getInvitation(String invitationKey) {
 		log.info("초대장 코드: {}에 대한 초대장을 조회합니다.", invitationKey);
-		Invite invite = readOnlyRepositoryService.findByCode(invitationKey);
-		readOnlyRepositoryService.checkValidation(invite);
+		Invite invite = readOnlyRepositoryService.findInviteByCode(invitationKey);
+		readOnlyRepositoryService.validateInvite(invite);
 		return invite;
 	}
 }

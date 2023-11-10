@@ -35,12 +35,12 @@ public class DetailWorktimeService {
 	private final DetailWorktimeWriteOnlyService writeOnlyService;
 
 	public void createDays(List<DetailWorktime> days) {
-		writeOnlyService.createDays(days);
+		writeOnlyService.registerDetailWorktimes(days);
 		log.info("{}개의 상세 근무 시간이 생성되었습니다.", days.size());
 	}
 
 	public void createDays(LocalDate week, List<Worktime> weeklyWorktimes, List<List<Long>> amount) {
-		writeOnlyService.createDaysWithWorktimesAndAmounts(week, weeklyWorktimes, amount);
+		writeOnlyService.registerWeeklyDetailWorktimesWithWorktimesAndAmounts(week, weeklyWorktimes, amount);
 	}
 
 	public Map<String, List<Map<Worktime, List<Apply>>>> findAppliesByWorktimeAndDayAndStatus(List<Worktime> worktimes,
@@ -59,7 +59,7 @@ public class DetailWorktimeService {
 
 	private Map<Worktime, List<Apply>> findAppliesByWorktimeAndStatusForDay(Worktime worktime, ApplyStatus status,
 		DayOfWeek day) {
-		List<Apply> applies = readOnlyService.findAppliesByWorktimeAndStatus(worktime, status, day);
+		List<Apply> applies = readOnlyService.findAppliesByWorktimeDayAndStatus(worktime, status, day);
 		log.info("근무 시간 ID: {}, 요일: {}에 따른 신청 정보를 조회하였습니다.", worktime.getId(), day);
 		Map<Worktime, List<Apply>> appliesByWorktime = new HashMap<>();
 		appliesByWorktime.put(worktime, applies);
@@ -73,7 +73,7 @@ public class DetailWorktimeService {
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailsWorktimesMap = new TreeMap<>(
 			Comparator.naturalOrder());
 		for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
-			List<DetailWorktime> detailWorktimes = readOnlyService.findByGroupAndDateAndStatus(group, date,
+			List<DetailWorktime> detailWorktimes = readOnlyService.findDetailWorktimesByGroupDateAndStatus(group, date,
 				WeekRecruitmentStatus.ENDED);
 
 			if (detailWorktimes.isEmpty()) {
@@ -92,17 +92,17 @@ public class DetailWorktimeService {
 	}
 
 	public List<DetailWorktime> findByStartDateAndGroup(LocalDate date, Group group) {
-		return readOnlyService.findByStartDateAndGroup(date, group);
+		return readOnlyService.findDetailWorktimesByStartDateAndGroup(date, group);
 	}
 
 	public List<DetailWorktime> findByGroupAndDate(Group group, LocalDate selectedDate) {
-		return readOnlyService.findByGroupAndDate(group, selectedDate);
+		return readOnlyService.findDetailWorktimesByGroupAndDate(group, selectedDate);
 	}
 
 	public List<DetailWorktime> findByStartDateAndWorktimes(LocalDate date, List<Worktime> worktimes) {
 		List<Long> ids = worktimes.stream().map(Worktime::getId).collect(
 			Collectors.toList());
-		return readOnlyService.findByStartDateAndWorktimes(date, ids);
+		return readOnlyService.findDetailWorktimesByStartDateAndWorktimes(date, ids);
 	}
 
 	public List<DetailWorktime> findByStartDateAndWorktimes(SortedMap<DayOfWeek, List<Worktime>> weeklyApplies) {
@@ -110,7 +110,7 @@ public class DetailWorktimeService {
 		for (DayOfWeek day : DayOfWeek.values()) {
 			List<Long> worktimeIds = weeklyApplies.get(day).stream().map(Worktime::getId).collect(Collectors.toList());
 			if (!worktimeIds.isEmpty()) {
-				appliedDetailWorktimes.addAll(readOnlyService.findByDayAndWorktimeIds(day, worktimeIds));
+				appliedDetailWorktimes.addAll(readOnlyService.findDetailWorktimesByDayAndWorktimeIds(day, worktimeIds));
 			}
 		}
 		return appliedDetailWorktimes;

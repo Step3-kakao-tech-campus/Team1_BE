@@ -19,7 +19,7 @@ public class GetMembers {
 			this.groupName = group.getName();
 			this.userName = user.getName();
 			this.members = users.stream()
-				.map(member -> new MemberInfo(member))
+				.map(MemberInfo::new)
 				.collect(Collectors.toList());
 		}
 

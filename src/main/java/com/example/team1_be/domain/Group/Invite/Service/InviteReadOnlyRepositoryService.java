@@ -24,31 +24,31 @@ public class InviteReadOnlyRepositoryService {
 
 	private final int INVITATION_EXPIRED_HOURS = 24;
 
-	public Invite findByCode(String invitationKey) {
+	public Invite findInviteByCode(String invitationKey) {
 		log.info("초대장 코드: {}에 대한 초대장을 조회합니다.", invitationKey);
 		return repository.findByCode(invitationKey)
 			.orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
 	}
 
-	public boolean isDuplicateCode(String uuid) {
+	public boolean checkDuplicateCode(String uuid) {
 		log.info("초대장 코드: {}가 중복되는지 확인합니다.", uuid);
 		try {
-			findByCode(uuid);
+			findInviteByCode(uuid);
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public String generateInviteCode() {
+	public String createInviteCode() {
 		String code;
 		do {
 			code = UUID.randomUUID().toString();
-		} while (isDuplicateCode(code));
+		} while (checkDuplicateCode(code));
 		return code;
 	}
 
-	public void checkValidation(Invite invite) {
+	public void validateInvite(Invite invite) {
 		log.info("초대장의 유효성을 확인합니다.");
 		if (invite.getRenewedAt() == null) {
 			throw new CustomException("유효하지 않은 요청입니다.", HttpStatus.FORBIDDEN);
@@ -58,7 +58,7 @@ public class InviteReadOnlyRepositoryService {
 		}
 	}
 
-	public Invite findByGroup(Group group) {
+	public Invite findInviteByGroup(Group group) {
 		log.info("그룹 ID: {}에 대한 초대장을 조회합니다.", group.getId());
 		return repository.findByGroup(group)
 			.orElseThrow(() -> new RuntimeException("그룹원과 초대장이 1:1이 되지 않는 에러입니다."));

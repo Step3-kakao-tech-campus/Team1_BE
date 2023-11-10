@@ -89,7 +89,7 @@ public class ScheduleService {
 		SortedMap<LocalDate, List<DetailWorktime>> monthlyDetailWorktimes = detailWorktimeService.findEndedByGroupAndYearMonth(
 			group,
 			requestMonth);
-		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedApplies(
+		SortedMap<LocalDate, List<Apply>> monthlyFixedApplies = applyService.findFixedAppliesByUserAndDate(
 			monthlyDetailWorktimes, member);
 		log.info("고정 주간 스케줄 가져오기가 완료되었습니다.");
 		return new GetFixedWeeklySchedule.Response(monthlyFixedApplies);
@@ -120,7 +120,7 @@ public class ScheduleService {
 		recommendedWeeklySchedule.getRecommendedWorktimeApplies()
 			.forEach(recommendedWorktimeApply ->
 				selectedApplies.add(recommendedWorktimeApply.getApply().updateStatus(ApplyStatus.FIX)));
-		applyService.createApplies(selectedApplies);
+		applyService.registerApplies(selectedApplies);
 
 		recommendedSchedule.forEach(x -> recommendedWorktimeApplyService.deleteAll(x.getRecommendedWorktimeApplies()));
 		recommendedWeeklyScheduleService.deleteAll(recommendedSchedule);
@@ -135,7 +135,7 @@ public class ScheduleService {
 		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, date);
 		List<DetailWorktime> weeklyDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(date,
 			weeklyWorktimes);
-		List<Apply> weeklyApplies = applyService.findAppliesByWorktimes(weeklyWorktimes);
+		List<Apply> weeklyApplies = applyService.findApplies(weeklyWorktimes);
 
 		Map<Long, Long> requestMap = weeklyDetailWorktimes.stream()
 			.collect(Collectors.toMap(DetailWorktime::getId, DetailWorktime::getAmount));
@@ -169,7 +169,7 @@ public class ScheduleService {
 		Map<Worktime, List<User>> dailyApplyMap = new HashMap<>();
 		List<DetailWorktime> detailWorktimes = detailWorktimeService.findByGroupAndDate(group, selectedDate);
 		for (DetailWorktime detailWorktime : detailWorktimes) {
-			List<User> appliers = applyService.findUsersByWorktimeAndFixedApplies(detailWorktime);
+			List<User> appliers = applyService.findUsersByWorktimeAndFixedStatus(detailWorktime);
 			if (appliers.size() != detailWorktime.getAmount()) {
 				throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
 			}
@@ -203,7 +203,7 @@ public class ScheduleService {
 
 		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, startWeekDate);
 
-		List<SortedMap<Worktime, Apply>> weeklyApplies = applyService.findByUserAndWorktimeAndDay(user,
+		List<SortedMap<Worktime, Apply>> weeklyApplies = applyService.findWeeklyAppliesByUser(user,
 			weeklyWorktimes);
 		log.info("신청서 가져오기가 완료되었습니다.");
 		return new GetApplies.Response(weeklyWorktimes, weeklyApplies);

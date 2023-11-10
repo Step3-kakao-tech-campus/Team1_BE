@@ -17,17 +17,17 @@ public class InviteWriteRepositoryService {
 	private final InviteRepository repository;
 
 	@Transactional
-	public void createInvite(Invite invite) {
+	public void registerInvite(Invite invite) {
 		log.info("초대를 생성합니다.");
 		repository.save(invite);
 		log.info("초대 생성이 완료되었습니다.");
 	}
 
 	@Transactional
-	public void renewInvitation(Invite invite) {
+	public void refreshInvitation(Invite invite) {
 		log.info("초대를 갱신합니다.");
 		invite.renew();
-		createInvite(invite);
+		registerInvite(invite);
 		log.info("초대 갱신이 완료되었습니다.");
 	}
 }

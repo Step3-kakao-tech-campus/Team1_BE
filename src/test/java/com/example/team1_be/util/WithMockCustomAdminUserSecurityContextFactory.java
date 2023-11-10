@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 import com.example.team1_be.domain.User.Role.Role;
-import com.example.team1_be.domain.User.Role.Roles;
+import com.example.team1_be.domain.User.Role.RoleType;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.utils.security.auth.UserDetails.CustomUserDetails;
 
@@ -20,12 +20,9 @@ public class WithMockCustomAdminUserSecurityContextFactory
 	public SecurityContext createSecurityContext(WithMockCustomAdminUser annotation) {
 		final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 		final Role adminRole = Role.builder()
-			.role(Roles.ROLE_ADMIN)
+			.roleType(RoleType.ROLE_ADMIN)
 			.build();
-		final Role userRole = Role.builder()
-			.role(Roles.ROLE_USER)
-			.build();
-		final Set<Role> roleSet = new HashSet<>(List.of(new Role[] {userRole, adminRole}));
+		final Set<Role> roleSet = new HashSet<>(List.of(new Role[] {adminRole}));
 		final User user = User.builder()
 			.id(Long.valueOf(annotation.userId()))
 			.name(annotation.username())

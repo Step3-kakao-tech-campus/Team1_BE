@@ -270,6 +270,19 @@ public class GroupControllerTest {
 		perform.andDo(print());
 	}
 
+	@DisplayName("그룹원 조회 성공(공백)")
+	@WithMockCustomAdminUser
+	@Sql("group-getMembers3.sql")
+	@Test
+	void getMembers3() throws Exception {
+		// when
+		ResultActions perform = mvc.perform(get("/api/group"));
+
+		// then
+		perform.andExpect(status().isOk());
+		perform.andDo(print());
+	}
+
 	@DisplayName("그룹 초대링크 발급 성공")
 	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Sql("group-getInvitation1.sql")

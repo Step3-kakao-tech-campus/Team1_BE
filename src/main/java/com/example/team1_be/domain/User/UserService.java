@@ -1,7 +1,5 @@
 package com.example.team1_be.domain.User;
 
-import java.util.Collections;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,7 +97,8 @@ public class UserService {
 
 	public Group findGroupByUser(User user) {
 		log.info("사용자의 그룹을 찾습니다.");
-		return repository.findGroupByUser(user.getId()).orElse(Group.builder().users(Collections.emptyList()).build());
+		return repository.findGroupByUser(user.getId())
+			.orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
 	}
 
 	public User findById(Long userId) {
@@ -115,6 +114,7 @@ public class UserService {
 
 	public Group findGroupByUserOrNull(User user) {
 		log.info("사용자의 그룹을 찾습니다.");
-		return repository.findGroupByUser(user.getId()).orElse(null);
+		return repository.findGroupByUser(user.getId())
+			.orElse(null);
 	}
 }

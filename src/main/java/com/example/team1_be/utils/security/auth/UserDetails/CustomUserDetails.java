@@ -8,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.team1_be.domain.User.Role.Role;
-import com.example.team1_be.domain.User.Role.Roles;
+import com.example.team1_be.domain.User.Role.RoleType;
 import com.example.team1_be.domain.User.User;
 
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
 		this.authorities = new ArrayList<SimpleGrantedAuthority>();
 
 		for (Role roles : user.getRoles()) {
-			Roles role = roles.getRole();
+			RoleType role = roles.getRoleType();
 			this.authorities.add(new SimpleGrantedAuthority(role.toString()));
 		}
 	}
