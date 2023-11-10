@@ -28,16 +28,16 @@ public class Role extends BaseEntity {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
-	private Roles role;
+	private RoleType roleType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Builder
-	public Role(Long id, Roles role, User user) {
+	public Role(Long id, RoleType roleType, User user) {
 		this.id = id;
-		this.role = role;
+		this.roleType = roleType;
 		this.user = user;
 	}
 }
