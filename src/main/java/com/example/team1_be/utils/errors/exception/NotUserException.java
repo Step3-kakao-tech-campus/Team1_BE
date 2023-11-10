@@ -8,15 +8,15 @@ import com.example.team1_be.utils.ApiUtils;
 import lombok.Getter;
 
 @Getter
-public class NotFoundException extends RuntimeException {
+public class NotUserException extends RuntimeException {
 	private ClientErrorCode errorCode;
 
-	public NotFoundException(String message) {
+	public NotUserException(String message) {
 		super(message);
 		this.errorCode = ClientErrorCode.UNKNOWN_ERROR;
 	}
 
-	public NotFoundException(ClientErrorCode errorCode) {
+	public NotUserException(ClientErrorCode errorCode) {
 		super(errorCode.getMessage());
 		this.errorCode = errorCode;
 	}

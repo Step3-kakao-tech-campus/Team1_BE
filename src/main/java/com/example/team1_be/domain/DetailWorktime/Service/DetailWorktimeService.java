@@ -11,6 +11,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import com.example.team1_be.utils.errors.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,6 @@ import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -73,7 +74,7 @@ public class DetailWorktimeService {
 		}
 
 		if (monthlyDetailsWorktimesMap.isEmpty()) {
-			throw new NotFoundException("확정된 스케줄이 없습니다.");
+			throw new CustomException("확정된 스케줄이 없습니다.", HttpStatus.NOT_FOUND);
 		}
 		return monthlyDetailsWorktimesMap;
 	}

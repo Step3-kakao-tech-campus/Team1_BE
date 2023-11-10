@@ -9,6 +9,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import com.example.team1_be.utils.errors.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +19,6 @@ import com.example.team1_be.domain.Apply.ApplyStatus;
 import com.example.team1_be.domain.DetailWorktime.DetailWorktime;
 import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,7 +53,7 @@ public class ApplyService {
 		}
 
 		if (monthlyApplies.isEmpty()) {
-			throw new NotFoundException("확정된 스케줄이 없습니다.");
+			throw new CustomException("확정된 스케줄이 없습니다.", HttpStatus.NOT_FOUND);
 		}
 		return monthlyApplies;
 	}
@@ -60,7 +61,7 @@ public class ApplyService {
 	public List<User> findUsersByWorktimeAndApplyStatus(DetailWorktime worktime, ApplyStatus status) {
 		List<User> users = readOnlyService.findUsersByWorktimeAndApplyStatus(worktime, status);
 		if (users.isEmpty()) {
-			throw new NotFoundException("확정된 신청자를 찾을 수 없습니다.");
+			throw new CustomException("확정된 신청자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 		}
 		return users;
 	}
@@ -80,7 +81,7 @@ public class ApplyService {
 			monthlyApplies.put(date, applies);
 		}
 		if (monthlyApplies.isEmpty()) {
-			throw new NotFoundException("확정된 스케줄이 존재하지 않습니다.");
+			throw new CustomException("확정된 스케줄이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
 		}
 		return monthlyApplies;
 	}

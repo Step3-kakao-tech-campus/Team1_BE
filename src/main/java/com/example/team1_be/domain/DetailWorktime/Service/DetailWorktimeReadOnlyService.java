@@ -17,7 +17,6 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.utils.errors.exception.CustomException;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +32,7 @@ public class DetailWorktimeReadOnlyService {
 
 	public List<Apply> findAppliesByWorktimeAndStatus(Worktime worktime, ApplyStatus status, DayOfWeek day) {
 		DetailWorktime detailWorktime = repository.findByWorktimeAndStatus(worktime.getId(), day)
-			.orElseThrow(() -> new NotFoundException("존재하지 않는 세부 근무 일정입니다."));
+			.orElseThrow(() -> new CustomException("존재하지 않는 세부 근무 일정입니다.", HttpStatus.NOT_FOUND));
 		return detailWorktime.getApplies();
 	}
 
@@ -61,7 +60,7 @@ public class DetailWorktimeReadOnlyService {
 	public List<DetailWorktime> findByDayAndWorktimeIds(DayOfWeek day, List<Long> worktimeIds) {
 		List<DetailWorktime> detailWorktimes = repository.findDayAndWorktimeIds(day, worktimeIds);
 		if (detailWorktimes.isEmpty()) {
-			throw new NotFoundException("Worktime은 생성되었지만 DetailWorktime이 생성되지 않은 논리적 오류입니다.");
+			throw new CustomException("Worktime은 생성되었지만 DetailWorktime이 생성되지 않은 논리적 오류입니다.", HttpStatus.NOT_FOUND);
 		}
 		return detailWorktimes;
 	}

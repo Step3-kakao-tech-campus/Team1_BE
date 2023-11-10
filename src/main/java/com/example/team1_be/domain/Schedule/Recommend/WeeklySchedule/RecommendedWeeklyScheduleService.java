@@ -2,11 +2,12 @@ package com.example.team1_be.domain.Schedule.Recommend.WeeklySchedule;
 
 import java.util.List;
 
+import com.example.team1_be.utils.errors.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Week.Week;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +27,7 @@ public class RecommendedWeeklyScheduleService {
 		List<RecommendedWeeklySchedule> recommendedWeeklySchedules = recommendedWeeklyScheduleRepository.findByWeek(
 			week.getId());
 		if (recommendedWeeklySchedules.isEmpty()) {
-			throw new NotFoundException("등록된 추천 스케줄이 존재하지 않습니다.");
+			throw new CustomException("등록된 추천 스케줄이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
 		}
 		return recommendedWeeklySchedules;
 	}

@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.team1_be.domain.Group.Group;
-import com.example.team1_be.domain.User.User;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +42,7 @@ public class WeekService {
 	public List<Worktime> findWorktimes(Week week) {
 		List<Worktime> worktimes = week.getWorktimes();
 		if (null == worktimes) {
-			throw new NotFoundException("근무일정이 존재하지 않습니다.");
+			throw new CustomException("근무일정이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
 		}
 		return worktimes;
 	}

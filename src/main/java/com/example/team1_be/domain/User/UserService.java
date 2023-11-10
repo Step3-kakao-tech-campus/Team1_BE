@@ -14,7 +14,7 @@ import com.example.team1_be.domain.User.Role.Service.RoleService;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUserRepository;
 import com.example.team1_be.utils.errors.exception.CustomException;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
+import com.example.team1_be.utils.errors.exception.NotUserException;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class UserService {
 
 	private final RoleService roleService;
 
-	@Transactional(noRollbackFor = NotFoundException.class)
+	@Transactional(noRollbackFor = NotUserException.class)
 	public Login.Response login(String code, Long kakaoId) {
 		User user = repository.findByKakaoId(kakaoId).orElse(null);
 		if (user == null) {
@@ -39,7 +39,7 @@ public class UserService {
 				.build();
 			unfinishedUserRepository.save(unfinishedUser);
 
-			throw new NotFoundException(ClientErrorCode.NOT_USER);
+			throw new NotUserException(ClientErrorCode.NOT_USER);
 		}
 		return new Login.Response(user.getIsAdmin());
 	}

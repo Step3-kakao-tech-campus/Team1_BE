@@ -44,7 +44,6 @@ import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Week.WeekRecruitmentStatus;
 import com.example.team1_be.domain.Worktime.Service.WorktimeService;
 import com.example.team1_be.domain.Worktime.Worktime;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -231,7 +230,7 @@ public class ScheduleService {
 		for (DetailWorktime detailWorktime : detailWorktimes) {
 			List<User> appliers = applyService.findUsersByWorktimeAndFixedApplies(detailWorktime);
 			if (appliers.size() != detailWorktime.getAmount()) {
-				throw new NotFoundException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.");
+				throw new CustomException("기존 worktime에서 모집하는 인원을 충족하지 못했습니다.", HttpStatus.NOT_FOUND);
 			}
 			dailyApplyMap.put(detailWorktime.getWorktime(), appliers);
 		}

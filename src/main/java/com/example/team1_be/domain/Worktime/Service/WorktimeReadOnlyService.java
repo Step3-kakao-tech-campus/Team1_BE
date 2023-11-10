@@ -13,7 +13,6 @@ import com.example.team1_be.domain.Group.Group;
 import com.example.team1_be.domain.Week.Week;
 import com.example.team1_be.domain.Worktime.Worktime;
 import com.example.team1_be.domain.Worktime.WorktimeRepository;
-import com.example.team1_be.utils.errors.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +33,7 @@ public class WorktimeReadOnlyService {
 	public List<Worktime> findByWeek(Week week) {
 		List<Worktime> worktimes = repository.findByWeek(week);
 		if (worktimes.isEmpty()) {
-			throw new NotFoundException("해당 날짜에 등록된 스케줄이 없습니다.");
+			throw new CustomException("해당 날짜에 등록된 스케줄이 없습니다.", HttpStatus.NOT_FOUND);
 		}
 		return worktimes;
 	}

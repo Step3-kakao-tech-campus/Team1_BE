@@ -1,5 +1,6 @@
 package com.example.team1_be.utils.errors;
 
+import com.example.team1_be.utils.errors.exception.NotUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,14 +12,17 @@ import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.errors.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.time.format.DateTimeParseException;
 import java.util.concurrent.TimeoutException;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
+
+	// kakao - 404 회원이 아닙니다
+	@ExceptionHandler(NotUserException.class)
+	public ResponseEntity<?> notUserException(NotUserException exception) {
+		return new ResponseEntity<>(exception.body(), exception.status());
+	}
 
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<?> handleCustomException(CustomException exception) {
@@ -64,6 +68,7 @@ public final class GlobalExceptionHandler {
 	// -10002
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> unknownException(Exception exception) {
+		exception.printStackTrace();
 		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.UNKNOWN_ERROR.getMessage(), ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
