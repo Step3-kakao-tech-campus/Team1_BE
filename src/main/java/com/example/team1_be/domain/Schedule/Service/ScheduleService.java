@@ -68,6 +68,8 @@ public class ScheduleService {
 	}
 
 	public WeeklyScheduleCheck.Response weeklyScheduleCheck(User user, LocalDate request) {
+
+
 		Group group = userService.findGroupByUser(user);
 		if (group.getUsers().isEmpty()) {
 			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
@@ -85,7 +87,7 @@ public class ScheduleService {
 //		}
 
 		Week week = weekService.findByGroupAndStartDate(group, request);
-		weekService.checkAppliable(user, week);
+		weekService.checkAppliable(week);
 
 		List<Worktime> weeklyWorktimes = weekService.findWorktimes(week);
 		ApplyStatus applyStatus = user.getIsAdmin() ? ApplyStatus.REMAIN : ApplyStatus.FIX;
@@ -145,9 +147,21 @@ public class ScheduleService {
 	}
 
 	public RecommendSchedule.Response recommendSchedule(User user, LocalDate date) {
+		if (!user.getIsAdmin()) {
+			throw new CustomException(ClientErrorCode.MANAGER_API_REQUEST_ERROR, HttpStatus.FORBIDDEN);	// 매니저 계정만 그룹을 생성할 수 있습니다.
+		}
+
 		Group group = userService.findGroupByUser(user);
+		if (group.getUsers().isEmpty()) {
+			throw new CustomException(ClientErrorCode.NO_GROUP, HttpStatus.BAD_REQUEST);
+		}
+		else if (group.getUsers().size() == 1) {
+			throw new CustomException(ClientErrorCode.ONLY_MEMBER, HttpStatus.BAD_REQUEST);
+		}
 
 		Week week = weekService.findByGroupAndStartDate(group, date);
+		weekService.checkAppliable(week);
+
 		List<Worktime> weeklyWorktimes = worktimeService.findByGroupAndDate(group, date);
 		List<DetailWorktime> weeklyDetailWorktimes = detailWorktimeService.findByStartDateAndWorktimes(date,
 			weeklyWorktimes);

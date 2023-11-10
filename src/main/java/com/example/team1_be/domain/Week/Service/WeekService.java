@@ -62,7 +62,7 @@ public class WeekService {
 		}
 	}
 
-	public void checkAppliable(User user, Week week) {
+	public void checkAppliable(Week week) {
 		if (week.getStatus().equals(WeekRecruitmentStatus.ENDED)) {
 			throw new CustomException(ClientErrorCode.RECRUITMENT_CLOSED, HttpStatus.BAD_REQUEST);	// 이미 마감된 스케줄입니다.
 		}
