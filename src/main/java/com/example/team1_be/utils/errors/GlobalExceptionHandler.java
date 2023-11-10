@@ -12,6 +12,8 @@ import com.example.team1_be.utils.ApiUtils;
 import com.example.team1_be.utils.errors.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
 import java.util.concurrent.TimeoutException;
 
 @RestControllerAdvice
@@ -38,11 +40,11 @@ public final class GlobalExceptionHandler {
 	}
 
 	// -10002
-//	@ExceptionHandler(NoHandlerFoundException.class)
-//	public ResponseEntity<?> handleResourceNotFoundException(NoHandlerFoundException exception) {
-//		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_URI.getMessage(), ClientErrorCode.INVALID_URI);
-//		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-//	}
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public ResponseEntity<?> handleResourceNotFoundException(NoHandlerFoundException exception) {
+		ApiUtils.ApiResult<?> error = ApiUtils.error(ClientErrorCode.INVALID_URI.getMessage(), ClientErrorCode.INVALID_URI);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
 
 	// -10003
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -58,10 +60,11 @@ public final class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
-	// ?
+	// -10005
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", ClientErrorCode.UNKNOWN_ERROR);
+	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+		exception.printStackTrace();
+		ApiUtils.ApiResult<?> error = ApiUtils.error("요청값의 양식이 잘못되었습니다.", ClientErrorCode.INVALID_FORM_INPUT);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
