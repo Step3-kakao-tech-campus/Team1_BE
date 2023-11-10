@@ -35,6 +35,7 @@ public class DetailWorktimeReadOnlyService {
 		return detailWorktimes;
 	}
 
+	public List<Apply> findAppliesByWorktimeDayAndStatus(Worktime worktime, ApplyStatus status, DayOfWeek day) {
 		DetailWorktime detailWorktime = repository.findByWorktimeAndStatus(worktime.getId(), day)
 			.orElseThrow(() -> new NotFoundException("존재하지 않는 세부 근무 일정입니다."));
 		log.info("근무 시간 ID: {}, 요일: {}에 따른 신청 정보를 조회하였습니다.", worktime.getId(), day);
