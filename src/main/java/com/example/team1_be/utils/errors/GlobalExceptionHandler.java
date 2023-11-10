@@ -15,10 +15,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.concurrent.TimeoutException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
+
+	// log 관련
+	private ResponseEntity<?> handleException(Exception e, String message, HttpStatus status) {
+		log.error(message, e);
+		ApiUtils.ApiResult<?> error = ApiUtils.error(message, ClientErrorCode.UNKNOWN_ERROR);
+		return new ResponseEntity<>(error, status);
+	}
 
 	// kakao - 404 회원이 아닙니다
 	@ExceptionHandler(NotUserException.class)
