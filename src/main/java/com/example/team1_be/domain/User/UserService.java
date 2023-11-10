@@ -1,6 +1,5 @@
 package com.example.team1_be.domain.User;
 
-import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +10,7 @@ import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.domain.User.Role.Service.RoleService;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUser;
 import com.example.team1_be.domain.User.UnfinishedUser.UnfinishedUserRepository;
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.CustomException;
 import com.example.team1_be.utils.errors.exception.NotFoundException;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 	private final UserRepository repository;
 	private final UnfinishedUserRepository unfinishedUserRepository;
