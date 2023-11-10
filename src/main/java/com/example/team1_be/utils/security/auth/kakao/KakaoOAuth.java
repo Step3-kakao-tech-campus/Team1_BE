@@ -28,8 +28,10 @@ public class KakaoOAuth {
 	private String CLIENT_ID;
 	@Value("${kakao.redirectURI}")
 	private String REDIRECT_URI;
-	private String PROXY_HOST_NAME = "krmp-proxy.9rum.cc";
-	private int PROXY_PORT = 3128;
+	@Value("${krampoline.proxy.hostName")
+	private String PROXY_HOST_NAME;
+	@Value("${krampoline.proxy.port")
+	private String PROXY_PORT;
 
 	public KakaoOAuthToken getToken(String code) throws JsonProcessingException {
 		HttpHeaders headers = new HttpHeaders();
@@ -68,7 +70,7 @@ public class KakaoOAuth {
 
 		RestTemplate rt;
 		if (!isLocalMode()) {
-			HttpHost proxy = new HttpHost(PROXY_HOST_NAME, PROXY_PORT);
+			HttpHost proxy = new HttpHost(PROXY_HOST_NAME, Integer.parseInt(PROXY_PORT));
 			CloseableHttpClient httpClient = HttpClients.custom()
 				.setProxy(proxy)
 				.build();

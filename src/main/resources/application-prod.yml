@@ -28,6 +28,13 @@ kakao:
   redirectURI: ${KAKAO_REDIRECT_URI}
   baseURI: ${KAKAO_BASE_URI}
 
+krampoline:
+  proxy:
+    hostName: ${KRAMPOLINE_PROXY_HOSTNAME}
+    port: ${KRAMPOLINE_PROXY_PORT}
+
+cors:
+  origin: ${CORS_ORIGIN}
 
 logging:
   level:
