@@ -28,20 +28,20 @@ import lombok.extern.slf4j.Slf4j;
 public class DetailWorktimeReadOnlyService {
 	private final DetailWorktimeRepository repository;
 
-	public List<DetailWorktime> findByGroupAndDateAndStatus(Group group, LocalDate date, WeekRecruitmentStatus status) {
+	public List<DetailWorktime> findDetailWorktimesByGroupDateAndStatus(Group group, LocalDate date,
+		WeekRecruitmentStatus status) {
 		List<DetailWorktime> detailWorktimes = repository.findByGroupAndDatesAndStatus(group.getId(), date, status);
 		log.info("그룹 ID: {}, 날짜: {}, 상태: {}에 따른 상세 근무 시간 정보를 조회하였습니다.", group.getId(), date, status);
 		return detailWorktimes;
 	}
 
-	public List<Apply> findAppliesByWorktimeAndStatus(Worktime worktime, ApplyStatus status, DayOfWeek day) {
 		DetailWorktime detailWorktime = repository.findByWorktimeAndStatus(worktime.getId(), day)
 			.orElseThrow(() -> new NotFoundException("존재하지 않는 세부 근무 일정입니다."));
 		log.info("근무 시간 ID: {}, 요일: {}에 따른 신청 정보를 조회하였습니다.", worktime.getId(), day);
 		return detailWorktime.getApplies();
 	}
 
-	public List<DetailWorktime> findByStartDateAndGroup(LocalDate date, Group group) {
+	public List<DetailWorktime> findDetailWorktimesByStartDateAndGroup(LocalDate date, Group group) {
 		List<DetailWorktime> detailWorktimes = repository.findByStartDateAndGroup(date, group.getId());
 		if (detailWorktimes.isEmpty()) {
 			log.warn("시작 날짜: {}, 그룹 ID: {}에 따른 상세 근무 시간 정보를 찾지 못하였습니다.", date, group.getId());
@@ -51,7 +51,7 @@ public class DetailWorktimeReadOnlyService {
 		return detailWorktimes;
 	}
 
-	public List<DetailWorktime> findByGroupAndDate(Group group, LocalDate selectedDate) {
+	public List<DetailWorktime> findDetailWorktimesByGroupAndDate(Group group, LocalDate selectedDate) {
 		List<DetailWorktime> detailWorktimes = repository.findByGroupAndDate(group.getId(), selectedDate);
 		if (detailWorktimes.isEmpty()) {
 			log.warn("그룹 ID: {}, 선택된 날짜: {}에 따른 상세 근무 시간 정보를 찾지 못하였습니다.", group.getId(), selectedDate);
@@ -61,13 +61,13 @@ public class DetailWorktimeReadOnlyService {
 		return detailWorktimes;
 	}
 
-	public List<DetailWorktime> findByStartDateAndWorktimes(LocalDate date, List<Long> ids) {
+	public List<DetailWorktime> findDetailWorktimesByStartDateAndWorktimes(LocalDate date, List<Long> ids) {
 		List<DetailWorktime> detailWorktimes = repository.findByStartDateAndWorktimes(date, ids);
 		log.info("시작 날짜: {}, 근무 시간 ID 목록: {}에 따른 상세 근무 시간 정보를 조회하였습니다.", date, ids);
 		return detailWorktimes;
 	}
 
-	public List<DetailWorktime> findByDayAndWorktimeIds(DayOfWeek day, List<Long> worktimeIds) {
+	public List<DetailWorktime> findDetailWorktimesByDayAndWorktimeIds(DayOfWeek day, List<Long> worktimeIds) {
 		List<DetailWorktime> detailWorktimes = repository.findDayAndWorktimeIds(day, worktimeIds);
 		if (detailWorktimes.isEmpty()) {
 			log.warn("요일: {}, 근무 시간 ID 목록: {}에 따른 상세 근무 시간 정보를 찾지 못하였습니다.", day, worktimeIds);
