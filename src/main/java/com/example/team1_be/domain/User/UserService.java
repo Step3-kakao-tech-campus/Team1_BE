@@ -65,7 +65,7 @@ public class UserService {
 	public Long matchKakaoId(String code) {
 		log.info("카카오 ID를 매칭합니다.");
 		UnfinishedUser unfinishedUser = unfinishedUserRepository.findByCode(code).orElseThrow(
-			() -> new BadRequestException("유효하지 않은 code입니다.")
+			() -> new BadRequestException("유효하지 않은 code입니다.", ClientErrorCode.UNFINISHED_USER_NOT_FOUND)
 		);
 		return unfinishedUser.getKakaoId();
 	}
@@ -74,7 +74,7 @@ public class UserService {
 	public Join.Response join(Join.Request request, Long kakaoId) {
 		log.info("회원 가입을 시작합니다.");
 		repository.findByKakaoId(kakaoId).ifPresent(existingUser -> {
-			throw new BadRequestException("이미 가입되었습니다.");
+			throw new BadRequestException("이미 가입되었습니다.", ClientErrorCode.DUPLICATE_KAKAO_ID);
 		});
 
 		User user = createUserAndAssignRole(request, kakaoId);
