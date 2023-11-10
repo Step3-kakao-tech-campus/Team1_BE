@@ -3,6 +3,8 @@ package com.example.team1_be.domain.Group.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,7 @@ public class GroupService {
 		Group group = userService.findGroupByUserOrNull(user);
 		if (group != null) {
 			log.error("그룹 생성 됨, id  : {}", group.getId());
-			throw new ForbiddenException("이미 가입된 그룹이 있습니다.");
+			throw new BadRequestException("이미 가입된 그룹이 있습니다.", ClientErrorCode.DUPLICATE_GRUOP);
 		}
 		group = request.toGroup();
 		writeOnlyRepositoryService.creatGroup(group);
