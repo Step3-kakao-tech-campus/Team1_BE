@@ -47,7 +47,7 @@ public class User extends BaseEntity {
 	@NotNull
 	private Boolean isAdmin;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private Set<Role> roles;
 
 	@ManyToOne(fetch = FetchType.LAZY)
