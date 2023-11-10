@@ -27,27 +27,27 @@ public final class GlobalExceptionHandler {
 
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<?> badRequest(BadRequestException e) {
-		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), e.getErrorCode());
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<?> unauthorized(UnauthorizedException e) {
-		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), e.getErrorCode());
 	}
 
 	@ExceptionHandler(ForbiddenException.class)
 	public ResponseEntity<?> forbidden(ForbiddenException e) {
-		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), e.getErrorCode());
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<?> notFound(NotFoundException e) {
-		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), e.getErrorCode());
 	}
 
 	@ExceptionHandler(ServerErrorException.class)
 	public ResponseEntity<?> serverError(ServerErrorException e) {
-		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, e.getMessage(), e.status(), e.getErrorCode());
 	}
 
 	@ExceptionHandler(Exception.class)
