@@ -55,23 +55,23 @@ public final class GlobalExceptionHandler {
 		return handleException(e, "알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR, ClientErrorCode.UNKNOWN_ERROR);
 	}
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException e) {
-		return handleException(e, "유효하지 않은 요청 파라미터입니다.", HttpStatus.BAD_REQUEST, ClientErrorCode.INVALID_PARAMETER);
-	}
-
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<?> handleCustomException(CustomException e) {
 		return handleException(e, e.getMessage(), e.status(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<?> handleRequestDTOValidationException(MethodArgumentNotValidException e) {
+		return handleException(e, "유효하지 않은 요청 파라미터입니다.", HttpStatus.BAD_REQUEST, ClientErrorCode.INVALID_REQUEST_BODY);
+	}
+
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> handlePathVariableException(MethodArgumentTypeMismatchException e) {
-		return handleException(e, "요청주소의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST, ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, "요청주소의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST, ClientErrorCode.INVALID_PARAMETER);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		return handleException(e, "요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST, ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, "요청값의 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST, ClientErrorCode.INVALID_FORM_INPUT);
 	}
 }
