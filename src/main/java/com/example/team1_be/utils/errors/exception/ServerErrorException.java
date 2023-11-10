@@ -9,12 +9,20 @@ import lombok.Getter;
 
 @Getter
 public class ServerErrorException extends RuntimeException {
+	private ClientErrorCode errorCode;
+
 	public ServerErrorException(String message) {
 		super(message);
+		this.errorCode = ClientErrorCode.UNKNOWN_ERROR;
+	}
+
+	public ServerErrorException(String message, ClientErrorCode errorCode) {
+		super(message);
+		this.errorCode = errorCode;
 	}
 
 	public ApiUtils.ApiResult<?> body() {
-		return ApiUtils.error(getMessage(), ClientErrorCode.UNKNOWN_ERROR);
+		return ApiUtils.error(getMessage(), errorCode);
 	}
 
 	public HttpStatus status() {
