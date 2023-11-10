@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -46,6 +47,17 @@ class AuthenticationConfigTest {
 	@WithMockCustomMemberUser
 	@Test
 	void recommendSchedule1() throws Exception {
+		LocalDate date = LocalDate.parse("2023-10-09");
+		ResultActions perform = mvc.perform(
+			get(String.format("/schedule/recommend/%s", date)));
+		perform.andExpect(status().isUnauthorized());
+		perform.andDo(print());
+	}
+
+	@DisplayName("접근인가 거부시 response entity를 반환할 수 있다.")
+	@WithAnonymousUser
+	@Test
+	void recommendSchedule2() throws Exception {
 		LocalDate date = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(
 			get(String.format("/schedule/recommend/%s", date)));
