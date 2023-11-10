@@ -23,6 +23,9 @@ public class ScheduleGenerator {
 	private final Map<Long, Long> requestMap;
 	private final List<List<Apply>> generatedApplies;
 	private int limit;
+	private int index;
+	private Map<Long, Long> remainRequestMap;
+	private List<Apply> fixedApplies;
 
 	public ScheduleGenerator(List<Worktime> worktimes, List<Apply> applyList, Map<Long, Long> requestMap) {
 		this.worktimes = worktimes;
@@ -30,19 +33,49 @@ public class ScheduleGenerator {
 		this.requestMap = requestMap;
 		this.generatedApplies = new ArrayList<>();
 		this.limit = GEN_LIMIT;
+		this.index = 0;
+		this.remainRequestMap = new HashMap<>(this.requestMap);
+		this.fixedApplies = new ArrayList<>();
 	}
 
 	public List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> generateSchedule() {
 		log.info("스케줄을 생성합니다.");
-		recursiveSearch(this.applyList, 0, this.requestMap, new ArrayList<>());
+		recursiveSearch();
 
-		List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> result = new ArrayList<>();
-		for (List<Apply> applies : this.generatedApplies) {
-			Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> recommend = generateDayOfWeekSortedMap(applies);
-			result.add(recommend);
-		}
+		List<Map<DayOfWeek, SortedMap<Worktime, List<Apply>>>> result = this.generatedApplies.stream()
+			.map(this::generateDayOfWeekSortedMap)
+			.collect(Collectors.toList());
+
 		log.info("스케줄 생성이 완료되었습니다.");
 		return result;
+	}
+
+	private void recursiveSearch() {
+		while (index < applyList.size() && limit > 0) {
+			Apply selectedApply = applyList.get(index);
+			Long selectedWorktimeId = selectedApply.getDetailWorktime().getId();
+			Long selectedAppliers = remainRequestMap.get(selectedWorktimeId);
+
+			if (selectedAppliers > 0) {
+				remainRequestMap.put(selectedWorktimeId, selectedAppliers - 1);
+				fixedApplies.add(selectedApply);
+				index++;
+				recursiveSearch();
+				if (limit == 0) {
+					return;
+				}
+			}
+			index++;
+		}
+
+		if (isSearchComplete()) {
+			generatedApplies.add(new ArrayList<>(fixedApplies));
+			limit--;
+		}
+	}
+
+	private boolean isSearchComplete() {
+		return remainRequestMap.values().stream().mapToInt(Long::intValue).sum() == 0 || index == applyList.size();
 	}
 
 	private Map<DayOfWeek, SortedMap<Worktime, List<Apply>>> generateDayOfWeekSortedMap(List<Apply> applies) {
@@ -50,11 +83,13 @@ public class ScheduleGenerator {
 		for (DayOfWeek day : DayOfWeek.values()) {
 			SortedMap<Worktime, List<Apply>> appliesByWorktime = new TreeMap<>(
 				Comparator.comparing(Worktime::getStartTime));
-			List<Apply> appliesByDay = filterAppliesByDay(applies, day);
+			List<Apply> appliesByDay = filterApplies(applies, day, null);
+
 			for (Worktime worktime : this.worktimes) {
-				List<Apply> appliesByDayAndWorktime = filterAppliesByDayAndWorktime(appliesByDay, worktime);
+				List<Apply> appliesByDayAndWorktime = filterApplies(appliesByDay, day, worktime);
 				if (!appliesByDayAndWorktime.isEmpty()) {
-					appliesByWorktime.put(worktime, appliesByDayAndWorktime);
+					Worktime key = appliesByDayAndWorktime.get(0).getDetailWorktime().getWorktime();
+					appliesByWorktime.put(key, appliesByDayAndWorktime);
 				}
 			}
 			recommend.put(day, appliesByWorktime);
@@ -62,50 +97,10 @@ public class ScheduleGenerator {
 		return recommend;
 	}
 
-	private List<Apply> filterAppliesByDay(List<Apply> applies, DayOfWeek day) {
+	private List<Apply> filterApplies(List<Apply> applies, DayOfWeek day, Worktime worktime) {
 		return applies.stream()
-			.filter(apply -> apply.getDetailWorktime().getDayOfWeek().equals(day))
+			.filter(apply -> apply.getDetailWorktime().getDayOfWeek().equals(day) &&
+				(worktime == null || apply.getDetailWorktime().getWorktime().getId().equals(worktime.getId())))
 			.collect(Collectors.toList());
-	}
-
-	private List<Apply> filterAppliesByDayAndWorktime(List<Apply> appliesByDay, Worktime worktime) {
-		return appliesByDay.stream()
-			.filter(apply -> apply.getDetailWorktime().getWorktime().getId().equals(worktime.getId()))
-			.collect(Collectors.toList());
-	}
-
-	private void recursiveSearch(List<Apply> applyList, int index, Map<Long, Long> remainRequestMap,
-		List<Apply> fixedApplies) {
-		if (isSearchComplete(remainRequestMap, index)) {
-			if (limit != 0) {
-				this.generatedApplies.add(new ArrayList<>(fixedApplies));
-				limit--;
-			}
-			return;
-		}
-
-		while (index < applyList.size()) {
-			Map<Long, Long> copiedRequestMap = new HashMap<>(remainRequestMap);
-			List<Apply> copiedFixedApplies = new ArrayList<>(fixedApplies);
-
-			Apply selectedApply = applyList.get(index);
-			Long selectedWorktimeId = selectedApply.getDetailWorktime().getId();
-			Long selectedAppliers = copiedRequestMap.get(selectedWorktimeId);
-
-			if (selectedAppliers != null && selectedAppliers != 0) {
-				copiedRequestMap.put(selectedWorktimeId, selectedAppliers - 1);
-				copiedFixedApplies.add(selectedApply);
-				recursiveSearch(applyList, index + 1, copiedRequestMap, copiedFixedApplies);
-				if (limit == 0) {
-					return;
-				}
-			}
-
-			index++;
-		}
-	}
-
-	private boolean isSearchComplete(Map<Long, Long> remainRequestMap, int index) {
-		return remainRequestMap.values().stream().mapToInt(Long::intValue).sum() == 0 || index == applyList.size();
 	}
 }
