@@ -1,5 +1,6 @@
 package com.example.team1_be.utils.errors.exception;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 
 import com.example.team1_be.utils.ApiUtils;
@@ -13,7 +14,7 @@ public class ServerErrorException extends RuntimeException {
 	}
 
 	public ApiUtils.ApiResult<?> body() {
-		return ApiUtils.error(getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return ApiUtils.error(getMessage(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	public HttpStatus status() {

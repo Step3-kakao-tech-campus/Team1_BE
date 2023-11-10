@@ -1,5 +1,6 @@
 package com.example.team1_be.utils.errors.exception;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import org.springframework.http.HttpStatus;
 
 import com.example.team1_be.utils.ApiUtils;
@@ -14,7 +15,7 @@ public class BadRequestException extends RuntimeException {
 	}
 
 	public ApiUtils.ApiResult<?> body() {
-		return ApiUtils.error(getMessage(), HttpStatus.BAD_REQUEST);
+		return ApiUtils.error(getMessage(), ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	public HttpStatus status() {

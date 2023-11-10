@@ -26,7 +26,7 @@ public final class GlobalExceptionHandler {
 
 	private ResponseEntity<?> handleException(Exception e, String message, HttpStatus status) {
 		log.error(message, e);
-		ApiUtils.ApiResult<?> error = ApiUtils.error(message, status);
+		ApiUtils.ApiResult<?> error = ApiUtils.error(message, ClientErrorCode.UNKNOWN_ERROR);
 		return new ResponseEntity<>(error, status);
 	}
 
