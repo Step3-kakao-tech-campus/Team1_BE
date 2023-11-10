@@ -17,8 +17,9 @@ public class UserAuditorAware implements AuditorAware<Long> {
 		if (authentication == null ||
 			!authentication.isAuthenticated() ||
 			authentication.getPrincipal() == "anonymousUser") {
-			return null;
+			return Optional.empty();
 		}
-		return Optional.of(((CustomUserDetails)authentication.getPrincipal()).getUser().getId());
+		Optional<Long> id = Optional.of(((CustomUserDetails)authentication.getPrincipal()).getUser().getId());
+		return id;
 	}
 }
