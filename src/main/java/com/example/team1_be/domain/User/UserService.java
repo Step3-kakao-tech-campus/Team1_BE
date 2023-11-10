@@ -94,4 +94,8 @@ public class UserService {
 	public boolean isAdmin(User user) {
 		return user.getIsAdmin();
 	}
+
+	public Group findGroupByUserOrNull(User user) {
+		return repository.findGroupByUser(user.getId()).orElse(null);
+	}
 }
