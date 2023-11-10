@@ -10,15 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.team1_be.domain.User.Role.RoleType;
-import com.example.team1_be.utils.security.XSS.XSSProtectFilter;
 import com.example.team1_be.utils.security.auth.CustomAccessDeniedHandler;
 import com.example.team1_be.utils.security.auth.CustomAuthenticationEntryPoint;
-import com.example.team1_be.utils.security.auth.jwt.JwtAuthenticationFilter;
 import com.example.team1_be.utils.security.auth.jwt.JwtProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -80,11 +77,8 @@ public class AuthenticationConfig {
 		http.authorizeHttpRequests()
 			.anyRequest().denyAll();
 
-		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+		http.addFilterBefore(new CombinedFilter(jwtProvider, om),
 			UsernamePasswordAuthenticationFilter.class);
-
-		http.addFilterBefore(new XSSProtectFilter(om),
-			ChannelProcessingFilter.class);
 
 		return http.build();
 	}
