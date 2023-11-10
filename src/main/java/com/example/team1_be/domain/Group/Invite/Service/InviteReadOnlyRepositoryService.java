@@ -3,6 +3,8 @@ package com.example.team1_be.domain.Group.Invite.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
 import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ public class InviteReadOnlyRepositoryService {
 	public Invite findInviteByCode(String invitationKey) {
 		log.info("초대장 코드: {}에 대한 초대장을 조회합니다.", invitationKey);
 		return repository.findByCode(invitationKey)
-			.orElseThrow(() -> new CustomException("존재하지 않는 그룹입니다.", HttpStatus.NOT_FOUND));
+			.orElseThrow(() -> new BadRequestException("존재하지 않는 그룹입니다.", ClientErrorCode.GROUP_NOT_FOUND));
 	}
 
 	public boolean checkDuplicateCode(String uuid) {
