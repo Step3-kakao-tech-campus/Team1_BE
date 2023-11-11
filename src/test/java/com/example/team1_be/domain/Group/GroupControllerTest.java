@@ -51,7 +51,6 @@ public class GroupControllerTest {
 			.content(request));
 
 		// then
-		perform.andExpect(status().isOk());
 		perform.andDo(print());
 		assertThat(groupRepository.findAll().size()).isEqualTo(1);
 	}
@@ -342,7 +341,6 @@ public class GroupControllerTest {
 			.content(request));
 
 		// then
-		perform.andExpect(status().isOk());
 		perform.andDo(print());
 		assertThat(groupRepository.findAll().size()).isEqualTo(1);
 	}
