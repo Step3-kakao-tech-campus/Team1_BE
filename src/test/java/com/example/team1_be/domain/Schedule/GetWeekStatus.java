@@ -30,7 +30,7 @@ public class GetWeekStatus {
 	@DisplayName("주별 상태 조회 closed")
 	@WithMockCustomAdminUser
 	@Test
-	void getWeekStatus1() throws Exception {
+	void shouldRetrieveClosedWeeklyStatus() throws Exception {
 		// given
 		LocalDate startDate = LocalDate.parse("2023-10-09");
 
@@ -46,7 +46,7 @@ public class GetWeekStatus {
 	@DisplayName("주별 상태 조회 inProgress")
 	@WithMockCustomAdminUser
 	@Test
-	void getWeekStatus2() throws Exception {
+	void shouldRetrieveInProgressWeeklyStatus() throws Exception {
 		// given
 		LocalDate startDate = LocalDate.parse("2023-10-16");
 
@@ -62,7 +62,7 @@ public class GetWeekStatus {
 	@DisplayName("주별 상태 조회 allocatable")
 	@WithMockCustomAdminUser
 	@Test
-	void getWeekStatus3() throws Exception {
+	void shouldRetrieveAllocatableWeeklyStatus() throws Exception {
 		// given
 		LocalDate startDate = LocalDate.parse("2023-10-23");
 
