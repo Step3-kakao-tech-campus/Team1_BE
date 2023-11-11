@@ -4,7 +4,7 @@ public enum RoleType {
 	ROLE_ADMIN,
 	ROLE_MEMBER;
 
-	public String getAuthority() {
+	public String getAuth() {
 		return name().replaceFirst("ROLE_", "");
 	}
 }
