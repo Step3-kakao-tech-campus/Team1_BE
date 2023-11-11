@@ -99,13 +99,13 @@ public class UserService {
 	public Group findGroupByUser(User user) {
 		log.info("사용자의 그룹을 찾습니다.");
 		return repository.findGroupByUser(user.getId())
-			.orElseThrow(() -> new NotFoundException("그룹을 찾을 수 없습니다."));
+			.orElseThrow(() -> new BadRequestException("그룹을 찾을 수 없습니다.", ClientErrorCode.NO_GROUP));
 	}
 
 	public User findById(Long userId) {
 		log.info("사용자를 찾습니다.");
 		return repository.findById(userId)
-			.orElseThrow(() -> new CustomException("존재하지 않는 유저입니다.", HttpStatus.NOT_FOUND));
+			.orElseThrow(() -> new BadRequestException("존재하지 않는 유저입니다.", ClientErrorCode.USER_ID_NOT_FOUND));
 	}
 
 	public boolean isAdmin(User user) {

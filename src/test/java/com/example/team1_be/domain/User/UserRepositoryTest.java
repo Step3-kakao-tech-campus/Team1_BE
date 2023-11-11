@@ -31,7 +31,7 @@ class UserRepositoryTest extends BaseTest {
 
 	@DisplayName("사용자 조회")
 	@Test
-	void test1() {
+	void shouldRetrieveUser() {
 		User user = User.builder()
 			.kakaoId(7L)
 			.name("dlwogns")
@@ -49,7 +49,7 @@ class UserRepositoryTest extends BaseTest {
 
 	@DisplayName("사용자 전체 조회")
 	@Test
-	void test2() {
+	void shouldRetrieveAllUsers() {
 		List<User> users = userRepository.findAll();
 
 		users.stream().forEach(user -> System.out.println(user.getId()));

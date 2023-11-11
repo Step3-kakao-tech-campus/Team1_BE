@@ -32,9 +32,6 @@ public class InviteService {
 	}
 
 	public GetInvitation.Response retrieveInvitation(User user) {
-		if (!user.getIsAdmin()) {
-			throw new CustomException("매니저 계정만 초대장을 발급할 수 있습니다.", HttpStatus.FORBIDDEN);
-		}
 		Group group = userService.findGroupByUser(user);
 		Invite invite = readOnlyRepositoryService.findInviteByGroup(group);
 		writeRepositoryService.refreshInvitation(invite);

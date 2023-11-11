@@ -39,7 +39,7 @@ public class findByGroupAndStartDate extends BaseTest {
 
 	@DisplayName("그룹과 시작일 기반 Worktime 조회")
 	@Test
-	void test1() {
+	void shouldRetrieveWorktimeBasedOnGroupAndStartDate() {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-09");
 		Group group = groupRepository.findById(1L).orElse(null);
 		List<Worktime> worktimes = worktimeRepository.findByDate(group.getId(), startWeekDate);
