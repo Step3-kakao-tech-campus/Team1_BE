@@ -27,7 +27,7 @@ public enum ClientErrorCode {
     GROUP_NOT_FOUND(-20004, Series.DUPLICATE, "초대키로 그룹을 찾을 수 없습니다."),
 
     // 21xxx
-    INVALID_TOKEN(-21000, Series.INACCESSIBLE, "토큰이 유효하지 않습니다."),
+    NO_PERMISSION(-21000, Series.INACCESSIBLE, "토큰이 인증되지 않았거나, 알바생<->매니저 API에 접근할 수 없습니다."),
     NO_GROUP(-21001, Series.INACCESSIBLE, "생성한 그룹이 없습니다."),
     ONLY_MEMBER(-21002, Series.INACCESSIBLE, "그룹에 멤버가 본인 뿐입니다."),
     USER_ID_NOT_FOUND(-21003, Series.INACCESSIBLE, "해당 userId를 찾을 수 없습니다."),

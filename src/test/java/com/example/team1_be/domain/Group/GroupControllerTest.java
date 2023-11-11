@@ -96,7 +96,7 @@ public class GroupControllerTest {
 			.content(request));
 
 		// then
-		perform.andExpect(status().isForbidden());
+		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
 
@@ -206,7 +206,7 @@ public class GroupControllerTest {
 			get(String.format("/api/group/invitation/information/%s", invitationKey)));
 
 		// then
-		perform.andExpect(status().isNotFound());
+		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
 
@@ -305,7 +305,7 @@ public class GroupControllerTest {
 		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
 		// then
-		perform.andExpect(status().isForbidden());
+		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
 
@@ -318,7 +318,7 @@ public class GroupControllerTest {
 		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
 		// then
-		perform.andExpect(status().isForbidden());
+		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
 

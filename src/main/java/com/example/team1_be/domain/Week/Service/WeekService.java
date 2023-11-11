@@ -3,6 +3,8 @@ package com.example.team1_be.domain.Week.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.team1_be.utils.errors.ClientErrorCode;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +44,7 @@ public class WeekService {
 		Week week = readOnlyService.findByGroupAndStartDate(group, startDate);
 		if (null == week) {
 			log.info("해당 주차를 찾을 수 없습니다.");
-			throw new NotFoundException("해당 주차를 찾을 수 없습니다.");
+			throw new BadRequestException("해당 주차를 찾을 수 없습니다.", ClientErrorCode.RECRUITMENT_NOT_STARTED);
 		}
 		log.info("그룹과 시작 날짜에 따른 주차를 찾았습니다.");
 		return week;
@@ -82,7 +84,7 @@ public class WeekService {
 		log.info("주차가 적용 가능한지 확인합니다.");
 		if (user.getIsAdmin() && week.getStatus().equals(WeekRecruitmentStatus.ENDED)) {
 			log.info("이미 마감된 스케줄입니다.");
-			throw new NotFoundException("이미 마감된 스케줄입니다.");
+			throw new BadRequestException("이미 마감된 스케줄입니다.", ClientErrorCode.RECRUITMENT_CLOSED);
 		}
 		if (!user.getIsAdmin() && week.getStatus().equals(WeekRecruitmentStatus.STARTED)) {
 			log.info("확정된 스케줄이 아닙니다.");
