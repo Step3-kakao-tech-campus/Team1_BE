@@ -96,7 +96,7 @@ public class GroupControllerTest {
 			.content(request));
 
 		// then
-		perform.andExpect(status().isForbidden());
+		perform.andExpect(status().isBadRequest());
 		perform.andDo(print());
 	}
 
