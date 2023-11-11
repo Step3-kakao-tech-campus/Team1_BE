@@ -202,10 +202,7 @@ Transactional이 적용된 메서드는 readOnly 가 true일때 나머지 CUD �
 
 [배포 링크](https://kf52b6fc37489a.user-app.krampoline.com/)
 
-## 반대편 repo
+## End repo
 
-[반대편 repo](링크를_넣어주세요)
-
-## 전체 스트럭쳐
-
-전체 스트럭쳐에 대한 설명을 적어주세요.
+[FrontEnd repo](링크를_넣어주세요)
+[DataBase repo](https://github.com/DAN-MU-ZI/krampoline_step4_v2)
