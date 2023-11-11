@@ -19,7 +19,7 @@
 
 ## ERD
 
-![ERD](이미지경로를_넣어주세요)
+![Alt text](gitsource/ERD.drawio.png)
 
 ## 프레임워크/라이브러리
 
