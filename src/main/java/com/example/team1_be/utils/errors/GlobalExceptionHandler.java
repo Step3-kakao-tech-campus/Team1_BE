@@ -1,6 +1,5 @@
 package com.example.team1_be.utils.errors;
 
-import com.example.team1_be.utils.errors.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,6 +9,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.example.team1_be.utils.ApiUtils;
+import com.example.team1_be.utils.errors.exception.BadRequestException;
+import com.example.team1_be.utils.errors.exception.CustomException;
+import com.example.team1_be.utils.errors.exception.ForbiddenException;
+import com.example.team1_be.utils.errors.exception.NotFoundException;
+import com.example.team1_be.utils.errors.exception.ServerErrorException;
+import com.example.team1_be.utils.errors.exception.UnauthorizedException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public final class GlobalExceptionHandler {
 
-	private ResponseEntity<?> handleException(Exception e, String message, HttpStatus status, ClientErrorCode errorCode) {
+	private ResponseEntity<?> handleException(Exception e, String message, HttpStatus status,
+		ClientErrorCode errorCode) {
 		log.error(message, e);
 		ApiUtils.ApiResult<?> error = ApiUtils.error(message, errorCode);
 		return new ResponseEntity<>(error, status);
@@ -52,7 +58,8 @@ public final class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> unknownException(Exception e) {
-		return handleException(e, "알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR, ClientErrorCode.UNKNOWN_ERROR);
+		return handleException(e, "알 수 없는 오류로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR,
+			ClientErrorCode.UNKNOWN_ERROR);
 	}
 
 	@ExceptionHandler(CustomException.class)

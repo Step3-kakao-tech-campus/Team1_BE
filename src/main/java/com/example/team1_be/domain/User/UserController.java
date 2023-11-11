@@ -2,8 +2,6 @@ package com.example.team1_be.domain.User;
 
 import javax.validation.Valid;
 
-import com.example.team1_be.utils.errors.ClientErrorCode;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.team1_be.domain.User.DTO.Join;
 import com.example.team1_be.domain.User.DTO.Login;
 import com.example.team1_be.utils.ApiUtils;
+import com.example.team1_be.utils.errors.ClientErrorCode;
 import com.example.team1_be.utils.errors.exception.ServerErrorException;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuth;
 import com.example.team1_be.utils.security.auth.kakao.KakaoOAuthToken;
 import com.example.team1_be.utils.security.auth.kakao.KakaoUserProfile;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -36,7 +36,7 @@ public class UserController {
 	@PostMapping("/auth/login")
 	public ResponseEntity<ApiUtils.ApiResult<Login.Response>> login(
 		@RequestBody @Valid Login.Request request) {
-		
+
 		String code = request.getCode();
 		Long kakaoId = null;
 		try {
@@ -47,6 +47,7 @@ public class UserController {
 			log.info("아이디 조회");
 			kakaoId = kakaoOAuthProfile.getId();
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			throw new ServerErrorException("code가 만료되었거나 유효하지 않습니다.", ClientErrorCode.KAKAO_CONNECT_FAIL);
 		}
 

@@ -1,6 +1,7 @@
 package com.example.team1_be.utils.security;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -60,12 +61,6 @@ public class AuthenticationConfig {
 				.contentSecurityPolicy("script-src 'self'");
 		}
 
-		http.exceptionHandling()
-			.authenticationEntryPoint(new CustomAuthenticationEntryPoint(om));
-
-		http.exceptionHandling()
-			.accessDeniedHandler(new CustomAccessDeniedHandler(om));
-
 		authorizeLogin(http);
 
 		authorizeGroup(http);
@@ -74,12 +69,18 @@ public class AuthenticationConfig {
 
 		authorizeError(http);
 
-		http.authorizeHttpRequests()
-			.anyRequest().denyAll();
+		//        http.authorizeRequests()
+		//                .anyRequest()
+		//                .denyAll();
 
 		http.addFilterBefore(new CombinedFilter(jwtProvider, om),
 			UsernamePasswordAuthenticationFilter.class);
 
+		http.exceptionHandling()
+			.authenticationEntryPoint(new CustomAuthenticationEntryPoint(om));
+
+		http.exceptionHandling()
+			.accessDeniedHandler(new CustomAccessDeniedHandler(om));
 		return http.build();
 	}
 
@@ -92,21 +93,23 @@ public class AuthenticationConfig {
 		http.cors()
 			.configurationSource(request -> {
 				CorsConfiguration corsConfiguration = new CorsConfiguration();
-				corsConfiguration.setAllowedOrigins(List.of(CORS_ORIGIN));
-				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-				corsConfiguration.setAllowedHeaders(List.of("*"));
-				corsConfiguration.addExposedHeader("Authorization");
+				corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("*"));
+				corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+				corsConfiguration.setAllowCredentials(true);
+				corsConfiguration.setAllowedHeaders(
+					Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+				corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
 				return corsConfiguration;
 			});
 	}
 
 	private void authorizeError(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
+		http.authorizeRequests()
 			.antMatchers("/error").permitAll();
 	}
 
 	private void authorizeSchedule(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
+		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET, "/schedule/application/**")
 			.hasRole(RoleType.ROLE_MEMBER.getAuthority())
 			.antMatchers(HttpMethod.PUT, "/schedule/application")
@@ -130,7 +133,7 @@ public class AuthenticationConfig {
 	}
 
 	private void authorizeGroup(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
+		http.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/group")
 			.hasRole(RoleType.ROLE_ADMIN.getAuthority())
 			.antMatchers(HttpMethod.GET, "/group")
@@ -144,18 +147,18 @@ public class AuthenticationConfig {
 	}
 
 	private void authorizeLogin(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
+		http.authorizeRequests()
 			.antMatchers("/login/kakao").permitAll()
 			.antMatchers("/auth/**").permitAll();
 	}
 
 	private void authorizeApiAndDocs(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
+		http.authorizeRequests()
 			.antMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll();
 	}
 
 	private void authorizeH2Console(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
+		http.authorizeRequests()
 			.antMatchers("/h2-console/**").permitAll();
 	}
 }

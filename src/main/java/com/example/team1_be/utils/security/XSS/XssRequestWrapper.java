@@ -15,8 +15,8 @@ import org.apache.commons.io.IOUtils;
 
 public class XssRequestWrapper extends HttpServletRequestWrapper {
 	private byte[] rawData;
-	private HttpServletRequest request;
-	private ResettableServletInputStream servletStream;
+	private final HttpServletRequest request;
+	private final ResettableServletInputStream servletStream;
 
 	public XssRequestWrapper(HttpServletRequest request) {
 		super(request);

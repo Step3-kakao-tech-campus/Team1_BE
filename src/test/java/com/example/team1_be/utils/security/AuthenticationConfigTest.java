@@ -38,7 +38,7 @@ class AuthenticationConfigTest {
 		String request = om.writeValueAsString(requestDTO);
 
 		// when
-		ResultActions perform = mvc.perform(post("/group/invitation")
+		ResultActions perform = mvc.perform(post("/api/group/invitation")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(request));
 
@@ -51,7 +51,7 @@ class AuthenticationConfigTest {
 	void recommendSchedule1() throws Exception {
 		LocalDate date = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/recommend/%s", date)));
+			get(String.format("/api/schedule/recommend/%s", date)));
 		perform.andExpect(status().isUnauthorized());
 		perform.andDo(print());
 	}
@@ -62,7 +62,7 @@ class AuthenticationConfigTest {
 	void recommendSchedule2() throws Exception {
 		LocalDate date = LocalDate.parse("2023-10-09");
 		ResultActions perform = mvc.perform(
-			get(String.format("/schedule/recommend/%s", date)));
+			get(String.format("/api/schedule/recommend/%s", date)));
 		perform.andExpect(status().isUnauthorized());
 		perform.andDo(print());
 	}

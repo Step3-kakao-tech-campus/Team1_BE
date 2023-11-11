@@ -1,6 +1,5 @@
 package com.example.team1_be.utils.security.auth.kakao;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -14,13 +13,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -31,9 +30,9 @@ public class KakaoOAuth {
 	private String CLIENT_ID;
 	@Value("${kakao.redirectURI}")
 	private String REDIRECT_URI;
-	@Value("${krampoline.proxy.hostName")
+	@Value("${krampoline.proxy.hostName}")
 	private String PROXY_HOST_NAME;
-	@Value("${krampoline.proxy.port")
+	@Value("${krampoline.proxy.port}")
 	private String PROXY_PORT;
 
 	public KakaoOAuthToken getToken(String code) throws JsonProcessingException {
@@ -48,11 +47,11 @@ public class KakaoOAuth {
 		params.add("code", code);
 
 		KakaoOAuthToken token = executeRequest(
-				"https://kauth.kakao.com/oauth/token",
-				HttpMethod.POST,
-				headers,
-				params,
-				KakaoOAuthToken.class
+			"https://kauth.kakao.com/oauth/token",
+			HttpMethod.POST,
+			headers,
+			params,
+			KakaoOAuthToken.class
 		);
 
 		log.info("Got Kakao OAuth token: {}", token);
@@ -66,11 +65,11 @@ public class KakaoOAuth {
 		headers.add("Authorization", "Bearer " + token.getAccess_token());
 
 		KakaoUserProfile userProfile = executeRequest(
-				"https://kapi.kakao.com/v2/user/me",
-				HttpMethod.POST,
-				headers,
-				null,
-				KakaoUserProfile.class
+			"https://kapi.kakao.com/v2/user/me",
+			HttpMethod.POST,
+			headers,
+			null,
+			KakaoUserProfile.class
 		);
 
 		log.info("Got Kakao user profile: {}", userProfile);
@@ -79,7 +78,7 @@ public class KakaoOAuth {
 	}
 
 	public <T> T executeRequest(String url, HttpMethod method, HttpHeaders headers, MultiValueMap<String, String> body,
-								Class<T> clazz) throws JsonProcessingException {
+		Class<T> clazz) throws JsonProcessingException {
 
 		log.info("Sending {} request to {}", method, url);
 
@@ -87,8 +86,8 @@ public class KakaoOAuth {
 		if (!isLocalMode()) {
 			HttpHost proxy = new HttpHost(PROXY_HOST_NAME, Integer.parseInt(PROXY_PORT));
 			CloseableHttpClient httpClient = HttpClients.custom()
-					.setProxy(proxy)
-					.build();
+				.setProxy(proxy)
+				.build();
 
 			HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 			factory.setConnectionRequestTimeout(360000);

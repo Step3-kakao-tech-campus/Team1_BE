@@ -22,12 +22,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
+	private final CustomUserDetailsService customUserDetailsService;
 	@Value("${jwt:secretKey}")
 	private String secretKey;
-
-	private final CustomUserDetailsService customUserDetailsService;
-
-	private Long expiredMs = 1000 * 60 * 60l * 24;
+	private final Long expiredMs = 1000 * 60 * 60L * 24;
 
 	public String createJwt(Long id) {
 		Claims claims = Jwts.claims();
