@@ -166,7 +166,7 @@ Transactional이 적용된 메서드는 readOnly 가 true일때 나머지 CUD �
 
 ## 배포 링크
 
-[배포 링크](링크를_넣어주세요)
+[배포 링크](https://kf52b6fc37489a.user-app.krampoline.com/)
 
 ## 반대편 repo
 
