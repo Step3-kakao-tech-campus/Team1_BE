@@ -35,7 +35,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Sql("group-create1.sql")
 	@Test
-	void postCreate1() throws Exception {
+	void shouldCreateGroupSuccessfully() throws Exception {
 		// given
 		Create.Request requestDTO = Create.Request.builder()
 			.marketName("kakao")
@@ -60,7 +60,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser
 	@Sql("group-create1.sql")
 	@Test
-	void postCreate2() throws Exception {
+	void shouldFailToCreateGroupWhenDtoValidationFails() throws Exception {
 		// given
 		Create.Request requestDTO = Create.Request.builder()
 			.build();
@@ -80,7 +80,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser
 	@Sql("group-create2.sql")
 	@Test
-	void postCreate3() throws Exception {
+	void shouldFailToCreateGroupWhenGroupAlreadyExists() throws Exception {
 		// given
 		Create.Request requestDTO = Create.Request.builder()
 			.marketName("kakao")
@@ -104,7 +104,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept1.sql")
 	@Test
-	void invitationAccept1() throws Exception {
+	void shouldSuccessfullySubmitGroupInvitation() throws Exception {
 		// given
 		InvitationAccept.Request requestDTO = new InvitationAccept.Request("testcode1");
 		String request = om.writeValueAsString(requestDTO);
@@ -123,7 +123,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept2.sql")
 	@Test
-	void invitationAccept2() throws Exception {
+	void shouldFailToSubmitGroupInvitationWhenNoRefreshDate() throws Exception {
 		// given
 		InvitationAccept.Request requestDTO = new InvitationAccept.Request("testcode1");
 		String request = om.writeValueAsString(requestDTO);
@@ -142,7 +142,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept3.sql")
 	@Test
-	void invitationAccept3() throws Exception {
+	void shouldFailToSubmitGroupInvitationWhenInvitationExpired() throws Exception {
 		// given
 		InvitationAccept.Request requestDTO = new InvitationAccept.Request("testcode1");
 		String request = om.writeValueAsString(requestDTO);
@@ -161,7 +161,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationAccept1.sql")
 	@Test
-	void invitationAccept4() throws Exception {
+	void shouldFailToSubmitGroupInvitationWhenNoInvitationContent() throws Exception {
 		// given
 		InvitationAccept.Request requestDTO = new InvitationAccept.Request();
 		String request = om.writeValueAsString(requestDTO);
@@ -180,7 +180,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck1.sql")
 	@Test
-	void invitationCheck1() throws Exception {
+	void shouldSuccessfullyCheckGroupInvitation() throws Exception {
 		// given
 		String invitationKey = "testcode1";
 
@@ -197,7 +197,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck2.sql")
 	@Test
-	void invitationCheck2() throws Exception {
+	void shouldFailToCheckGroupInvitationWhenInvitationDoesNotExist() throws Exception {
 		// given
 		String invitationKey = "testcode1";
 
@@ -214,7 +214,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck3.sql")
 	@Test
-	void invitationCheck3() throws Exception {
+	void shouldFailToCheckGroupInvitationWhenInvitationExpired() throws Exception {
 		// given
 		String invitationKey = "testcode1";
 
@@ -231,7 +231,7 @@ public class GroupControllerTest {
 	@WithMockCustomMemberUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-invitationCheck4.sql")
 	@Test
-	void invitationCheck4() throws Exception {
+	void shouldFailToCheckGroupInvitationWhenInvitationNotRefreshed() throws Exception {
 		// given
 		String invitationKey = "testcode1";
 
@@ -248,7 +248,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser
 	@Sql("group-getMembers1.sql")
 	@Test
-	void getMembers1() throws Exception {
+	void shouldSuccessfullyRetrieveGroupMembers() throws Exception {
 		// when
 		ResultActions perform = mvc.perform(get("/api/group"));
 
@@ -261,7 +261,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser
 	@Sql("group-getMembers2.sql")
 	@Test
-	void getMembers2() throws Exception {
+	void shouldFailToRetrieveGroupMembersWhenNoRegisteredMember() throws Exception {
 		// when
 		ResultActions perform = mvc.perform(get("/api/group"));
 
@@ -274,7 +274,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser
 	@Sql("group-getMembers3.sql")
 	@Test
-	void getMembers3() throws Exception {
+	void shouldSuccessfullyRetrieveGroupMembersWhenGroupIsEmpty() throws Exception {
 		// when
 		ResultActions perform = mvc.perform(get("/api/group"));
 
@@ -287,7 +287,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser(username = "eunjin", isAdmin = "true")
 	@Sql("group-getInvitation1.sql")
 	@Test
-	void getInvitation1() throws Exception {
+	void shouldSuccessfullyIssueGroupInvitationLink() throws Exception {
 		// when
 		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
@@ -300,7 +300,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser
 	@Sql("group-getInvitation2.sql")
 	@Test
-	void getInvitation2() throws Exception {
+	void shouldFailToIssueGroupInvitationLinkWhenNotGroupMember() throws Exception {
 		// when
 		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
@@ -313,7 +313,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser(username = "dksgkswn", userId = "2", kakaoId = "2")
 	@Sql("group-getInvitation3.sql")
 	@Test
-	void getInvitation3() throws Exception {
+	void shouldFailToIssueGroupInvitationLinkWhenNotGroupLeader() throws Exception {
 		// when
 		ResultActions perform = mvc.perform(get("/api/group/invitation"));
 
@@ -326,7 +326,7 @@ public class GroupControllerTest {
 	@WithMockCustomAdminUser(isAdmin = "true")
 	@Sql("group-create1.sql")
 	@Test
-	void userAuditing1() throws Exception {
+	void shouldCheckUserAuditingWhenCreatingGroup() throws Exception {
 		// given
 		Create.Request requestDTO = Create.Request.builder()
 			.marketName("kakao")

@@ -29,7 +29,7 @@ class GroupRepositoryTest extends BaseTest {
 
 	@DisplayName("그룹 조회")
 	@Test
-	void test1() {
+	void shouldFindGroupById() {
 		Group group = Group.builder()
 			.id(1L)
 			.name("이재훈")
@@ -46,7 +46,7 @@ class GroupRepositoryTest extends BaseTest {
 
 	@DisplayName("그룹 전체 조회")
 	@Test
-	void test2() {
+	void shouldFindAllGroups() {
 		Group group = Group.builder()
 			.id(1L)
 			.name("이재훈")
@@ -58,7 +58,7 @@ class GroupRepositoryTest extends BaseTest {
 
 	@DisplayName("그룹을 조회할 수 있다.")
 	@Test
-	void test3() {
+	void shouldFindGroupByIdWhenExists() {
 		Group group = Group.builder()
 			.id(1L)
 			.name("이재훈")
