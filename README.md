@@ -53,9 +53,9 @@
 - config : application.yml 파일에 대한 수정
 - style : 코드 컨벤션 및 별도 코드 스타일 수정
 
-### 코드 컨벤션
+### 코딩 컨벤션(스타일)
 
-코드 컨벤션에 대한 설명을 적어주세요.
+- [네이버 코딩 컨벤션](https://naver.github.io/hackday-conventions-java/) 사용중
 
 ### 브랜치 네이밍
 
