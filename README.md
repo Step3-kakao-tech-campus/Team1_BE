@@ -57,21 +57,27 @@
 
 - [네이버 코딩 컨벤션](https://naver.github.io/hackday-conventions-java/) 사용중
 
-### 브랜치 네이밍
-
-브랜치 네이밍에 대한 설명을 적어주세요.
-
 ### 작업 프로세스
 
-작업 프로세스에 대한 설명을 적어주세요.
+1. issue 작성
+2. 브랜치 생성
+3. issue 해결
+4. pull main
+5. pull request
+6. 테크리더 검토이후 merge
+
+### 브랜치 네이밍
+
+(feat, config, build, bug)/[세부 작업 내용]#[issue 번호]
+
+### 이슈, PR 템플릿
+
+이슈, 버그, PR에 대해서 공통양식을 작성하여 관리함  
+실수로 main에 push를 방지하기 위해서 CODE-OWNER를 적용하여 merge되는 것을 방지
 
 ### 디렉토리 구조
 
 디렉토리 구조에 대한 설명을 적어주세요.
-
-### 이슈, PR 템플릿
-
-이슈와 PR 템플릿에 대한 설명을 적어주세요.
 
 ## 주안점
 
