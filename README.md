@@ -1,4 +1,4 @@
-![Alt text](gitsource/%EB%85%B8%EC%85%98%EB%B0%B0%EB%84%884.png)
+![Alt text](gitsource/%EB%85%B8%EC%85%98%EB%B0%B0%EB%84%88.png)
 
 ## 프로젝트 설명
 
