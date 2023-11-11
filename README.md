@@ -45,8 +45,8 @@
 
 ## 주요 문서 링크
 
-- [API 문서](링크를_넣어주세요)
-- [Error 처리 문서](링크를_넣어주세요)
+- [API 문서](https://www.notion.so/afd3b231dfd94fa4a81b5dc59a09944b?v=bde64cfbecfd4dd4a5eec9e88547d36c)
+- [Error code 문서](https://www.notion.so/fbe7806d167e462b96d0a9d6d926259d)
 - [와이어 프레임](https://www.figma.com/file/NPlfOX5C2seLsJOuGJJLti/1%EC%A1%B0-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=0%3A1&mode=design&t=MluLXkeWbkZ4UhD3-1)
 
 ## ERD
