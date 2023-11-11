@@ -99,8 +99,8 @@ Transactional이 적용된 메서드는 readOnly 가 true일때 나머지 CUD �
 그래서 CQRS를 도입하려 했지만 시간상 여유가 없어서 서비스만을 분리했습니다.
 
 ### 내부 에러 코드
-같은 상태 코드라도 자세한 사유가 다를 수 있고, 이를 FE에서 별도로 처리해야 했습니다. 그래서 내부 상태 코드를 만들었고, 이를 위한 기준들을 세웠습니다.
-[에러코드 기준 문서](https://www.notion.so/error-978e4b88b09f4e20a487ec4904eddd67)
+같은 상태 코드라도 자세한 사유가 다를 수 있고, 이를 FE에서 별도로 처리해야 했습니다. 그래서 내부 상태 코드를 만들었고, 이를 위한 기준들을 세웠습니다.  
+[에러코드 기준 문서](https://www.notion.so/error-978e4b88b09f4e20a487ec4904eddd67)  
 [에러코드 조치 문서](https://www.notion.so/API-errorCode-b158aeae42b64c05b1edb3080ed96aed)
 
 ### API 요청 흐름(외부)
