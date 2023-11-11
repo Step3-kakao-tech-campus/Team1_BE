@@ -30,7 +30,7 @@ public class LoadLatestSchedule {
 	@DisplayName("최근 스케줄 조회 성공")
 	@WithMockCustomAdminUser(userId = "2")
 	@Test
-	void test1() throws Exception {
+	void shouldRetrieveRecentScheduleSuccessfully() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
 		ResultActions perform = mvc.perform(
 			get(String.format("/api/schedule/worktime/%s", startWeekDate)));

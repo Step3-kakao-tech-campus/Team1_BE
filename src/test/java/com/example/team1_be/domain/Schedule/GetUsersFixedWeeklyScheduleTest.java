@@ -30,7 +30,7 @@ public class GetUsersFixedWeeklyScheduleTest {
 	@DisplayName("개인 확정 스케줄 조회 성공")
 	@WithMockCustomAdminUser(userId = "2")
 	@Test
-	void GetUsersFixedWeeklySchedule1() throws Exception {
+	void shouldRetrieveUsersFixedWeeklyScheduleSuccessfully() throws Exception {
 		YearMonth month = YearMonth.parse("2023-10");
 		ResultActions perform = mvc.perform(
 			get(String.format("/api/schedule/fix/month/%s", month)));
@@ -41,7 +41,7 @@ public class GetUsersFixedWeeklyScheduleTest {
 	@DisplayName("개인 확정 스케줄 조회 실패(파라미터 에러)")
 	@WithMockCustomAdminUser(userId = "2")
 	@Test
-	void GetUsersFixedWeeklySchedule2() throws Exception {
+	void shouldFailToRetrieveUsersFixedWeeklyScheduleDueToParameterError() throws Exception {
 		ResultActions perform = mvc.perform(
 			get(String.format("/api/schedule/fix/month/%s", "2023")));
 		perform.andExpect(status().isBadRequest());

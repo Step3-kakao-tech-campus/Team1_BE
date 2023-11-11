@@ -32,7 +32,7 @@ public class GetDailyFixedAppliesTest {
 	@DisplayName("요청 성공")
 	@WithMockCustomAdminUser
 	@Test
-	public void test1() throws Exception {
+	public void shouldHandleScheduleRequestSuccessfully() throws Exception {
 		// given
 		LocalDate date = LocalDate.parse("2023-10-16");
 		mvc.perform(
@@ -59,7 +59,7 @@ public class GetDailyFixedAppliesTest {
 	@DisplayName("요청 실패(잘못된 양식의 주소 요청")
 	@WithMockCustomAdminUser
 	@Test
-	public void test2() throws Exception {
+	public void shouldFailToHandleScheduleRequestWithWrongDateFormat() throws Exception {
 		String wrongDateFormat = "2023-22";
 		ResultActions perform = mvc.perform(
 			get(String.format("/api/schedule/fix/day/%s", wrongDateFormat)));

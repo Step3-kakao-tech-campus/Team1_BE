@@ -8,6 +8,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -39,7 +40,7 @@ public class GetAppliesTest {
 	@DisplayName("스케줄 신청/수정 조회 요청 성공")
 	@WithMockCustomMemberUser(userId = "2")
 	@Test
-	void test1() throws Exception {
+	void shouldRetrieveScheduleApplicationSuccessfully() throws Exception {
 		LocalDate startWeekDate = LocalDate.parse("2023-10-16");
 		String URL = String.format("/api/schedule/application/%s", startWeekDate);
 		ResultActions perform = mvc.perform(get(URL));
@@ -50,7 +51,7 @@ public class GetAppliesTest {
 	@DisplayName("스케줄 신청/수정 제출 DTO 확인")
 	@WithMockCustomMemberUser(userId = "2")
 	@Test
-	void test2() throws Exception {
+	void shouldCheckScheduleApplicationDto() throws Exception {
 		LocalDate weekStartDate = LocalDate.parse("2023-10-16");
 
 		List<SortedMap<Worktime, Boolean>> weeklyApplies = new ArrayList<>();
@@ -61,7 +62,7 @@ public class GetAppliesTest {
 
 		for (DayOfWeek day : DayOfWeek.values()) {
 			SortedMap<Worktime, Boolean> dailyApplies = new TreeMap<>(
-				(s1, s2) -> s1.getStartTime().compareTo(s2.getStartTime()));
+				Comparator.comparing(Worktime::getStartTime));
 			for (Worktime worktime : worktimes) {
 				dailyApplies.put(worktime, day.ordinal() % 2 == 1);
 			}
@@ -75,7 +76,7 @@ public class GetAppliesTest {
 	@DisplayName("스케줄 신청/수정 제출 DTO 포함 요청")
 	@WithMockCustomMemberUser(userId = "2")
 	@Test
-	void test3() throws Exception {
+	void shouldSubmitScheduleApplicationWithDto() throws Exception {
 		// given
 		LocalDate weekStartDate = LocalDate.parse("2023-10-16");
 
@@ -87,7 +88,7 @@ public class GetAppliesTest {
 
 		for (DayOfWeek day : DayOfWeek.values()) {
 			SortedMap<Worktime, Boolean> dailyApplies = new TreeMap<>(
-				(s1, s2) -> s1.getStartTime().compareTo(s2.getStartTime()));
+				Comparator.comparing(Worktime::getStartTime));
 			for (Worktime worktime : worktimes) {
 				dailyApplies.put(worktime, day.ordinal() % 2 == 1);
 			}
