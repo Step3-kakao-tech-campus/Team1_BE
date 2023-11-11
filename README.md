@@ -200,5 +200,5 @@ Transactional이 적용된 메서드는 readOnly 가 true일때 나머지 CUD �
 
 ## End repo
 
-[FrontEnd repo](링크를_넣어주세요)  
+[FrontEnd repo](https://github.com/Step3-kakao-tech-campus/Team1_FE/tree/Evaluation)  
 [DataBase repo](https://github.com/DAN-MU-ZI/krampoline_step4_v2)
