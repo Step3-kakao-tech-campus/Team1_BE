@@ -1,12 +1,5 @@
 ![Alt text](gitsource/%EB%85%B8%EC%85%98%EB%B0%B0%EB%84%884.png)
 
-## About
-
-- **설명**: 프로젝트에 대한 간략한 설명을 적어주세요.
-- **해시태그**: 프로젝트와 관련된 해시태그를 적어주세요.
-
-![프로젝트 온보딩 화면](이미지경로를_넣어주세요)
-
 ## 프로젝트 설명
 
 프로젝트에 대한 자세한 설명을 적어주세요.
@@ -30,7 +23,18 @@
 
 ## 프레임워크/라이브러리
 
-사용한 프레임워크와 라이브러리에 대한 설명을 적어주세요.
+- Spring Boot
+- Spring Data JPA
+- Spring Boot Starter Security
+- Spring Security Test
+- Springfox
+- JJwt
+- Apache HttpClient
+- Lombok
+- H2 Database
+- MariaDB Java Client
+- Commons IO
+- Commons Text
 
 ## 그라운드 룰
 
